@@ -1,8 +1,7 @@
 pub mod dense;
-pub mod batchnormalization;
+pub mod batch_normalization;
 
 use arrayfire::*;
-use crate::activations::*;
 
 pub enum Initializer {
     Zeros,

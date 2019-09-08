@@ -1,10 +1,9 @@
 use arrayfire::*;
 use crate::layers::*;
-use crate::activations::*;
 use crate::losses::*;
 use crate::optimizers::*;
-use crate::data::*;
-use std::marker::PhantomData;
+use crate::data::DataSet;
+use crate::data::batch_iterator::BatchIterator;
 
 enum NetworkError {
     NoLayers
@@ -13,7 +12,7 @@ enum NetworkError {
 pub struct Network<'a, L, O>
 where L: DataSet, O: Optimizer
 {
-    data: &'a L,
+    data: &'a mut L,
     layers: Vec<Box<dyn Layer>>,
     loss_function: Loss,
     optimizer: O,
@@ -23,7 +22,7 @@ where L: DataSet, O: Optimizer
 impl<'a, L, O> Network<'a, L, O>
 where L: DataSet, O: Optimizer
 {
-    pub fn new(data: &'a L, loss_function: Loss, optimizer: O) -> Network<L, O> {
+    pub fn new(data: &'a mut L, loss_function: Loss, optimizer: O) -> Network<L, O> {
         Network {
             data,
             layers: Vec::new(),
@@ -79,31 +78,31 @@ where L: DataSet, O: Optimizer
 
         self.initialize_optimizer();
 
-        self.data.set_batch_size(batch_size);
 
-        //let x = self.data.x_train();
-        //let y = self.data.y_train();
+        for epoch in 1..=epochs {
 
+            self.data.shuffle();
+            let batches = BatchIterator::new(self.data, batch_size);
 
-
-        for epoch in 0..epochs {
-
-            for (mini_batch_x, mini_batch_y) in *self.data.mini_batch() {
+            for (mini_batch_x, mini_batch_y) in batches {
 
                 // Compute activation of the last layer
-                let al = self.forward(&mini_batch_x);
+                let final_activation = self.forward(&mini_batch_x);
 
-                // Print loss every 10 epoch
-                if (epoch + 1) % 10 == 0 {
-                    let train_loss = self.compute_loss(&al, &mini_batch_y);
-                    let valid_loss = self.evaluate();
-                    println!("epoch: {}, train_loss: {}, valid_loss: {}", epoch + 1, train_loss, valid_loss)
-                }
-
-                self.backward(&al, &mini_batch_y);
+                self.backward(&final_activation, &mini_batch_y);
                 self.update_parameters();
             }
+
+            // Print loss every 10 epoch
+            if epoch % 10 == 0 {
+                //let train_loss = self.compute_loss(&al, &mini_batch_y);
+                let valid_loss = self.evaluate();
+                //println!("epoch: {}, train_loss: {}, valid_loss: {}", epoch + 1, train_loss, valid_loss)
+                println!("epoch: {}, valid_loss: {}", epoch, valid_loss)
+            }
             //mem_info!("Memory used by Arrayfire");
+            //device_gc();
+
         }
     }
 
@@ -137,7 +136,7 @@ where L: DataSet, O: Optimizer
         }
 
         match self.layers.last() {
-            Some(last_layer) => {
+            Some(_) => {
                 self.loss_function.eval(&a_prev, self.data.y_valid())
             },
             None => 0.,

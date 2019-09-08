@@ -1,13 +1,15 @@
 use std::path::Path;
 use arrayfire::*;
 
+
 use neuro::layers::dense::*;
 use neuro::activations::Activation;
 use neuro::models::*;
 use neuro::losses::Loss;
 use neuro::optimizers::*;
-use neuro::layers::batchnormalization::BatchNormalization;
-use neuro::data::*;
+use neuro::layers::batch_normalization::BatchNormalization;
+use neuro::data::DataSetError;
+use neuro::data::tabular_data::TabularDataSet;
 
 
 fn main() -> Result<(), DataSetError> {
@@ -41,30 +43,25 @@ fn main() -> Result<(), DataSetError> {
     let outputs = Path::new("datasets/outputs.csv");
 
     let mut data = TabularDataSet::from_csv(&inputs, &outputs, 0.2)?;
-    let (mb_x, mb_y) = data.mini_batch.next();
-
-    //let mut data = DataSet::from_csv(&inputs, &outputs, 0.2)?;
-
-
-    //data.normalize();
-
-    //data.batch_iterator(10);
+    data.normalize_output();
 
     // Create the network
-    /*
-    let mut nn = Network::new(&data, Loss::MeanSquaredError, Adam::new(0.03));
-    nn.add(Dense::new(3, Activation::ReLU));
+    let mut nn = Network::new(&mut data, Loss::MeanSquaredError, Adam::new(0.03));
+    nn.add(BatchNormalization::new());
+    nn.add(Dense::new(4, Activation::ReLU));
     nn.add(BatchNormalization::new());
     nn.add(Dense::new(5, Activation::ReLU));
-    //nn.add(BatchNormalization::new());
+    nn.add(BatchNormalization::new());
     nn.add(Dense::new(2, Activation::Linear));
 
     // Test
-    nn.fit(1, 60);
+    nn.fit(32, 100);
 
-    nn.evaluate();
-    */
+    //nn.evaluate();
 
 
     Ok(())
 }
+
+
+
