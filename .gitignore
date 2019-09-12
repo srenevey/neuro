@@ -4,3 +4,4 @@ Cargo.lock
 /datasets
 .DS_Store
 .idea/
+/site
