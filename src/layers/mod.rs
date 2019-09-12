@@ -1,5 +1,6 @@
 pub mod dense;
 pub mod batch_normalization;
+pub mod conv2d;
 
 use arrayfire::*;
 
