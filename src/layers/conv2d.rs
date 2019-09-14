@@ -8,6 +8,8 @@ pub struct Conv2D {
     mode: ConvMode,
     filter: Array<f64>,
     biases: Array<f64>,
+    z: Option<Array<f64>>,
+    a_prev: Option<Array<f64>>
 }
 
 impl Conv2D {
@@ -17,6 +19,8 @@ impl Conv2D {
             mode,
             filter: Array::new_empty(Dim4::new(&[filter, filter, 1, 1])),
             biases: Array::new_empty(Dim4::new(&[0, 0, 1, 1])),
+            z: None,
+            a_prev: None,
         }
     }
 }
