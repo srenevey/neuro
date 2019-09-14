@@ -1,15 +1,11 @@
 use std::path::Path;
-use arrayfire::*;
 
-
-use neuro::layers::dense::*;
+use neuro::layers::{Dense, BatchNormalization};
 use neuro::activations::Activation;
-use neuro::models::*;
+use neuro::models::Network;
 use neuro::losses::Loss;
-use neuro::optimizers::*;
-use neuro::layers::batch_normalization::BatchNormalization;
-use neuro::data::DataSetError;
-use neuro::data::tabular_data::TabularDataSet;
+use neuro::optimizers::Adam;
+use neuro::data::{DataSetError, TabularDataSet};
 
 
 fn main() -> Result<(), DataSetError> {
