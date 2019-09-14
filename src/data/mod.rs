@@ -1,3 +1,6 @@
+pub use self::image_data::ImageDataSet;
+pub use self::tabular_data::TabularDataSet;
+
 pub mod batch_iterator;
 pub mod tabular_data;
 pub mod image_data;
