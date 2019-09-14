@@ -1,3 +1,9 @@
+// Public re-exports
+pub use self::batch_normalization::BatchNormalization;
+pub use self::conv2d::Conv2D;
+pub use self::dense::Dense;
+
+
 pub mod dense;
 pub mod batch_normalization;
 pub mod conv2d;
