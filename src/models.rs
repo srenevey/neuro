@@ -34,12 +34,12 @@ where L: DataSet, O: Optimizer
     /// Add layer to the network
     pub fn add(&mut self, layer: Box<dyn Layer>)
     {
-        let fan_in = match self.layers.last() {
-            Some(layer) => layer.fan_out(),
-            None => self.data.num_features(),
+        let input_shape = match self.layers.last() {
+            Some(layer) => layer.output_shape(),
+            None => self.data.input_shape(),
         };
         self.layers.push(layer);
-        self.layers.last_mut().unwrap().initialize_parameters(fan_in);
+        self.layers.last_mut().unwrap().initialize_parameters(input_shape);
     }
 
     /// Compute a forward pass of the network
@@ -61,7 +61,7 @@ where L: DataSet, O: Optimizer
     fn backward(&mut self, y: &Array<f64>, y_expected: &Array<f64>) {
         self.layers.iter_mut().rev().fold(
             self.loss_function.grad(y, y_expected),
-            |da_prev, layer| layer.compute_da_prev_mut(&da_prev)
+            |da_prev, layer| layer.compute_dactivation_mut(&da_prev)
         );
 
         /*
