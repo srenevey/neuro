@@ -17,7 +17,7 @@ impl Activation {
             Activation::Tanh        => { tanh(z) },
             Activation::ReLU        => { maxof(&constant(0.0f64, z.dims()), z, true) },
             Activation::LeakyReLU   => { maxof(&constant(0.0f64, z.dims()), &mul(&0.01f64, z, true), true) },
-            Activation::Linear      => { z.clone() }
+            Activation::Linear      => { z.copy() }
         }
     }
 
