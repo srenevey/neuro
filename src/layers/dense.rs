@@ -1,6 +1,7 @@
 use arrayfire::*;
 use crate::activations::*;
 use super::*;
+use super::initializers::Initializer;
 
 pub struct Dense
 {
@@ -54,9 +55,15 @@ impl Dense
 
 impl Layer for Dense
 {
-    fn initialize_parameters(&mut self, fan_in: u64) {
+    fn initialize_parameters(&mut self, input_shape: Dim4) {
+        let fan_in = (input_shape.get()[0] * input_shape.get()[1]) as f64;
+        let fan_out = self.units as f64;
+        self.weights = self.weights_initializer.new(Dim4::new(&[self.units, input_shape.get()[0], 1, 1]), fan_in, fan_out);
+        self.biases = self.biases_initializer.new(Dim4::new(&[self.units, 1, 1, 1]), fan_in, fan_out);
+
+        /*
         match self.weights_initializer {
-            Initializer::Zeros  => { self.weights = constant(0.0f64, Dim4::new(&[self.units, fan_in, 1, 1])); },
+            Initializer::Zeros  => { self.weights = constant(0.0f64, Dim4::new(&[self.units, fan_in.dims()[0], 1, 1])); },
             Initializer::Ones   => { self.weights = constant(1.0f64, Dim4::new(&[self.units, fan_in, 1, 1])); },
             Initializer::Constant(x) => { self.weights = constant(x, Dim4::new(&[self.units, fan_in, 1, 1])); },
             Initializer::RandomUniform  => { self.weights = randu::<f64>(Dim4::new(&[self.units, fan_in, 1, 1])); },
@@ -84,6 +91,7 @@ impl Layer for Dense
             Initializer::HeNormal     => {},
             Initializer::HeUniform => {}
         }
+        */
     }
 
     fn compute_activation(&self, prev_activation: &Array<f64>) -> Array<f64> {
@@ -101,12 +109,12 @@ impl Layer for Dense
     }
 
 
-    fn fan_out(&self) -> u64 {
-        self.units
+    fn output_shape(&self) -> Dim4 {
+        Dim4::new(&[self.units, 1, 1, 1])
     }
 
 
-    fn compute_da_prev_mut(&mut self, da: &Array<f64>) -> Array<f64> {
+    fn compute_dactivation_mut(&mut self, da: &Array<f64>) -> Array<f64> {
         match &self.z {
             Some(z) => {
                 let dz = mul(da, &self.activation.grad(z), true);

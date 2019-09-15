@@ -50,11 +50,11 @@ impl BatchNormalization {
 }
 
 impl Layer for BatchNormalization {
-    fn initialize_parameters(&mut self, fan_in: u64) {
-        self.gamma = constant(1.0f64, Dim4::new(&[fan_in, 1, 1, 1]));
-        self.beta = constant(0.0f64, Dim4::new(&[fan_in, 1, 1, 1]));
-        self.mean = constant(0.0f64, Dim4::new(&[fan_in, 1, 1, 1]));
-        self.variance = constant(0.0f64, Dim4::new(&[fan_in, 1, 1, 1]));
+    fn initialize_parameters(&mut self, input_shape: Dim4) {
+        self.gamma = constant(1.0f64, input_shape);
+        self.beta = constant(0.0f64, input_shape);
+        self.mean = constant(0.0f64, input_shape);
+        self.variance = constant(0.0f64, input_shape);
     }
 
     fn compute_activation(&self, prev_activation: &Array<f64>) -> Array<f64> {
@@ -78,21 +78,15 @@ impl Layer for BatchNormalization {
         self.normalized_input = div(&sub(prev_activation, &self.mb_mean, true), &sqrt(&add(&self.mb_variance, &self.eps, true)), true);
         self.normalized_input.eval();
 
-        //let tmp5 = mul(&self.gamma, &tmp4, true);
-        //let tmp6 = add(&tmp5, &self.beta, true);
-
-        //af_print!("gamma", self.gamma);
-        //af_print!("beta", self.beta);
-
         add(&mul(&self.gamma, &self.normalized_input, true), &self.beta, true)
     }
 
-    fn fan_out(&self) -> u64 {
-        self.gamma.dims()[0]
+    fn output_shape(&self) -> Dim4 {
+        self.gamma.dims()
     }
 
 
-    fn compute_da_prev_mut(&mut self, dz: &Array<f64>) -> Array<f64> {
+    fn compute_dactivation_mut(&mut self, dz: &Array<f64>) -> Array<f64> {
         self.dgamma = sum(&mul(dz, &self.normalized_input, true), 3);
         self.dbeta = sum(&dz.copy(), 3);
 
