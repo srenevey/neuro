@@ -7,8 +7,8 @@ use rand::Rng;
 
 
 pub struct TabularDataSet {
-    num_features: u64,
-    num_outputs: u64,
+    input_shape: Dim4,
+    output_shape: Dim4,
     num_train_samples: u64,
     x_train: Vec<Array<f64>>,
     y_train: Vec<Array<f64>>,
@@ -67,8 +67,8 @@ impl TabularDataSet {
             // Create the data set
             Ok(TabularDataSet {
                 num_train_samples,
-                num_features: in_shape,
-                num_outputs: out_shape,
+                input_shape: Dim4::new(&[in_shape, 1, 1, 1]),
+                output_shape: Dim4::new(&[out_shape, 1, 1, 1]),
                 x_train: x[0..num_train_samples as usize].to_vec(),
                 y_train: y[0..num_train_samples as usize].to_vec(),
                 x_valid,
@@ -194,17 +194,11 @@ impl TabularDataSet {
 }
 
 impl DataSet for TabularDataSet {
-    fn num_features(&self) -> u64 {
-        self.num_features
-    }
+    fn input_shape(&self) -> Dim4 { self.input_shape }
 
-    fn num_outputs(&self) -> u64 {
-        self.num_outputs
-    }
+    fn output_shape(&self) -> Dim4 { self.output_shape }
 
-    fn num_train_samples(&self) -> u64 {
-        self.num_train_samples
-    }
+    fn num_train_samples(&self) -> u64 { self.num_train_samples }
 
     fn shuffle(&mut self) {
         let mut rng = thread_rng();

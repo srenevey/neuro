@@ -4,7 +4,7 @@ use std::fs;
 use std::collections::HashMap;
 use image;
 
-use super::{Scaling, DataSetError};
+use super::{Scaling, DataSet, DataSetError};
 use image::{GenericImageView, ImageDecoder, load, ImageFormat};
 use image::jpeg::JPEGDecoder;
 use std::convert::TryInto;
@@ -176,6 +176,40 @@ impl ImageDataSet {
         }
 
         (x_arr, y_arr)
+    }
+}
+
+impl DataSet for ImageDataSet {
+    fn input_shape(&self) -> Dim4 { self.input_shape }
+
+    fn output_shape(&self) -> Dim4 { self.output_shape }
+
+    fn num_train_samples(&self) -> u64 { self.num_train_samples }
+
+    fn shuffle(&mut self) {
+        let mut rng = thread_rng();
+
+        for i in (1..self.num_train_samples as usize).rev() {
+            let idx = rng.gen_range(0, i + 1);
+            self.x_train.swap(i, idx);
+            self.y_train.swap(i, idx);
+        }
+    }
+
+    fn x_train(&self) -> &Vec<Array<f64>> {
+        unimplemented!()
+    }
+
+    fn y_train(&self) -> &Vec<Array<f64>> {
+        unimplemented!()
+    }
+
+    fn x_valid(&self) -> &Array<f64> {
+        unimplemented!()
+    }
+
+    fn y_valid(&self) -> &Array<f64> {
+        unimplemented!()
     }
 }
 

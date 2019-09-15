@@ -8,6 +8,8 @@ pub mod image_data;
 use arrayfire::*;
 use std::io;
 use std::fmt;
+use rand::thread_rng;
+use rand::Rng;
 
 
 #[derive(Debug)]
@@ -46,8 +48,8 @@ enum Scaling {
 }
 
 pub trait DataSet {
-    fn num_features(&self) -> u64;
-    fn num_outputs(&self) -> u64;
+    fn input_shape(&self) -> Dim4;
+    fn output_shape(&self) -> Dim4;
     fn num_train_samples(&self) -> u64;
     fn shuffle(&mut self);
     fn x_train(&self) -> &Vec<Array<f64>>;
