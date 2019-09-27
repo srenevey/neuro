@@ -3,7 +3,7 @@
 // Public re-exports
 pub use self::batch_normalization::BatchNormalization;
 pub use self::conv2d::Conv2D;
-pub use self::conv2d::ConvMode;
+pub use self::conv2d::Padding;
 pub use self::dense::Dense;
 pub use self::max_pooling::MaxPooling2D;
 
