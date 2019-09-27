@@ -5,7 +5,7 @@ use neuro::models::Network;
 use neuro::losses::Loss;
 use neuro::activations::Activation;
 use neuro::optimizers::Adam;
-use neuro::layers::{Dense, Conv2D, ConvMode};
+use neuro::layers::{Dense, Conv2D, Padding};
 
 
 fn main() -> Result<(), DataSetError> {
@@ -15,7 +15,7 @@ fn main() -> Result<(), DataSetError> {
     data.print_stats();
 
     let mut nn = Network::new(&mut data, Loss::CrossEntropy, Adam::new(0.03));
-    nn.add(Conv2D::new(2, (32, 32), ConvMode::Same, Activation::Linear));
+    nn.add(Conv2D::new(5, (32, 32), Padding::Same));
 
     Ok(())
 }
