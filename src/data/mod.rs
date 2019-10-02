@@ -20,6 +20,7 @@ pub enum DataSetError {
     PathDoesNotExist,
     TrainPathDoesNotExist,
     ValidPathDoesNotExist,
+    ImageFormatNotSupported,
 }
 
 impl fmt::Display for DataSetError {
@@ -31,6 +32,7 @@ impl fmt::Display for DataSetError {
             DataSetError::PathDoesNotExist => write!(f, "The path does not exist."),
             DataSetError::TrainPathDoesNotExist => write!(f, "The root directory does not contain a 'train' subfolder."),
             DataSetError::ValidPathDoesNotExist => write!(f, "The root directory does not contain a 'valid' subfolder."),
+            DataSetError::ImageFormatNotSupported => write!(f, "The image format is not supported."),
         }
     }
 }
