@@ -5,16 +5,23 @@
 //! * BatchNorm
 //! * Conv2D
 //! * Dense
+//! * Dropout
 //! * MaxPooling2D
 //!
 //! allowing the creation of feedforward and convolutional neural networks.
 
+pub use self::tensor::Tensor;
+
 pub mod activations;
-pub mod layers;
-pub mod models;
-pub mod losses;
-pub mod optimizers;
 pub mod data;
+pub mod layers;
+pub mod losses;
+pub mod metrics;
+pub mod models;
+pub mod optimizers;
+pub mod regularizers;
+pub mod tensor;
+
 
 
 /// Assert if two expressions are approximately equal.
