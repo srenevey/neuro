@@ -3,13 +3,19 @@
 //! This layer performs max pooling operation on 2D arrays. The pooling is defined by a kernel size and stride.
 
 use crate::layers::Layer;
+use crate::Tensor;
+use crate::tensor::*;
 use arrayfire::*;
+use std::io;
+use std::io::BufWriter;
+use std::fs;
+use std::fmt;
 
 pub struct MaxPooling2D {
     kernel_size: (u64, u64),
     stride: (u64, u64),
     output_shape: Dim4,
-    grad: Array<f64>,
+    grad: Tensor,
 }
 
 impl MaxPooling2D {
@@ -23,9 +29,9 @@ impl MaxPooling2D {
     pub fn new(kernel_size: (u64, u64)) -> Box<MaxPooling2D> {
         Box::new(MaxPooling2D {
             kernel_size,
-            stride: (1, 1),
+            stride: kernel_size,
             output_shape: Dim4::new(&[0, 0, 0, 0]),
-            grad: Array::new_empty(Dim4::new(&[0, 0, 0, 0]))
+            grad: Tensor::new_empty_tensor()
         })
     }
 
@@ -42,7 +48,7 @@ impl MaxPooling2D {
             kernel_size,
             stride,
             output_shape: Dim4::new(&[0, 0, 0, 0]),
-            grad: Array::new_empty(Dim4::new(&[0, 0, 0, 0]))
+            grad: Tensor::new_empty_tensor()
         })
     }
 }
@@ -54,7 +60,7 @@ impl Layer for MaxPooling2D {
         self.output_shape = Dim4::new(&[output_height, output_width, input_shape.get()[2], input_shape.get()[3]]);
     }
 
-    fn compute_activation(&self, input: &Array<f64>) -> Array<f64> {
+    fn compute_activation(&self, input: &Tensor) -> Tensor {
         let height = input.dims().get()[0];
         let width = input.dims().get()[1];
         let n_channels = input.dims().get()[2];
@@ -68,7 +74,7 @@ impl Layer for MaxPooling2D {
         let i_max = (height - self.kernel_size.0) / self.stride.0 + 1;
         let j_max = (width - self.kernel_size.1) / self.stride.1 + 1;
 
-        let mut max_values = Array::new_empty(Dim4::new(&[1, 1, n_channels, mb_size]));
+        let mut max_values = Tensor::new_empty(Dim4::new(&[1, 1, n_channels, mb_size]));
 
         // Generate indices to select values in the filtering window
         for i in 0..i_max {
@@ -99,10 +105,10 @@ impl Layer for MaxPooling2D {
         transpose(&moddims(&max_values, Dim4::new(&[j_max, i_max, n_channels, mb_size])), false)
     }
 
-    fn compute_activation_mut(&mut self, input: &Array<f64>) -> Array<f64> {
+    fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor {
         let height = input.dims().get()[0];
         let width = input.dims().get()[1];
-        let n_channels = input.dims().get()[2];
+        let num_channels = input.dims().get()[2];
         let mb_size = input.dims().get()[3];
 
         // Check if values work
@@ -113,8 +119,8 @@ impl Layer for MaxPooling2D {
         let i_max = (height - self.kernel_size.0) / self.stride.0 + 1;
         let j_max = (width - self.kernel_size.1) / self.stride.1 + 1;
 
-        let mut max_values = Array::new_empty(Dim4::new(&[1, 1, n_channels, mb_size]));
-        let mut grad_values = constant(0.0f64, Dim4::new(&[height, width, n_channels, mb_size]));
+        let mut max_values = Tensor::new_empty(Dim4::new(&[1, 1, num_channels, mb_size]));
+        let mut grad_values = Tensor::zeros(Dim4::new(&[height, width, num_channels, mb_size]));
 
         // Generate indices to select values in the filtering window
         for i in 0..i_max {
@@ -130,12 +136,12 @@ impl Layer for MaxPooling2D {
 
                 // Select values in the filtering window and pick largest one
                 let sub = index(&input, seqs);
-                let reshaped = moddims(&sub, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1, 1, n_channels, mb_size]));
+                let reshaped = moddims(&sub, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1, 1, num_channels, mb_size]));
                 let max = max(&reshaped, 0);
 
                 // Compute the gradient
                 let mut mask = eq(&reshaped, &max, true);
-                mask = moddims(&mask, Dim4::new(&[self.kernel_size.0, self.kernel_size.1, n_channels, mb_size]));
+                mask = moddims(&mask, Dim4::new(&[self.kernel_size.0, self.kernel_size.1, num_channels, mb_size]));
                 let grad_sub = index(&grad_values, seqs);
                 let max_mask_grad = maxof(&mask, &grad_sub, true);
                 grad_values = assign_seq(&grad_values, seqs, &max_mask_grad);
@@ -151,27 +157,35 @@ impl Layer for MaxPooling2D {
         self.grad = grad_values;
 
         // Reshape the array containing the max values and return result
-        transpose(&moddims(&max_values, Dim4::new(&[j_max, i_max, n_channels, mb_size])), false)
+        transpose(&moddims(&max_values, Dim4::new(&[j_max, i_max, num_channels, mb_size])), false)
+    }
+
+    fn compute_dactivation_mut(&mut self, _dz: &Tensor) -> Tensor {
+        self.grad.copy()
     }
 
     fn output_shape(&self) -> Dim4 {
         self.output_shape
     }
 
-    fn compute_dactivation_mut(&mut self, _dz: &Array<f64>) -> Array<f64> {
-        self.grad.copy()
+    fn parameters(&self) -> Option<Vec<&Tensor>> {
+        None
     }
 
-    fn parameters(&self) -> Vec<&Array<f64>> {
-        Vec::new()
+    fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
+        None
     }
 
-    fn dparameters(&self) -> Vec<&Array<f64>> {
-        Vec::new()
+    fn dparameters(&self) -> Option<Vec<&Tensor>> {
+        None
     }
 
-    fn set_parameters(&mut self, parameters: Vec<Array<f64>>) {
+    fn set_parameters(&mut self, parameters: Vec<Tensor>) {
         {}
+    }
+
+    fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
+        Ok(())
     }
 }
 
@@ -179,14 +193,15 @@ impl Layer for MaxPooling2D {
 #[cfg(test)]
 mod tests {
     use arrayfire::*;
-    use crate::layers::{max_pooling, MaxPooling2D, Layer};
+    use crate::layers::{MaxPooling2D, Layer};
     use crate::assert_approx_eq;
+    use crate::Tensor;
 
     #[test]
     fn test_max_pooling() {
         // Generate array of dimension [3 4 1 2]
         let val = [2., 9., -2., 8., 13., -21., -5., 10., 1., 0., -1., 14., -17., 6., 22., 4., -2., -8., 0., 11., -1., -20., 19., 12.];
-        let arr = Array::new(&val, Dim4::new(&[3, 4, 1, 2]));
+        let arr = Tensor::new(&val, Dim4::new(&[3, 4, 1, 2]));
 
         let max_pooling = MaxPooling2D::with_param((2, 2), (1, 1));
         let activation = max_pooling.compute_activation(&arr);
@@ -195,5 +210,11 @@ mod tests {
         let mut output: [f64; 12] = [0.; 12];
         activation.host(&mut output);
         assert_approx_eq!(expected_output, output);
+    }
+}
+
+impl fmt::Display for MaxPooling2D {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        write!(f, "MaxPooling2D \t 0")
     }
 }
