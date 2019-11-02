@@ -103,22 +103,6 @@ impl Layer for Dropout {
         self.output_shape
     }
 
-    fn parameters(&self) -> Option<Vec<&Tensor>> {
-        None
-    }
-
-    fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
-        None
-    }
-
-    fn dparameters(&self) -> Option<Vec<&Tensor>> {
-        None
-    }
-
-    fn set_parameters(&mut self, parameters: Vec<Tensor>) {
-
-    }
-
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
         Ok(())
     }

@@ -117,9 +117,11 @@ impl Layer for BatchNormalization {
         self.gamma.dims()
     }
 
+
     fn parameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.gamma, &self.beta])
     }
+
 
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
         Some((vec![&mut self.gamma, &mut self.beta], vec![&self.dgamma, &self.dbeta]))
@@ -127,11 +129,6 @@ impl Layer for BatchNormalization {
 
     fn dparameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.dgamma, &self.dbeta])
-    }
-
-    fn set_parameters(&mut self, parameters: Vec<Tensor>) {
-        self.gamma = parameters[0].copy();
-        self.beta = parameters[1].copy();
     }
 
 

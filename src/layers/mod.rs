@@ -30,12 +30,11 @@ pub trait Layer: std::fmt::Display {
     fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor;
     fn compute_dactivation_mut(&mut self, input: &Tensor) -> Tensor;
     fn output_shape(&self) -> Dim4;
-    fn parameters(&self) -> Option<Vec<&Tensor>>;
+    fn parameters(&self) -> Option<Vec<&Tensor>> { None }
 
-    /// Returns the parameters and their derivatives
-    fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)>;
-    fn dparameters(&self) -> Option<Vec<&Tensor>>;
-    fn set_parameters(&mut self, parameters: Vec<Tensor>);
+    /// Returns the parameters and their derivatives.
+    fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> { None }
+    fn dparameters(&self) -> Option<Vec<&Tensor>> { None }
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()>;
     fn set_regularizer(&mut self, regularizer: Option<Regularizer>) {}
     fn print(&self) {}

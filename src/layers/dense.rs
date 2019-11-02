@@ -152,9 +152,11 @@ impl Layer for Dense
         Dim4::new(&[self.units, 1, 1, 1])
     }
 
+
     fn parameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.weights, &self.biases])
     }
+
 
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
         Some((vec![&mut self.weights, &mut self.biases], vec![&self.dweights, &self.dbiases]))
@@ -162,11 +164,6 @@ impl Layer for Dense
 
     fn dparameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.dweights, &self.dbiases])
-    }
-
-    fn set_parameters(&mut self, parameters: Vec<Tensor>) {
-        self.weights = parameters[0].copy();
-        self.biases = parameters[1].copy();
     }
 
 

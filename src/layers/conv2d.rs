@@ -355,9 +355,11 @@ impl Layer for Conv2D {
         self.output_shape
     }
 
+
     fn parameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.weights, &self.biases])
     }
+
 
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
         Some((vec![&mut self.weights, &mut self.biases], vec![&self.dweights, &self.dbiases]))
@@ -367,10 +369,12 @@ impl Layer for Conv2D {
         Some(vec![&self.dweights, &self.dbiases])
     }
 
+    /*
     fn set_parameters(&mut self, parameters: Vec<Tensor>) {
         self.weights = parameters[0].copy();
         self.biases = parameters[1].copy();
     }
+    */
 
 
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
