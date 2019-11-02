@@ -2,7 +2,18 @@
 name = "neuro"
 version = "0.1.0"
 authors = ["Sylvain Renevey <syl.renevey@gmail.com>"]
+description = "Neuro is a deep learning library running on the GPU."
 edition = "2018"
+
+documentation = "https://docs.rs/neuro/"
+homepage = "https://srenevey.github.io/neuro/"
+repository = "https://github.com/srenevey/neuro"
+readme = "README.md"
+
+keywords = ["deep learning", "machine learning", "neural network"]
+categories = ["science"]
+
+license = "BSD-3-Clause"
 
 [dependencies]
 arrayfire = "3.6.1"
@@ -10,3 +21,4 @@ csv = "1.1.1"
 rand = "0.7.0"
 image = "0.22.2"
 walkdir = "2.2.9"
+byteorder = "1.3.2"
