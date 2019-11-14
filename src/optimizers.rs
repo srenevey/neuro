@@ -1,19 +1,21 @@
-use arrayfire::*;
 use crate::layers::Layer;
 use crate::tensor::*;
+
 use std::fs;
-use std::io::BufWriter;
 use std::io;
-use std::io::Write;
+use std::io::{BufWriter, Write};
+
+use arrayfire::*;
 use byteorder::{BigEndian, WriteBytesExt};
 
-
+/// Defines the trait that needs to be implemented by any optimizer working with neuro.
 pub trait Optimizer
 {
     fn update_parameters(&mut self, layer: &mut Box<dyn Layer>, layer_idx: usize);
     fn update_time_step(&mut self) {}
     fn initialize_opt_params(&mut self, layers_dims: Vec<(Dim4, Dim4)>);
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()>;
+    /*
     fn write_vec_array(vec: &Vec<Tensor>, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
         for tensor in vec.iter() {
             let dims: [[u8; 8]; 4] = [tensor.dims().get()[0].to_be_bytes(), tensor.dims().get()[1].to_be_bytes(), tensor.dims().get()[2].to_be_bytes(), tensor.dims().get()[3].to_be_bytes()];
@@ -32,20 +34,10 @@ pub trait Optimizer
         }
         Ok(())
     }
+    */
 }
 
 /// Stochastic Gradient Descent
-///
-/// The stochastic gradient descent performs gradient descent with momentum. For every parameter W in the layer, the value
-///
-/// <div align="center"><img src="https://latex.codecogs.com/svg.latex?V_{dW}&space;=&space;\beta&space;V_{dW}&space;&plus;&space;(1&space;-&space;\beta)dW" title="V_{dW} = \beta V_{dW} + (1 - \beta)dW" /></div>
-///
-/// is computed where <img src="https://latex.codecogs.com/svg.latex?\beta" title="\beta" /> is the momentum. The parameter is then updated according to
-///
-/// <div align="center"><img src="https://latex.codecogs.com/svg.latex?W&space;=&space;W&space;-&space;\alpha&space;V_{dW}" title="W = W - \alpha V_{dW}" /></div>
-///
-/// with <img src="https://latex.codecogs.com/svg.latex?\alpha" title="\alpha" /> the learning rate.
-///
 pub struct SGD {
     learning_rate: PrimitiveType,
     momentum: PrimitiveType,
@@ -102,30 +94,6 @@ impl Optimizer for SGD
             None => {}
         }
     }
-
-    /*
-    fn update_parameters(&mut self, layer: &mut Box<dyn Layer>, layer_idx: usize) {
-        match layer.parameters() {
-            Some(param) => {
-                match layer.dparameters() {
-                    Some(dparam) => {
-                        self.vdw[layer_idx] = mul(&self.momentum, &self.vdw[layer_idx], true) + mul(&(1. - self.momentum), dparam[0], true);
-                        self.vdb[layer_idx] = mul(&self.momentum, &self.vdb[layer_idx], true) + mul(&(1. - self.momentum), dparam[1], true);
-
-                        self.vdw[layer_idx].eval();
-                        self.vdb[layer_idx].eval();
-
-                        let updated_weights = param[0] - mul(&self.learning_rate, &self.vdw[layer_idx], true);
-                        let updated_biases = param[1] -  mul(&self.learning_rate, &self.vdb[layer_idx], true);
-                        layer.set_parameters(vec![updated_weights, updated_biases]);
-                    },
-                    None => panic!("The layer has some parameters but the gradient with respect to these parameters return None.")
-                }
-            },
-            None => {}
-        }
-    }
-    */
 
     fn initialize_opt_params(&mut self, layers_dims: Vec<(Dim4, Dim4)>) {
         for dim in layers_dims {
@@ -246,46 +214,6 @@ impl Optimizer for Adam
             None => {}
         }
     }
-    /*
-    fn update_parameters(&mut self, layer: &mut Box<dyn Layer>, layer_idx: usize) {
-        match layer.parameters() {
-            Some(param) => {
-                match layer.dparameters() {
-                    Some(dparam) => {
-                        self.iteration += 1;
-                        //self.vdw[layer_idx] = add(&mul(&self.beta1, &self.vdw[layer_idx], false), &mul(&(1. - self.beta1), layer.dweights(), false), false);
-                        //self.vdb[layer_idx] = add(&mul(&self.beta1, &self.vdb[layer_idx], false), &mul(&(1. - self.beta1), layer.dbiases(), false), false);
-                        //self.sdw[layer_idx] = add(&mul(&self.beta2, &self.sdw[layer_idx], false), &mul(&(1. - self.beta2), &(layer.dweights() * layer.dweights()), false), false);
-                        //self.sdb[layer_idx] = add(&mul(&self.beta2, &self.sdb[layer_idx], false), &mul(&(1. - self.beta2), &(layer.dbiases() * layer.dbiases()), false), false);
-
-                        self.vdw[layer_idx] = add(&mul(&self.beta1, &self.vdw[layer_idx], false), &mul(&(1. - self.beta1), dparam[0], false), false);
-                        self.vdb[layer_idx] = add(&mul(&self.beta1, &self.vdb[layer_idx], false), &mul(&(1. - self.beta1), dparam[1], false), false);
-                        self.sdw[layer_idx] = add(&mul(&self.beta2, &self.sdw[layer_idx], false), &mul(&(1. - self.beta2), &(dparam[0] * dparam[0]), false), false);
-                        self.sdb[layer_idx] = add(&mul(&self.beta2, &self.sdb[layer_idx], false), &mul(&(1. - self.beta2), &(dparam[1] * dparam[1]), false), false);
-
-
-                        self.vdw[layer_idx].eval();
-                        self.vdb[layer_idx].eval();
-                        self.sdw[layer_idx].eval();
-                        self.sdb[layer_idx].eval();
-
-                        let vdw_corr = &self.vdw[layer_idx] / (1. - self.beta1.powi(self.iteration as i32));
-                        let vdb_corr = &self.vdb[layer_idx] / (1. - self.beta1.powi(self.iteration as i32));
-                        let sdw_corr = &self.sdw[layer_idx] / (1. - self.beta2.powi(self.iteration as i32));
-                        let sdb_corr = &self.sdb[layer_idx] / (1. - self.beta2.powi(self.iteration as i32));
-
-                        let updated_weights = param[0] - mul(&self.learning_rate, &div(&vdw_corr, &add(&sqrt(&sdw_corr), &self.eps, false), false), false);
-                        let updated_biases = param[1] - mul(&self.learning_rate, &div(&vdb_corr, &add(&sqrt(&sdb_corr), &self.eps, false), false), false);
-
-                        layer.set_parameters(vec![updated_weights, updated_biases]);
-                    },
-                    None => panic!("The layer has some parameters but the gradient with respect to these parameters return None.")
-                }
-            },
-            None => {}
-        }
-    }
-    */
 
     fn update_time_step(&mut self) {
         self.time_step += 1;
