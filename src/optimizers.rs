@@ -1,3 +1,4 @@
+//! Optimizers used to train the neural network.
 use crate::layers::Layer;
 use crate::tensor::*;
 
@@ -60,7 +61,7 @@ impl SGD {
         }
     }
 
-    /// Creates a Stochastic Gradient Descent optimizer with Nesterov momentum estimation.
+    /// Creates a Stochastic Gradient Descent optimizer with momentum estimation.
     ///
     /// # Arguments
     /// * `learning_rate`: learning rate used to update the parameters of the layers
@@ -119,7 +120,7 @@ impl Optimizer for SGD
 }
 
 
-/// Adam - Adaptive moments estimation
+/// Adaptive moments estimation
 pub struct Adam {
     learning_rate: PrimitiveType,
     beta1: PrimitiveType,
@@ -134,6 +135,9 @@ pub struct Adam {
 
 impl Adam {
     /// Creates an Adam optimizer.
+    ///
+    /// The exponential decay rates for the first and second moment estimates are set to 0.9 and 0.999 respectively.
+    /// The epsilon value used for numerical stability is 1e-8.
     ///
     /// # Arguments
     /// * `learning_rate`: learning rate used to update the parameters of the layers
@@ -253,7 +257,7 @@ impl Optimizer for Adam
 }
 
 
-/// Root Mean Square Prop
+/// RMSProp
 pub struct RMSProp {
     learning_rate: PrimitiveType,
     decay_rate: PrimitiveType,
@@ -265,6 +269,9 @@ pub struct RMSProp {
 impl RMSProp {
 
     /// Creates an RMSProp optimizer.
+    ///
+    /// The exponential decay rate for the first moment estimate is set to 0.9 and the epsilon value used for
+    /// numerical stability is 1e-8.
     ///
     /// # Arguments
     /// * `learning_rate`: learning rate used to update the parameters of the layers
