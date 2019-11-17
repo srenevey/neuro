@@ -1,16 +1,16 @@
-//! # MaxPooling2D
-//!
-//! This layer performs max pooling operation on 2D arrays. The pooling is defined by a kernel size and stride.
-
+//! 2D max pooling layer
 use crate::layers::Layer;
 use crate::Tensor;
 use crate::tensor::*;
-use arrayfire::*;
+
+use std::fmt;
+use std::fs;
 use std::io;
 use std::io::BufWriter;
-use std::fs;
-use std::fmt;
 
+use arrayfire::*;
+
+/// Defines a 2D max pooling layer.
 pub struct MaxPooling2D {
     kernel_size: (u64, u64),
     stride: (u64, u64),
@@ -19,31 +19,14 @@ pub struct MaxPooling2D {
 }
 
 impl MaxPooling2D {
-    /// Create a max pooling 2D layer.
-    ///
-    /// # Arguments
-    /// * `kernel_size`: tuple containing the height and width of the kernel
-    ///
-    /// # Notes
-    /// By default the stride is set to (1, 1).
-    pub fn new(kernel_size: (u64, u64)) -> Box<MaxPooling2D> {
-        Box::new(MaxPooling2D {
-            kernel_size,
-            stride: kernel_size,
-            output_shape: Dim4::new(&[0, 0, 0, 0]),
-            grad: Tensor::new_empty_tensor()
-        })
-    }
 
-    /// Create a max pooling 2D layer with the specified parameters.
+    /// Creates a 2D max pooling layer with the specified parameters.
     ///
     /// # Arguments
-    /// * `kernel_size` - tuple containing the height and width of the kernel
-    /// * `stride` - tuple containing the vertical and horizontal stride
+    /// * `kernel_size`: height and width of the kernel
+    /// * `stride`: horizontal and vertical stride
     ///
-    /// # Notes
-    /// The dimension of the input minus the kernel size must be divisible by the stride.
-    pub fn with_param(kernel_size: (u64, u64), stride: (u64, u64)) -> Box<MaxPooling2D> {
+    pub fn new(kernel_size: (u64, u64), stride: (u64, u64)) -> Box<MaxPooling2D> {
         Box::new(MaxPooling2D {
             kernel_size,
             stride,

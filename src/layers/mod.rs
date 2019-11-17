@@ -1,4 +1,4 @@
-//! Define the different types of layers
+//! Collection of layers used to create neural networks.
 
 // Public re-exports
 pub use self::batch_normalization::BatchNormalization;
@@ -6,17 +6,16 @@ pub use self::conv2d::Conv2D;
 pub use self::conv2d::Padding;
 pub use self::dense::Dense;
 pub use self::dropout::Dropout;
-pub use self::initializers::Initializer;
 pub use self::max_pooling::MaxPooling2D;
 
 pub mod batch_normalization;
 pub mod conv2d;
 pub mod dense;
 pub mod dropout;
-pub mod initializers;
 pub mod max_pooling;
 
 use crate::regularizers::*;
+use crate::initializers::*;
 
 use std::fs;
 use std::io;
@@ -24,6 +23,7 @@ use std::io::BufWriter;
 use arrayfire::*;
 use crate::Tensor;
 
+/// Public trait defining the behaviors of a layer.
 pub trait Layer: std::fmt::Display {
     fn initialize_parameters(&mut self, input_shape: Dim4);
     fn compute_activation(&self, input: &Tensor) -> Tensor;
@@ -34,7 +34,6 @@ pub trait Layer: std::fmt::Display {
 
     /// Returns the parameters and their derivatives.
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> { None }
-    fn dparameters(&self) -> Option<Vec<&Tensor>> { None }
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()>;
     fn set_regularizer(&mut self, regularizer: Option<Regularizer>) {}
     fn print(&self) {}

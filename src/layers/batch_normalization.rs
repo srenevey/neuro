@@ -1,8 +1,12 @@
-use arrayfire::*;
+//! Batch normalization layer
 use super::*;
-use std::fmt;
 use crate::tensor::*;
 
+use std::fmt;
+
+use arrayfire::*;
+
+/// Defines a batch normalization layer.
 pub struct BatchNormalization {
     mb_mean: Tensor,
     mb_variance: Tensor,
@@ -18,6 +22,12 @@ pub struct BatchNormalization {
 }
 
 impl BatchNormalization {
+
+    /// Creates a batch normalization layer.
+    ///
+    /// By default, the momentum used by the running averages is set to 0.99 and the epsilon value
+    /// used for numerical stability to 1e-5.
+    ///
     pub fn new() -> Box<BatchNormalization> {
         Box::new(BatchNormalization {
             mb_mean: Tensor::new_empty_tensor(),
@@ -34,6 +44,12 @@ impl BatchNormalization {
         })
     }
 
+    /// Creates a batch normalization layers with the given parameters.
+    ///
+    /// # Arguments
+    /// * `momentum`: momentum used by the running averages to compute the mean and standard deviation of the data set
+    /// * `eps`: small constant used for numerical stability
+    ///
     pub fn with_param(momentum: PrimitiveType, eps: PrimitiveType) -> Box<BatchNormalization> {
         Box::new(BatchNormalization {
             mb_mean: Tensor::new_empty_tensor(),
@@ -122,13 +138,8 @@ impl Layer for BatchNormalization {
         Some(vec![&self.gamma, &self.beta])
     }
 
-
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> {
         Some((vec![&mut self.gamma, &mut self.beta], vec![&self.dgamma, &self.dbeta]))
-    }
-
-    fn dparameters(&self) -> Option<Vec<&Tensor>> {
-        Some(vec![&self.dgamma, &self.dbeta])
     }
 
 
