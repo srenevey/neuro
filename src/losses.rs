@@ -1,15 +1,31 @@
+//! Loss functions.
 use arrayfire::*;
 use crate::Tensor;
 use crate::tensor::*;
-use crate::tensor::PrimitiveType;
 
+/// Defines the behaviors of a loss function.
 pub trait Loss {
+    /// Returns a unique identifier.
     fn id(&self) -> u64;
+
+    /// Computes the value of the loss function.
+    ///
+    /// # Arguments
+    /// * `y_pred`: predicted labels
+    /// * `y_true`: true labels
+    ///
     fn eval(&self, y_pred: &Tensor, y_true: &Tensor) -> PrimitiveType;
+
+    /// Computes the gradient of the loss function.
+    ///
+    /// # Arguments
+    /// * `y_pred`: predicted labels
+    /// * `y_true`: true labels
+    ///
     fn grad(&self, y_pred: &Tensor, y_true: &Tensor) -> Tensor;
 }
 
-/// Computes the binary cross entropy loss.
+/// Defines the binary cross entropy loss.
 #[derive(Debug, Copy, Clone)]
 pub struct BinaryCrossEntropy;
 
@@ -22,12 +38,14 @@ impl Loss for BinaryCrossEntropy {
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> PrimitiveType {
-        let num_samples = y_pred.dims()[3] as PrimitiveType;
-        -1. / num_samples * sum_all(&(y_true * log(y_pred) + (Tensor::ones(y_true.dims()) - y_true) * log(&(Tensor::ones(y_pred.dims()) - y_pred)))).0 as PrimitiveType
-
-        //let diff1 = sub(&Tensor::ones(y_true.dims()), y_true, true);
-        //let diff2 = sub(&Tensor::ones(y_true.dims()), y_pred, true);
-        //-1. / num_samples * sum_all(&add(&mul(y_true, &log(y_pred), true), &mul(&diff1, &log(&diff2), true), true)).0
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        // Prevent the log to explode by clipping the predicted values
+        let mut loss = clamp(y_pred, &(1e-8 as PrimitiveType), &((1. - 1e-8) as PrimitiveType), true);
+        loss = y_true * log(&loss) + (Tensor::ones(y_true.dims()) - y_true) * log(&sub(&Tensor::ones(loss.dims()), &loss, true));
+        -1. / batch_size * sum_all(&loss).0 as PrimitiveType
+        //*loss = sum(&sum(&sum(&sum(&loss, 3), 2), 1), 0);
+        //*loss = mul(loss, &(-1. / batch_size), true);
+        //-1. / batch_size * sum_all(&(y_true * log(&output) + (Tensor::ones(y_true.dims()) - y_true) * log(&(Tensor::ones(output.dims()) - output)))).0 as PrimitiveType
     }
 
     fn grad(&self,
@@ -35,13 +53,13 @@ impl Loss for BinaryCrossEntropy {
             y_true: &Tensor
     ) -> Tensor {
         let ones = Tensor::ones(y_true.dims());
-        let num_samples = y_pred.dims()[3] as PrimitiveType;
-        let factor = constant(1. / num_samples, y_true.dims());
-        - (y_true / y_pred - (&ones - y_true) / (&ones - y_pred))
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        let factor = 1. / batch_size;
+        -  (y_true / y_pred - (&ones - y_true) / (&ones - y_pred)) * factor
     }
 }
 
-/// Computes the cross entropy loss.
+/// Defines the cross entropy loss.
 #[derive(Debug, Copy, Clone)]
 pub struct CrossEntropy;
 
@@ -54,21 +72,27 @@ impl Loss for CrossEntropy {
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> PrimitiveType {
-        let num_samples = y_pred.dims()[3];
-        - 1. / num_samples as PrimitiveType * sum_all(&mul(y_true, &log(y_pred), true)).0 as PrimitiveType
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        // Prevent the log to explode by clipping the predicted values
+        let mut loss = clamp(y_pred, &(1e-8 as PrimitiveType), &((1. - 1e-8) as PrimitiveType), true);
+        loss = mul(y_true, &log(&loss), true);
+        -1. / batch_size * sum_all(&loss).0 as PrimitiveType
+        //*loss = sum(&sum(&sum(&sum(loss, 3), 2), 1), 0);
+        //*loss = mul(loss, &(-1. / batch_size), true);
+        //- 1. / batch_size * sum_all(&mul(y_true, &log(&output), true)).0 as PrimitiveType
     }
 
     fn grad(&self,
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> Tensor {
-        let num_samples = y_pred.dims()[3];
-        let factor = constant(-1. / num_samples as PrimitiveType, y_pred.dims());
-        factor * (y_true / y_pred)
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        let factor = 1. / batch_size;
+        - (y_true / y_pred) * factor
     }
 }
 
-/// Computes the mean absolute error loss (MAE).
+/// Defines the mean absolute error loss (MAE).
 #[derive(Debug, Copy, Clone)]
 pub struct MeanAbsoluteError;
 
@@ -81,6 +105,8 @@ impl Loss for MeanAbsoluteError {
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> PrimitiveType {
+        //*loss = abs(&sub(y_pred, y_true, true));
+        //*loss = mean(&mean(&mean(&mean(loss, 3), 2), 1), 0);
         mean_all(&abs(&sub(y_pred, y_true, true))).0 as PrimitiveType
     }
 
@@ -90,13 +116,13 @@ impl Loss for MeanAbsoluteError {
     ) -> Tensor {
         let diff = y_pred - y_true;
         let cond = ge(y_pred, y_true, true);
-        let mb_size = y_pred.dims()[3];
-        let fac = 1. / mb_size as PrimitiveType;
-        mul(&constant(fac, y_pred.dims()), &selectr(&Tensor::ones(y_pred.dims()), &cond, -1.0f64), true)
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        let factor = 1. / batch_size;
+        mul(&constant(factor, y_pred.dims()), &selectr(&Tensor::ones(y_pred.dims()), &cond, -1.0f64), true)
     }
 }
 
-/// Computes the mean squared error loss (MSE).
+/// Defines the mean squared error loss (MSE).
 #[derive(Debug, Copy, Clone)]
 pub struct MeanSquaredError;
 
@@ -109,17 +135,20 @@ impl Loss for MeanSquaredError {
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> PrimitiveType {
-        let mb_size = y_pred.dims()[3];
-        1. / mb_size as PrimitiveType * sum_all(&pow(&sub(y_pred, y_true, true), &2.0f64, true)).0 as PrimitiveType
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        //*loss = pow(&(y_pred - y_true), &(2.0 as PrimitiveType), true);
+        //*loss = sum(&sum(&sum(&sum(loss, 3), 2), 1), 0);
+        //*loss = mul(loss, &(1. / batch_size), true);
+        1. / batch_size * sum_all(&pow(&sub(y_pred, y_true, true), &2.0f64, true)).0 as PrimitiveType
     }
 
     fn grad(&self,
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> Tensor {
-        let mb_size = y_pred.dims()[3];
-        let factor = constant(2. / mb_size as PrimitiveType, y_pred.dims());
-        factor * (y_pred - y_true)
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        let factor = 2. / batch_size;
+        (y_pred - y_true) * factor
     }
 }
 
@@ -137,20 +166,22 @@ impl Loss for SoftmaxCrossEntropy {
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> PrimitiveType {
-        let num_samples = y_pred.dims()[3] as PrimitiveType;
-        //let activation = super::activations::Activation::Softmax;
-        //let soft = activation.eval(y_pred);
-        let prod = y_true * &log(y_pred);
-        - 1. / num_samples * sum_all(&prod).0 as PrimitiveType
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        // Prevent the log to explode by clipping the predicted values
+        let mut loss = clamp(y_pred, &(1e-8 as PrimitiveType), &((1. - 1e-8) as PrimitiveType), true);
+        loss = y_true * &log(&loss);
+        //*loss = sum(&sum(&sum(&sum(loss, 3), 2), 1), 0);
+        //*loss = mul(loss, &(- 1. / batch_size), true);
+        - 1. / batch_size * sum_all(&loss).0 as PrimitiveType
     }
 
     fn grad(&self,
             y_pred: &Tensor,
             y_true: &Tensor
     ) -> Tensor {
-        let num_samples = y_pred.dims()[3] as PrimitiveType;
-        let factor = constant(1. / num_samples, y_pred.dims());
-        factor * (y_pred - y_true)
+        let batch_size = y_pred.dims()[3] as PrimitiveType;
+        let factor = 1. / batch_size;
+        (y_pred - y_true) * factor
     }
 }
 
@@ -161,33 +192,38 @@ impl Loss for SoftmaxCrossEntropy {
 mod tests {
     use crate::losses::*;
     use crate::Tensor;
-    use crate::tensor::Dim;
+    use crate::tensor::*;
     use crate::assert_approx_eq;
-    //use arrayfire::*;
 
     #[test]
     fn test_mse_eval() {
-        let loss = MeanSquaredError;
+        let loss_fun = MeanSquaredError;
 
         // 1 sample, 3 outputs
         let mut y_true = Tensor::new(&[2.1, -1.5, 10.9], Dim::new(&[3, 1, 1, 1]));
         let mut y_pred = Tensor::new(&[2.5, 0.1, 11.4], Dim::new(&[3, 1, 1, 1]));
-        let output1 = loss.eval(&y_true, &y_pred);
+        //let mut loss_value1 = Tensor::new(&[0.0], Dim::new(&[1, 1, 1, 1]));
+        let loss1 = loss_fun.eval(&y_true, &y_pred);
+        //let loss1 = loss_value1.get_scalar();
         let expected_output1 = 2.97;
 
         // 2 samples, 2 outputs
         y_true = Tensor::new(&[-16.8, 2.34, -0.2, 31.7], Dim::new(&[2, 1, 1, 2]));
         y_pred = Tensor::new(&[-16.5, -0.9, -3.4, 29.6], Dim::new(&[2, 1, 1, 2]));
-        let output2 = loss.eval(&y_true, &y_pred);
-        let expected_output2 = 12.6188;
+        //let mut loss_value2 = Tensor::new(&[0.0], Dim::new(&[1, 1, 1, 1]));
+        let loss2 = loss_fun.eval(&y_true, &y_pred);
+        //let loss2 = loss_value2.get_scalar();
+        let expected_output2 = 12.6188 as PrimitiveType;
 
         // 3 samples, 4 outputs
         y_true = Tensor::new(&[254.89, 199.9, -4.78, -782.12, 34.65, 12.4, 5.89, -3.2, 78.1, -90.5, -220.6, 136.4], Dim::new(&[4, 1, 1, 3]));
         y_pred = Tensor::new(&[260.2, 203.0, 12.7, -950.2, 41.3, 0.19, 7.1, -4.0, 81.4, -95.3, -231.2, 128.4], Dim::new(&[4, 1, 1, 3]));
-        let output3 = loss.eval(&y_true, &y_pred);
-        let expected_output3 = 9666.647867;
+        //let mut loss_value3 = Tensor::new(&[0.0], Dim::new(&[1, 1, 1, 1]));
+        let loss3 = loss_fun.eval(&y_true, &y_pred);
+        //let loss3 = loss_value3.get_scalar();
+        let expected_output3 = 9666.647867 as PrimitiveType;
 
-        assert_approx_eq!([output1, output2, output3], [expected_output1, expected_output2, expected_output3]);
+        assert_approx_eq!([loss1, loss2, loss3], [expected_output1, expected_output2, expected_output3]);
     }
 
     #[test]
@@ -237,9 +273,11 @@ mod tests {
         // 3 samples, 4 outputs
         let y = Tensor::new(&[254.89, 199.9, -4.78, -782.12, 34.65, 12.4, 5.89, -3.2, 78.1, -90.5, -220.6, 136.4], Dim::new(&[4, 1, 1, 3]));
         let y_expected = Tensor::new(&[260.2, 203.0, 12.7, -950.2, 41.3, 0.19, 7.1, -4.0, 81.4, -95.3, -231.2, 128.4], Dim::new(&[4, 1, 1, 3]));
-        let output = loss.eval(&y, &y_expected);
+        //let mut loss_value = Tensor::new(&[0.0], Dim::new(&[1, 1, 1, 1]));
+        let loss_value= loss.eval(&y, &y_expected);
+        //let loss = loss_value.get_scalar();
         let expected_output = 80.513333333333335;
-        assert_approx_eq!([output], [expected_output]);
+        assert_approx_eq!([loss_value], [expected_output]);
     }
 
     #[test]
