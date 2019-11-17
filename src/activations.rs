@@ -1,8 +1,9 @@
+//! Activation functions.
 use arrayfire::*;
 use crate::tensor::*;
 use crate::tensor::PrimitiveType;
 
-/// Activation functions
+/// Enumeration of the activation functions.
 ///
 #[derive(Debug)]
 pub enum Activation {
