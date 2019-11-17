@@ -1,7 +1,4 @@
-//! # Dropout
-//!
-//! This layer performs dropout operation.
-
+//! Dropout layer
 use crate::layers::Layer;
 use crate::Tensor;
 use crate::tensor::*;
@@ -12,6 +9,7 @@ use std::io::BufWriter;
 use std::fs;
 use std::fmt;
 
+/// Defines a dropout layer.
 pub struct Dropout {
     drop_rate: f64,
     output_shape: Dim4,
@@ -20,10 +18,13 @@ pub struct Dropout {
 }
 
 impl Dropout {
-    /// Create a dropout layer.
+    /// Creates a dropout layer.
     ///
     /// # Arguments
-    /// * `rate`: probability that a unit will be dropped
+    /// * `rate`: probability that a unit will be dropped. Must be between 0 and 1.
+    ///
+    /// # Panics
+    /// The method panics if `rate` is smaller than 0 or greater than 1.
     ///
     pub fn new(rate: f64) -> Box<Dropout> {
         /*
@@ -31,6 +32,10 @@ impl Dropout {
         let seed: u64 = rng.gen();
         let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, None);
         */
+
+        if rate < 0. || rate > 1. {
+            panic!("The drop probability is invalid.");
+        }
 
         Box::new(Dropout {
             drop_rate: rate,
