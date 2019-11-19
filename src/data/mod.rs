@@ -1,17 +1,20 @@
+//! Simple interfaces to import data.
+pub(crate) use self::batch_iterator::BatchIterator;
 pub use self::image_data::ImageDataSet;
 pub use self::tabular_data::TabularDataSet;
 
-pub mod batch_iterator;
-pub mod tabular_data;
-pub mod image_data;
+mod batch_iterator;
+mod image_data;
+mod tabular_data;
+
+use crate::Tensor;
+
+use std::fmt;
+use std::io;
 
 use arrayfire::*;
-use std::io;
-use std::fmt;
-use rand::thread_rng;
-use rand::Rng;
 
-
+/// Errors that may be raised by data sets methods.
 #[derive(Debug)]
 pub enum DataSetError {
     Io(io::Error),
@@ -21,6 +24,23 @@ pub enum DataSetError {
     TrainPathDoesNotExist,
     ValidPathDoesNotExist,
     ImageFormatNotSupported,
+    InvalidValidationFraction,
+    DifferentNumbersOfChannels,
+}
+
+/// Types of data set.
+#[derive(Debug)]
+enum Set {
+    Test,
+    Train,
+    Valid
+}
+
+/// Types of data.
+#[derive(Debug)]
+enum IO {
+    Input,
+    Output,
 }
 
 impl fmt::Display for DataSetError {
@@ -33,6 +53,8 @@ impl fmt::Display for DataSetError {
             DataSetError::TrainPathDoesNotExist => write!(f, "The root directory does not contain a 'train' subfolder."),
             DataSetError::ValidPathDoesNotExist => write!(f, "The root directory does not contain a 'valid' subfolder."),
             DataSetError::ImageFormatNotSupported => write!(f, "The image format is not supported."),
+            DataSetError::InvalidValidationFraction => write!(f, "The validation fraction is incorrect. It must be between 0 and 1."),
+            DataSetError::DifferentNumbersOfChannels => write!(f, "The directory contains images with different numbers of channels."),
         }
     }
 }
@@ -43,19 +65,56 @@ impl std::convert::From<io::Error> for DataSetError {
     }
 }
 
-
-enum Scaling {
+/// Defines the type of scaling that has been performed.
+#[derive(Debug)]
+pub enum Scaling {
     Normalized,
     Standarized,
 }
 
+
+/// Trait that must be implemented for any type of data set supported by neuro.
 pub trait DataSet {
+    /// Returns the dimension of the samples.
     fn input_shape(&self) -> Dim4;
+
+    /// Returns the dimension of the labels.
     fn output_shape(&self) -> Dim4;
+
+    /// Returns the number of samples in the training set.
     fn num_train_samples(&self) -> u64;
-    fn shuffle(&mut self);
-    fn x_train(&self) -> &Vec<Array<f64>>;
-    fn y_train(&self) -> &Vec<Array<f64>>;
-    fn x_valid(&self) -> &Array<f64>;
-    fn y_valid(&self) -> &Array<f64>;
+
+    /// Returns the number of samples in the validation set.
+    fn num_valid_samples(&self) -> u64;
+
+    /// Number of classes in the data set (if applicable).
+    fn classes(&self) -> Option<Vec<String>> { None }
+
+    /// Returns a reference to the training samples.
+    fn x_train(&self) -> &Tensor;
+
+    /// Returns a reference to the training labels.
+    fn y_train(&self) -> &Tensor;
+
+    /// Returns a reference to the validation samples.
+    fn x_valid(&self) -> &Tensor;
+
+    /// Returns a reference to the validation labels.
+    fn y_valid(&self) -> &Tensor;
+
+    /// Returns a reference to the type of scaling that has been applied to the input features and the values used for the scaling.
+    ///
+    /// If scaling has been applied, the returned tuple contains the following:
+    /// * Normalization: (Scaling::Normalized, minimum value, maximum value)
+    /// * Standardization: (Scaling::Standarized, mean, standard deviation)
+    ///
+    fn x_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)>;
+
+    /// Returns a reference to the type of scaling that has been applied to the output labels and the values used for the scaling.
+    ///
+    /// If scaling has been applied, the returned tuple contains the following:
+    /// * Normalization: (Scaling::Normalized, minimum value, maximum value)
+    /// * Standardization: (Scaling::Standarized, mean, standard deviation)
+    ///
+    fn y_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)>;
 }
