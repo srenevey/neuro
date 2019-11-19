@@ -8,11 +8,11 @@ pub use self::dense::Dense;
 pub use self::dropout::Dropout;
 pub use self::max_pooling::MaxPooling2D;
 
-pub mod batch_normalization;
-pub mod conv2d;
-pub mod dense;
-pub mod dropout;
-pub mod max_pooling;
+mod batch_normalization;
+mod conv2d;
+mod dense;
+mod dropout;
+mod max_pooling;
 
 use crate::regularizers::*;
 use crate::initializers::*;
