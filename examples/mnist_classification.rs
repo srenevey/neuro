@@ -1,31 +1,30 @@
-use std::path::Path;
-
-use neuro::data::{DataSetError, ImageDataSet, DataSet};
+use neuro::data::{DataSetError, ImageDataSet};
 use neuro::models::Network;
 use neuro::losses;
 use neuro::activations::Activation;
 use neuro::metrics::Metrics;
-use neuro::optimizers::{Adam, SGD};
-use neuro::regularizers::*;
-use neuro::layers::{Dense, BatchNormalization, Dropout, MaxPooling2D};
+use neuro::optimizers::Adam;
+use neuro::layers::Dense;
 use neuro::tensor::*;
+use neuro::regularizers::Regularizer;
 
+use std::path::Path;
 
 fn main() -> Result<(), DataSetError> {
 
     // Create the dataset
     let path = Path::new("datasets/MNIST");
-    let data = ImageDataSet::from_path(&path, 28, 0.2)?;
+    let data = ImageDataSet::from_path(&path, 28, 0.1)?;
     println!("{}", data);
 
-    let mut nn = Network::new(&data, losses::SoftmaxCrossEntropy, Adam::new(0.03), Some(vec![Metrics::Accuracy]), None);
+    // Create the neural network
+    let mut nn = Network::new(&data, losses::SoftmaxCrossEntropy, Adam::new(0.003), Some(vec![Metrics::Accuracy]), Some(Regularizer::L2(1e-4)));
     nn.add(Dense::new(32, Activation::ReLU));
     nn.add(Dense::new(10, Activation::Softmax));
-
     println!("{}", nn);
 
-    nn.fit(128, 2, Some(1));
-
+    // Fit the network
+    nn.fit(128, 10, Some(1));
 
     // Predict output on test images
     let input = data.load_img_vec(&vec![
