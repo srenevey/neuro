@@ -16,7 +16,7 @@ categories = ["science"]
 license = "BSD-3-Clause"
 
 [dependencies]
-arrayfire = "3.6.1"
+arrayfire = "3.6.2"
 csv = "1.1.1"
 rand = "0.7.0"
 image = "0.22.2"
