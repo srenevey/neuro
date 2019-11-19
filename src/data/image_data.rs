@@ -1,81 +1,110 @@
-use arrayfire::*;
-use std::path::Path;
-use std::fs;
-use std::collections::HashMap;
-use image;
-use walkdir::{DirEntry, WalkDir};
-
+//! Helper methods to work with image data sets.
 use super::{Scaling, DataSet, DataSetError};
-use image::{GenericImageView, ImageDecoder, load, ImageFormat};
-use image::jpeg::JPEGDecoder;
-use std::convert::TryInto;
-use std::fs::FileType;
+use crate::Tensor;
+use crate::tensor::*;
+
+use std::fmt;
+use std::fs;
+use std::path::Path;
+
+use arrayfire::*;
+use image;
+use image::DynamicImage;
 use rand::thread_rng;
 use rand::Rng;
+use walkdir::{DirEntry, WalkDir};
 
+
+/// Structure representing a collection of images.
 pub struct ImageDataSet {
     input_shape: Dim4,
     output_shape: Dim4,
+    image_size: u32,
     num_train_samples: u64,
     num_valid_samples: u64,
     classes: Vec<String>,
-    x_train: Vec<Array<f64>>,
-    y_train: Vec<Array<f64>>,
-    x_valid: Array<f64>,
-    y_valid: Array<f64>,
-    x_test: Option<Array<f64>>,
-    y_test: Option<Array<f64>>,
-    //x_train_stats: Option<(Scaling, Vec<f64>, Vec<f64>)>,
-    //y_train_stats: Option<(Scaling, Array<f64>, Array<f64>)>,
+    x_train: Tensor,
+    y_train: Tensor,
+    x_valid: Tensor,
+    y_valid: Tensor,
+    x_test: Option<Tensor>,
+    y_test: Option<Tensor>,
 }
 
 impl ImageDataSet {
 
-    /// Construct an ImageDataSet from a path. All images in the data set will have the same size. This method loads all images in memory.
+    /// Constructs an ImageDataSet from a path.
+    ///
+    /// The images must be in folders named after the corresponding class in a *train* top-level directory.
+    /// Optionally, if a *test* directory exists, its content will be used to test the trained model.
+    /// For instance:
+    /// ```
+    /// train/
+    ///   cats/
+    ///     img1.jpg
+    ///     img2.jpg
+    ///     ...
+    ///   dogs/
+    ///     img1.jpg
+    ///     img2.jpg
+    ///     ...
+    /// test/
+    ///   cats/
+    ///     img1.jpg
+    ///     img2.jpg
+    ///     ...
+    ///   dogs/
+    ///     img1.jpg
+    ///     img2.jpg
+    ///     ...
+    /// ```
+    /// The method resizes the images and load them all in memory.
     ///
     /// # Arguments
-    /// * `path`: path to load the images from. Must contain a train, valid, and (optional) test subdirectories
+    /// * `path`: path to load the images from. Must contain a *train* and optionally a *test* subdirectory.
     /// * `image_size`: size the images are resized to
+    /// * `valid_frac`: fraction of the data used for validation. Must be between 0 and 1.
     ///
-    pub fn from_path(path: &Path, image_size: u32) -> Result<ImageDataSet, DataSetError> {
+    pub fn from_path(path: &Path, image_size: u32, valid_frac: f64) -> Result<ImageDataSet, DataSetError> {
+
+        if valid_frac < 0. || valid_frac > 1. {
+            return Err(DataSetError::InvalidValidationFraction);
+        }
+
+        print!("Loading the data...");
+
         if path.exists() {
 
-            // Create the paths to the training, validation, and test samples
+            // Create the paths to the training and test samples
             let train_path = path.join("train");
             if !train_path.exists() {
                 return Err(DataSetError::TrainPathDoesNotExist);
             }
-            let valid_path = path.join("valid");
-            if !valid_path.exists() {
-                return Err(DataSetError::ValidPathDoesNotExist);
-            }
+
             let test_path = path.join("test");
             let (x_test, y_test) = if test_path.exists() {
-                let (mut x_test_vec, mut y_test_vec, _) = ImageDataSet::load_images_from_dir(&test_path, image_size)?;
-                let (x_test_arr, y_test_arr) = ImageDataSet::join_vec(&x_test_vec, &y_test_vec);
-                (Some(x_test_arr), Some(y_test_arr))
+                let (x_test, y_test, _, _, _) = ImageDataSet::load_images_from_dir(&test_path, image_size, None)?;
+                (Some(x_test), Some(y_test))
             } else {
                 (None, None)
             };
 
-            // Load the images in vectors of Array<f64> and shuffle
-            let (mut x_train, mut y_train, classes) = ImageDataSet::load_images_from_dir(&train_path, image_size)?;
-            let (mut x_valid_vec, mut y_valid_vec, _) = ImageDataSet::load_images_from_dir(&valid_path, image_size)?;
-            ImageDataSet::shuffle_vec(&mut x_train, &mut y_train);
-            ImageDataSet::shuffle_vec(&mut x_valid_vec, &mut y_valid_vec);
+            // Load the images in tensors
+            let valid_f = if valid_frac != 0. { Some(valid_frac) } else { None };
+            let (x_train, y_train, x_valid, y_valid, classes) = ImageDataSet::load_images_from_dir(&train_path, image_size, valid_f)?;
 
-            let (x_valid, y_valid) = ImageDataSet::join_vec(&x_valid_vec, &y_valid_vec);
+            let input_shape = x_train.dims();
+            let output_shape = y_train.dims();
 
+            let num_train_samples = x_train.dims().get()[3];
+            let num_valid_samples = x_valid.dims().get()[3];
 
-            let input_shape = x_train[0].dims();
-            let output_shape = y_train[0].dims();
-
-            let num_train_samples = x_train.len() as u64;
-            let num_valid_samples = x_valid_vec.len() as u64;
+            println!("done.");
 
             Ok(ImageDataSet {
                 input_shape,
                 output_shape,
+                image_size,
                 num_train_samples,
                 num_valid_samples,
                 classes,
@@ -91,69 +120,106 @@ impl ImageDataSet {
         }
     }
 
-    /// Print some info on the data set
-    pub fn print_stats(&self) {
-        println!("Number of training samples: {}", self.num_train_samples);
-        println!("Number of validation samples: {}", self.num_valid_samples);
-        println!("Input shape: {:?}", self.input_shape);
-        println!("Output shape: {:?}", self.output_shape);
-    }
 
-    /// Load the images in vectors of arrays and create one hot encoded classes.
+    /// Loads the images in vectors of arrays and create one hot encoded classes.
     ///
-    /// The method returns a Result containing a tuple of a vector containing the samples, a vector containing the labels, and a vector containing the one hot encoding dictionary.
+    /// The images are shuffled before being split into training and validation sets.
     ///
     /// # Arguments
     /// * `path`: the path to load the images from
     /// * `image_size`: size the images are resized to
+    /// * `valid_frac`: optional fraction of the data used for validation. Must be between 0 and 1.
     ///
-    /// # Panic
-    /// The method panics if the image format is not supported
+    /// # Returns
+    /// Returns a Result containing a tuple of tensors containing the training samples, training labels,
+    /// validation samples, validation labels, and a vector containing the classes of the data set.
     ///
-    fn load_images_from_dir(path: &Path, image_size: u32) -> Result<(Vec<Array<f64>>, Vec<Array<f64>>, Vec<String>), DataSetError> {
+    fn load_images_from_dir(path: &Path, image_size: u32, valid_frac: Option<f64>) -> Result<(Tensor, Tensor, Tensor, Tensor, Vec<String>), DataSetError> {
         // Each subdirectory corresponds to a class
         let walker = WalkDir::new(&path).min_depth(1).max_depth(1).into_iter();
         let num_classes = walker.filter_entry(|e| !Self::is_hidden(e)).count();
-
         let mut classes = Vec::<String>::with_capacity(num_classes);
-        let mut x: Vec<Array<f64>> = Vec::new();
-        let mut y: Vec<Array<f64>> = Vec::with_capacity(num_classes);
+
+        let mut x: Vec<PrimitiveType> = Vec::new();
+        let mut y: Vec<PrimitiveType> = Vec::new();
 
         // Iterate through the subdirectories and load the images
+        let mut num_images = 0;
+        let mut num_channels: Option<u64> = None;
+        let mut class_id = 0;
         for class in fs::read_dir(&path)? {
             let class = class?;
             if class.path().is_dir() {
 
                 // One hot encoding of the classes
                 classes.push(class.path().file_name().unwrap().to_str().unwrap().to_string());
-                let mut one_hot_encoded_class = vec![0.; num_classes];
-                one_hot_encoded_class[classes.len() - 1] = 1.;
+                let one_hot_encoded_class = if num_classes < 3 {
+                    let mut ohe = vec![0.; 1];
+                    ohe[0] = class_id as PrimitiveType;
+                    ohe
+                } else {
+                    let mut ohe = vec![0.; num_classes];
+                    ohe[class_id] = 1.;
+                    ohe
+                };
+                class_id += 1;
 
                 // Load the images in memory
                 for image in fs::read_dir(&class.path())? {
                     let image = image?;
 
                     let img = image::open(image.path()).unwrap().resize_exact(image_size, image_size, image::FilterType::Nearest);
-                    let img_vec = img.raw_pixels().iter().map(|it| *it as f64 / 255.0).collect::<Vec<f64>>();
-                    let (width, height) = img.dimensions();
+                    let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
+                    let img_channels = Self::get_num_channels(&img)?;
 
-                    let num_channels = match img.color() {
-                        image::Gray(_)      => { 1u64 },
-                        image::GrayA(_)     => { 2u64 },
-                        image::RGB(_)       => { 3u64 },
-                        image::RGBA(_)      => { 4u64 },
-                        image::BGR(_)       => { 3u64 },
-                        image::BGRA(_)      => { 4u64 } ,
-                        image::Palette(_)   => { panic!("The image could not be read.")},
-                    };
-                    x.push(Array::new(&img_vec[..], Dim4::new(&[height as u64, width as u64, num_channels, 1])));
+                    match num_channels {
+                        Some(n) => {
+                            if img_channels != n {
+                                return Err(DataSetError::DifferentNumbersOfChannels);
+                            }
+                        },
+                        None => num_channels = Some(img_channels),
+                    }
+                    x.extend(img_vec);
 
                     // Create label
-                    y.push(Array::new(&one_hot_encoded_class[..], Dim4::new(&[num_classes as u64, 1, 1, 1])));
+                    y.extend(one_hot_encoded_class.clone());
+
+                    num_images += 1;
                 }
             }
         }
-        Ok((x, y, classes))
+
+        let mut x_arr = Tensor::new(&x[..], Dim4::new(&[image_size as u64, image_size as u64, num_channels.unwrap(), num_images as u64]));
+        let class_dim = if num_classes < 3 { 1 } else { num_classes as u64 };
+        let mut y_arr = Tensor::new(&y[..], Dim4::new(&[class_dim, 1, 1, num_images as u64]));
+
+        Tensor::shuffle_mut(&mut x_arr, &mut y_arr);
+
+        // Split data into training and validation sets
+        match valid_frac {
+            Some(valid_frac) => {
+                let num_valid_samples = (valid_frac * num_images as f64).floor() as u64;
+                let num_train_samples = num_images - num_valid_samples;
+
+                let seqs_train = &[Seq::default(), Seq::default(), Seq::default(), Seq::new(0.0, (num_train_samples - 1) as f64, 1.0)];
+                let seqs_valid = &[Seq::default(), Seq::default(), Seq::default(), Seq::new(num_train_samples as f64, (num_images - 1) as f64, 1.0)];
+                let x_train = index(&x_arr, seqs_train);
+                let x_valid = index(&x_arr, seqs_valid);
+                let y_train = index(&y_arr, seqs_train);
+                let y_valid = index(&y_arr, seqs_valid);
+                Ok((x_train, y_train, x_valid, y_valid, classes))
+            },
+            None => {
+                let x_train = x_arr;
+                let y_train = y_arr;
+                let x_valid = Tensor::new_empty_tensor();
+                let y_valid = Tensor::new_empty_tensor();
+                Ok((x_train, y_train, x_valid, y_valid, classes))
+            }
+        }
+
+
     }
 
     /// Filter out hidden directories (typically .DS_Store on macos)
@@ -170,48 +236,72 @@ impl ImageDataSet {
             .unwrap_or(false)
     }
 
-    /// Shuffle the content of two vectors
-    ///
-    /// # Arguments
-    /// * `x`: first vector to shuffle
-    /// * `y`: second vector to shuffle
-    ///
-    fn shuffle_vec(x: &mut Vec<Array<f64>>, y: &mut Vec<Array<f64>>) {
-        let mut rng = thread_rng();
 
-        if x.len() != y.len() {
-            panic!("The length of the two vectors must be the same.");
+    /// Prints the classes in the dataset.
+    pub fn print_classes(&self) {
+        print!("Classes: ");
+        for class in &self.classes {
+            print!("{} ", class);
         }
+        print!("\n");
+    }
 
-        for i in (1..x.len()).rev() {
-            let idx = rng.gen_range(0, i + 1);
-            x.swap(i, idx);
-            y.swap(i, idx);
+    /// Retrieves the number of channels for the image.
+    fn get_num_channels(image: &DynamicImage) -> Result<u64, DataSetError> {
+        match image.color() {
+            image::Gray(_) => Ok(1u64),
+            image::GrayA(_) => Ok(2u64),
+            image::RGB(_) => Ok(3u64),
+            image::RGBA(_) => Ok(4u64),
+            image::BGR(_) => Ok(3u64),
+            image::BGRA(_) => Ok(4u64),
+            image::Palette(_) => Err(DataSetError::ImageFormatNotSupported),
         }
     }
 
-    /// Convert vectors of arrays into arrays
+
+    /// Loads a single image from a path.
+    ///
+    /// The image is resized to the size defined at initialization.
     ///
     /// # Arguments
-    /// * `x`: first vector to convert
-    /// * `y`: second vector to convert
+    /// * `path`: path to the image
     ///
-    /// # Panic
-    /// The method panics if the length of the two vectors is different.
+    pub fn load_img(&self, path: &Path) -> Result<Tensor, DataSetError> {
+        let img = image::open(path).unwrap().resize_exact(self.image_size, self.image_size, image::FilterType::Nearest);
+        let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
+        let num_channels = Self::get_num_channels(&img)?;
+
+        Ok(Tensor::new(&img_vec[..], Dim4::new(&[self.image_size as u64, self.image_size as u64, num_channels, 1])))
+    }
+
+    /// Loads the images from the paths.
     ///
-    fn join_vec(x: &Vec<Array<f64>>, y: &Vec<Array<f64>>) -> (Array<f64>, Array<f64>) {
-        if x.len() != y.len() {
-            panic!("The length of the two vectors must be the same.");
+    /// # Arguments
+    /// * `paths`: vector of paths to the images. Each path must point to an individual image.
+    ///
+    pub fn load_img_vec(&self, paths: &Vec<&Path>) -> Result<Tensor, DataSetError> {
+        let mut images = Vec::new();
+        let mut num_channels = None;
+
+        for path in paths {
+            let img = image::open(path).unwrap().resize_exact(self.image_size, self.image_size, image::FilterType::Nearest);
+            let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
+            let img_channels = Self::get_num_channels(&img)?;
+
+            match num_channels {
+                Some(n) => {
+                    if img_channels != n {
+                        return Err(DataSetError::DifferentNumbersOfChannels);
+                    }
+                },
+                None => num_channels = Some(img_channels),
+            }
+
+            images.extend(img_vec);
         }
 
-        let mut x_arr = x[0].copy();
-        let mut y_arr = y[0].copy();
-        for i in 1..x.len() {
-            x_arr = join(3, &x_arr, &x[i]);
-            y_arr = join(3, &y_arr, &y[i]);
-        }
-
-        (x_arr, y_arr)
+        Ok(Tensor::new(&images[..], Dim4::new(&[self.image_size as u64, self.image_size as u64, num_channels.unwrap(), paths.len() as u64])))
     }
 }
 
@@ -222,30 +312,47 @@ impl DataSet for ImageDataSet {
 
     fn num_train_samples(&self) -> u64 { self.num_train_samples }
 
-    fn shuffle(&mut self) {
-        let mut rng = thread_rng();
+    fn num_valid_samples(&self) -> u64 { self.num_valid_samples }
 
-        for i in (1..self.num_train_samples as usize).rev() {
-            let idx = rng.gen_range(0, i + 1);
-            self.x_train.swap(i, idx);
-            self.y_train.swap(i, idx);
-        }
+    fn classes(&self) -> Option<Vec<String>> {
+        Some(self.classes.clone())
     }
 
-    fn x_train(&self) -> &Vec<Array<f64>> {
-        unimplemented!()
+    fn x_train(&self) -> &Tensor {
+        &self.x_train
     }
 
-    fn y_train(&self) -> &Vec<Array<f64>> {
-        unimplemented!()
+    fn y_train(&self) -> &Tensor {
+        &self.y_train
     }
 
-    fn x_valid(&self) -> &Array<f64> {
-        unimplemented!()
+    fn x_valid(&self) -> &Tensor {
+        &self.x_valid
     }
 
-    fn y_valid(&self) -> &Array<f64> {
-        unimplemented!()
+    fn y_valid(&self) -> &Tensor {
+        &self.y_valid
     }
+
+    fn x_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)> {
+        &None
+    }
+
+    fn y_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)> {
+        &None
+    }
+
 }
 
+
+impl fmt::Display for ImageDataSet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "Input shape: \t [{} {} {}]", self.input_shape.get()[0], self.input_shape.get()[1], self.input_shape.get()[2],)?;
+        writeln!(f, "Output shape: \t [{} {} {}]", self.output_shape.get()[0], self.output_shape.get()[1], self.output_shape.get()[2])?;
+        writeln!(f, "Number of training samples: \t {}", self.num_train_samples)?;
+        writeln!(f, "Number of validation samples: \t {}", self.num_valid_samples)?;
+        writeln!(f, "Number of classes: \t {}", self.classes.len())?;
+
+        Ok(())
+    }
+}
