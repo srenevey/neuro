@@ -1,5 +1,4 @@
-//! Initializers
-
+//! Parameters initialization methods.
 use arrayfire::*;
 use crate::tensor::*;
 use crate::tensor::PrimitiveType;
@@ -8,7 +7,7 @@ use crate::tensor::PrimitiveType;
 #[derive(Debug, Copy, Clone)]
 pub enum Initializer {
     /// Given constant value.
-    Constant(f64),
+    Constant(PrimitiveType),
     /// Normal distribution scaled using Glorot scale factor.
     GlorotNormal,
     /// Uniform distribution scaled using Glorot scale factor.
@@ -24,13 +23,13 @@ pub enum Initializer {
     /// Normal distribution with mean 0 and standard deviation 0.01.
     Normal,
     /// Normal distribution with mean 0 and given standard deviation.
-    NormalScaled(f64),
+    NormalScaled(PrimitiveType),
     /// Ones.
     Ones,
     /// Uniform distribution within -0.01 and 0.01.
     Uniform,
     /// Uniform distribution within the given bounds.
-    UniformBounded(f64, f64),
+    UniformBounded(PrimitiveType, PrimitiveType),
     /// Zeros.
     Zeros,
 }
@@ -51,7 +50,7 @@ impl Initializer {
                       fan_out: u64
     ) -> Tensor {
         match self {
-            Initializer::Constant(x) => constant(x as PrimitiveType, dims),
+            Initializer::Constant(x) => constant(x, dims),
             Initializer::GlorotNormal => {
                 let standard_deviation = (2. / (fan_out + fan_in) as PrimitiveType).sqrt();
                 Tensor::scaled_normal(0 as PrimitiveType, standard_deviation, dims)
@@ -77,10 +76,10 @@ impl Initializer {
                 Tensor::scaled_uniform(-limit, limit, dims)
             },
             Initializer::Normal => Tensor::scaled_normal(0 as PrimitiveType, 0.01, dims),
-            Initializer::NormalScaled(standard_deviation) => Tensor::scaled_normal(0 as PrimitiveType, standard_deviation as PrimitiveType, dims),
+            Initializer::NormalScaled(standard_deviation) => Tensor::scaled_normal(0 as PrimitiveType, standard_deviation, dims),
             Initializer::Ones => Tensor::ones(dims),
             Initializer::Uniform => Tensor::scaled_uniform(-0.01, 0.01, dims),
-            Initializer::UniformBounded(lb, ub) => Tensor::scaled_uniform(lb as PrimitiveType, ub as PrimitiveType, dims),
+            Initializer::UniformBounded(lb, ub) => Tensor::scaled_uniform(lb, ub, dims),
             Initializer::Zeros => Tensor::zeros(dims),
         }
     }
