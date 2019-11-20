@@ -2,19 +2,22 @@
 use crate::layers::Layer;
 use crate::Tensor;
 use crate::tensor::*;
-use arrayfire::*;
-use rand::prelude::*;
+
+use std::fmt;
+use std::fs;
 use std::io;
 use std::io::BufWriter;
-use std::fs;
-use std::fmt;
+
+use arrayfire::*;
+use rand::prelude::*;
+
 
 /// Defines a dropout layer.
 pub struct Dropout {
     drop_rate: f64,
     output_shape: Dim4,
     grad: Tensor,
-    //random_engine: RandomEngine,
+    random_engine: RandomEngine,
 }
 
 impl Dropout {
@@ -27,30 +30,34 @@ impl Dropout {
     /// The method panics if `rate` is smaller than 0 or greater than 1.
     ///
     pub fn new(rate: f64) -> Box<Dropout> {
-        /*
+
         let mut rng = rand::thread_rng();
         let seed: u64 = rng.gen();
         let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, None);
-        */
+
 
         if rate < 0. || rate > 1. {
-            panic!("The drop probability is invalid.");
+            panic!("The drop rate is invalid.");
         }
 
         Box::new(Dropout {
             drop_rate: rate,
             output_shape: Dim4::new(&[0, 0, 0, 0]),
             grad: Tensor::new_empty_tensor(),
-            //random_engine,
+            random_engine,
         })
     }
 
     fn generate_binomial_mask(&self, dims: Dim4) -> Tensor {
+
+        /*
         let height = dims.get()[0];
         let width = dims.get()[1];
         let num_channels = dims.get()[2];
-        let mb_size = dims.get()[3];
+        let batch_size = dims.get()[3];
+        */
 
+        /*
         let mut rng = rand::thread_rng();
         let num_inputs = height * width;
         let num_ones = ((1. - self.drop_rate) * height as f64 * width as f64).floor() as u64;
@@ -71,12 +78,13 @@ impl Dropout {
             values.extend(&tmp);
         }
         Tensor::new(&values[..], dims)
+        */
 
         // Alternatively
-        //let random_values = random_uniform::<f64>(dims, &self.random_engine);
-        //let cond = gt(&random_values, &self.rate, true);
-        //let ones = constant(1.0f64, dims);
-        //selectr(&ones, &cond, 0.0);
+        let random_values = random_uniform::<f64>(dims, &self.random_engine);
+        let cond = gt(&random_values, &self.drop_rate, true);
+        let ones = Tensor::ones(dims);
+        selectr(&ones, &cond, 0.0)
     }
 }
 
