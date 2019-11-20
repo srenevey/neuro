@@ -19,7 +19,7 @@ When creating convolutional neural networks, there is a bug when trying to retri
 
 ## Installation
 The crate is powered by ArrayFire to perform all operations on the GPU. The first step is therefore to install ArrayFire. Once the library is installed, clone this repository and start using neuro by importing it in your project:
-```
+```rust
 use neuro::*;
 ```
 When building your project, make sure that the path to the ArrayFire library is in the path environment variables. For instance for a typical install (on Unix):
