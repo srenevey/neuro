@@ -24,7 +24,7 @@ fn main() -> Result<(), DataSetError> {
     // Fit the model
     nn.fit(4, 2000, Some(200));
 
-    // Compute the output for the train data
+    // Compute the output for the training data
     let predictions = nn.predict(&x_train);
     println!("Predictions:");
     Tensor::print_tensor(&predictions);
