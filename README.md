@@ -1,5 +1,5 @@
 # neuro 
-[Homepage](https://srenevey.github.io/neuro)  [API Documentation](https://srenevey.github.io/neuro/api)  [Examples](https://srenevey.github.io/neuro/examples)
+[Homepage](https://srenevey.github.io/neuro) • [API Documentation](https://srenevey.github.io/neuro/api) • [Examples](https://srenevey.github.io/neuro/examples)
 
 Neuro is a deep learning library that runs on the GPU. The architecture of the library is inspired by Keras and works by stacking layers. Currently supported layers are:
 
