@@ -75,7 +75,7 @@ impl Initializer {
                 let limit = (3. / fan_in as PrimitiveType).sqrt();
                 Tensor::scaled_uniform(-limit, limit, dims)
             },
-            Initializer::Normal => Tensor::scaled_normal(0 as PrimitiveType, 0.01, dims),
+            Initializer::Normal => Tensor::scaled_normal(0 as PrimitiveType, 0.1, dims),
             Initializer::NormalScaled(standard_deviation) => Tensor::scaled_normal(0 as PrimitiveType, standard_deviation, dims),
             Initializer::Ones => Tensor::ones(dims),
             Initializer::Uniform => Tensor::scaled_uniform(-0.01, 0.01, dims),
