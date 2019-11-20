@@ -1,9 +1,9 @@
-use neuro::layers::Dense;
 use neuro::activations::Activation;
-use neuro::models::Network;
-use neuro::losses;
-use neuro::optimizers::Adam;
 use neuro::data::{DataSetError, TabularDataSet};
+use neuro::layers::Dense;
+use neuro::losses;
+use neuro::models::Network;
+use neuro::optimizers::Adam;
 use neuro::tensor::*;
 
 use std::path::Path;
@@ -13,15 +13,15 @@ fn main() -> Result<(), DataSetError> {
 
     // Load the data
     let inputs = Path::new("datasets/tabular_data/input_normalized.csv");
-    let outputs = Path::new("datasets/tabular_data/output_normalized.csv");
+    let outputs = Path::new("datasets/tabular_data/single_output_normalized.csv");
     let data = TabularDataSet::from_csv(&inputs, &outputs, 0.1, true)?;
     println!("{}", data);
 
     // Create the network
     let mut nn = Network::new(&data, losses::MeanSquaredError, Adam::new(0.01), None, None);
     nn.add(Dense::new(32, Activation::ReLU));
-    nn.add(Dense::new(15, Activation::ReLU));
-    nn.add(Dense::new(2, Activation::Linear));
+    nn.add(Dense::new(16, Activation::ReLU));
+    nn.add(Dense::new(1, Activation::Linear));
 
     // Train
     nn.fit(64, 50, Some(10));
