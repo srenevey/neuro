@@ -22,8 +22,9 @@ The crate is powered by ArrayFire to perform all operations on the GPU. The firs
 ```rust
 use neuro::*;
 ```
-When building your project, make sure that the path to the ArrayFire library is in the path environment variables. For instance for a typical install (on Unix):
+When building your project, make sure that the path to the ArrayFire library is in the path environment variables. For instance, for a typical installation on a Unix system:
 ```
 export DYLD_LIBRARY_PATH=/opt/arrayfire/lib
 ```
-In order to quickly get started, check out the [examples](https://srenevey.github.io/neuro/examples).
+Also, it is highly recommended to set the `--release` flag when building your code for considerable speedup. In order to quickly get started, check out the [examples](https://srenevey.github.io/neuro/examples).
+
