@@ -31,7 +31,7 @@
 //! ```
 //! export DYLD_LIBRARY_PATH=/opt/arrayfire/lib
 //! ```
-//! In order to quickly get started, check out the [examples](https://srenevey.github.io/neuro).
+//! In order to quickly get started, check out the [examples](https://srenevey.github.io/neuro/examples).
 
 
 pub use self::tensor::Tensor;
