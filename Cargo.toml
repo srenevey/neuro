@@ -2,10 +2,10 @@
 name = "neuro"
 version = "0.1.0"
 authors = ["Sylvain Renevey <syl.renevey@gmail.com>"]
-description = "Neuro is a deep learning library running on the GPU."
+description = "Neuro is a deep learning library that runs on the GPU."
 edition = "2018"
 
-documentation = "https://docs.rs/neuro/"
+documentation = "https://srenevey.github.io/neuro/api"
 homepage = "https://srenevey.github.io/neuro/"
 repository = "https://github.com/srenevey/neuro"
 readme = "README.md"
