@@ -25,12 +25,12 @@
         &lt;p&gt;The linear activation function simply returns its input without applying any modification:&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;x&#34; title=&#34;g(x) = x&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative is then given by:&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&#34; title=&#34;\frac{\partial g}{\partial x} = 1&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
 
