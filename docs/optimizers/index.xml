@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – Optimizers</title>
-    <link>https://srenevey.github.io/neuro/docs/optimizers/</link>
+    <link>https://srenevey.github.com/docs/optimizers/</link>
     <description>Recent content in Optimizers on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://srenevey.github.io/neuro/docs/optimizers/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://srenevey.github.com/docs/optimizers/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Adam</title>
-      <link>https://srenevey.github.io/neuro/docs/optimizers/adam/</link>
+      <link>https://srenevey.github.com/docs/optimizers/adam/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/optimizers/adam/</guid>
+      <guid>https://srenevey.github.com/docs/optimizers/adam/</guid>
       <description>
         
         
@@ -54,10 +54,10 @@
     
     <item>
       <title>Docs: RMSProp</title>
-      <link>https://srenevey.github.io/neuro/docs/optimizers/rmsprop/</link>
+      <link>https://srenevey.github.com/docs/optimizers/rmsprop/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/optimizers/rmsprop/</guid>
+      <guid>https://srenevey.github.com/docs/optimizers/rmsprop/</guid>
       <description>
         
         
@@ -84,10 +84,10 @@
     
     <item>
       <title>Docs: SGD</title>
-      <link>https://srenevey.github.io/neuro/docs/optimizers/sgd/</link>
+      <link>https://srenevey.github.com/docs/optimizers/sgd/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/optimizers/sgd/</guid>
+      <guid>https://srenevey.github.com/docs/optimizers/sgd/</guid>
       <description>
         
         
