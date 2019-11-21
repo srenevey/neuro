@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Padding","Defines the type of padding applied to the inputs."]],"struct":[["Conv2D","Defines a 2D convolution layer."]]});

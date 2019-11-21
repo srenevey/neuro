@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+<link rel="alternate" type="application/rss&#43;xml" href="/examples/binary-classification/index.xml">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Binary Classification | neuro</title><meta property="og:title" content="Binary Classification" />
+<meta property="og:description" content="Learning the XOR gate with a neural network.
+" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/examples/binary-classification/" />
+<meta property="og:site_name" content="neuro" />
+<meta itemprop="name" content="Binary Classification">
+<meta itemprop="description" content="Learning the XOR gate with a neural network.
+">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Binary Classification"/>
+<meta name="twitter:description" content="Learning the XOR gate with a neural network.
+"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" as="style">
+<link href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>Binary Classification | neuro</title>
+  </head>
+  <body class="td-section">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 13.147345 12.788828" id="svg8" inkscape:export-filename="/Users/sylvain/Developer/Rust_projects/neuro/www/assets/logo.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="0.92.2 5c3e80d, 2017-08-06" sodipodi:docname="logo.svg"><defs id="defs2" /><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="69.202826" inkscape:cy="48.04465" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:window-width="1680" inkscape:window-height="952" inkscape:window-x="0" inkscape:window-y="1" inkscape:window-maximized="1" inkscape:pagecheckerboard="true" showborder="true" borderlayer="false" inkscape:showpageshadow="false" /><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-13.436986,-26.062207)"><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="path815" cx="19.974806" cy="27.222263" r="1.0755528" /><circle r="1.0755528" cy="31.332914" cx="25.424274" id="circle817" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle819" cx="14.597042" cy="31.332914" r="1.0755528" /><circle r="1.0755528" cy="37.690979" cx="16.533037" id="circle821" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle823" cx="23.631687" cy="37.690979" r="1.0755528" /><path style="fill:none;fill-opacity:1;stroke:#fff;stroke-width:.40561634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m14.525339 31.309365 5.377764-4.158804 5.521171 4.158804-1.792588 6.381613-7.098648-.0717z" id="path829" inkscape:connector-curvature="0" /></g></svg></span><span class="font-weight-light">neuro</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/docs/" ><span>  Knowledge Base</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/examples/" ><span class="active">  Examples</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/api/neuro" ><span>   API Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://www.github.com/srenevey/neuro" target="_blank" ><span> <i class='fab fa-github'></i>  GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/examples/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Examples</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="examples">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/examples/binary-classification/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Binary Classification</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="examples-binary-classification">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/examples/multiclass-classification/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Multiclass Classification</a>
+  </li>
+  <ul>
+    <li class="collapse " id="examples-multiclass-classification">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/examples/regression/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Regression</a>
+  </li>
+  <ul>
+    <li class="collapse " id="examples-regression">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/examples/">Examples</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/examples/binary-classification/">Binary Classification</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Binary Classification</h1>
+	<div class="lead">Learning the XOR gate with a neural network.</div>
+	<p>In this example, we will train a simple feedforward neural network to learn an approximation of the XOR gate. The XOR function takes two inputs and returns a single output. Each input can be 0 or 1. If one and only one of the inputs is 1, then the XOR function returns 1. It returns 0 otherwise. The following table shows the training samples used to train the model.</p>
+
+<p><img class="center" src="/images/xor.svg" /></p>
+
+<p>The first step to create a neural network with neuro is to bring the required modules into scope.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">activations</span>::<span style="color:#000">Activation</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">data</span>::<span style="color:#000;font-weight:bold">{</span><span style="color:#000">DataSetError</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">TabularDataSet</span><span style="color:#000;font-weight:bold">};</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">initializers</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">layers</span>::<span style="color:#000">Dense</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">losses</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">metrics</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">models</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">optimizers</span>::<span style="color:#000">SGD</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">tensor</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>We then define the main function of the program. The return type is a <code>Result</code> such that we can use the <code>?</code> syntax sugar and spare a few <code>match</code> statements.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">fn</span> <span style="color:#000">main</span><span style="color:#000;font-weight:bold">()</span><span style="color:#f8f8f8;text-decoration:underline"> </span>-&gt; <span style="color:#204a87">Result</span><span style="color:#ce5c00;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">DataSetError</span><span style="color:#ce5c00;font-weight:bold">&gt;</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>The data set is created using the samples described before. We create a TabularDataSet using the <code>from_tensor</code> method. Since there is no validation data for this simple example, we use the same data for training and validation. We don&rsquo;t have any data for testing so we pass <code>None</code> for the last two arguments.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Create the dataset
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">input_values</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">];</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">x_train</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Tensor</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">input_values</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Dim</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">output_values</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1.</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.</span><span style="color:#000;font-weight:bold">];</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">y_train</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Tensor</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">output_values</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Dim</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">data</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">TabularDataSet</span>::<span style="color:#000">from_tensor</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">x_train</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">copy</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">y_train</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">copy</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">x_train</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">copy</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">y_train</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">copy</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">)</span><span style="color:#ce5c00;font-weight:bold">?</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>A shallow neural network is then created. The loss function is the binary cross entropy and we use the SGD optimizer with a learning rate of 0.3. The training progress of the network is monitored using the accuracy metrics and no regularization is applied. A hidden layer with two units is added to the network with a ReLU activation function. We choose to manually set the initializer to Constant with a value of 0.01 for the weights and initialize the biases to zero. The output layer contains a single unit and uses the sigmoid activation function. The network is then trained for 2000 epochs using a mini-batch size of 4. The progress of the training is printed every 200 epochs.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Create the neural network and add two layers
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">models</span>::<span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">BinaryCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">SGD</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.3</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">metrics</span>::<span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">with_param</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">ReLU</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Initializer</span>::<span style="color:#000">Constant</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.01</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Initializer</span>::<span style="color:#000">Zeros</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">Sigmoid</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#8f5902;font-style:italic">// Fit the model
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">fit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2000</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">200</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>The ouput of the <code>fit</code> method is:</p>
+
+<pre><code>Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
+epoch: 200, train_loss: 0.54150397, valid_loss: 0.54150397, metrics: [0.75]
+epoch: 400, train_loss: 0.4090877, valid_loss: 0.4090877, metrics: [0.75]
+epoch: 600, train_loss: 0.24516115, valid_loss: 0.24516115, metrics: [1.0]
+epoch: 800, train_loss: 0.14278865, valid_loss: 0.14278865, metrics: [1.0]
+epoch: 1000, train_loss: 0.09136461, valid_loss: 0.09136461, metrics: [1.0]
+epoch: 1200, train_loss: 0.0640522, valid_loss: 0.0640522, metrics: [1.0]
+epoch: 1400, train_loss: 0.047940247, valid_loss: 0.047940247, metrics: [1.0]
+epoch: 1600, train_loss: 0.037719432, valid_loss: 0.037719432, metrics: [1.0]
+epoch: 1800, train_loss: 0.030878099, valid_loss: 0.030878099, metrics: [1.0]
+epoch: 2000, train_loss: 0.025920894, valid_loss: 0.025920894, metrics: [1.0]
+</code></pre>
+
+<p>The first line indicates that the library runs on my GPU and uses OpenCL. We then see the training and validation losses as well as the metrics every 200 epochs. Note that since we used the same data set for training and validation, the losses should be identical. The loss decreases as expected and the accuracy quickly reaches 100%. Finally, we can check what the probability that each sample belongs to class 1 is:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Compute the output for the training data
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">predictions</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">predict</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">x_train</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">println</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Predictions:&#34;</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">Tensor</span>::<span style="color:#000">print_tensor</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">predictions</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87">Ok</span><span style="color:#000;font-weight:bold">(())</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000;font-weight:bold">}</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>which prints:</p>
+
+<pre><code>Predictions:
+
+[1 1 1 4]
+    0.0615 
+
+    0.9852 
+
+    0.9852 
+
+    0.0103
+</code></pre>
+
+<p>Hence, the network is very confident that samples 2 and 3 only contain one true value and samples 1 and 4 contain zero or two true values.</p>
+
+        <div class="section-index">
+    
+    
+    
+    
+    <hr class="panel-line">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+</div>
+
+	
+	
+	
+</div>
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/srenevey">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="LinkedIn" aria-label="LinkedIn">
+    <a class="text-white" target="_blank" href="https://linkedin.com/in/sylvainrenevey">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script src="/js/main.min.29b0315468c00226fa6f4556a9cebc0ac4fe1ce1457a01b22c0a06b329877383.js" integrity="sha256-KbAxVGjAAib6b0VWqc68CsT&#43;HOFFegGyLAoGsymHc4M=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

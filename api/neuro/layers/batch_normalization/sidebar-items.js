@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["BatchNormalization","Defines a batch normalization layer."]]});

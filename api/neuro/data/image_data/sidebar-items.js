@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ImageDataSet","Structure representing a collection of images."]]});

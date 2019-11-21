@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Activation","Enumeration of the activation functions."]]});

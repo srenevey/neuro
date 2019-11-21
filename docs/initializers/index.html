@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+<link rel="alternate" type="application/rss&#43;xml" href="/docs/initializers/index.xml">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Initializers | neuro</title><meta property="og:title" content="Initializers" />
+<meta property="og:description" content="A deep learning library written in Rust" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/docs/initializers/" />
+<meta property="og:site_name" content="neuro" />
+<meta itemprop="name" content="Initializers">
+<meta itemprop="description" content="A deep learning library written in Rust">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Initializers"/>
+<meta name="twitter:description" content="A deep learning library written in Rust"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" as="style">
+<link href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>Initializers | neuro</title>
+  </head>
+  <body class="td-section">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 13.147345 12.788828" id="svg8" inkscape:export-filename="/Users/sylvain/Developer/Rust_projects/neuro/www/assets/logo.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="0.92.2 5c3e80d, 2017-08-06" sodipodi:docname="logo.svg"><defs id="defs2" /><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="69.202826" inkscape:cy="48.04465" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:window-width="1680" inkscape:window-height="952" inkscape:window-x="0" inkscape:window-y="1" inkscape:window-maximized="1" inkscape:pagecheckerboard="true" showborder="true" borderlayer="false" inkscape:showpageshadow="false" /><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-13.436986,-26.062207)"><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="path815" cx="19.974806" cy="27.222263" r="1.0755528" /><circle r="1.0755528" cy="31.332914" cx="25.424274" id="circle817" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle819" cx="14.597042" cy="31.332914" r="1.0755528" /><circle r="1.0755528" cy="37.690979" cx="16.533037" id="circle821" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle823" cx="23.631687" cy="37.690979" r="1.0755528" /><path style="fill:none;fill-opacity:1;stroke:#fff;stroke-width:.40561634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m14.525339 31.309365 5.377764-4.158804 5.521171 4.158804-1.792588 6.381613-7.098648-.0717z" id="path829" inkscape:connector-curvature="0" /></g></svg></span><span class="font-weight-light">neuro</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">  Knowledge Base</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/examples/" ><span>  Examples</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/api/neuro" ><span>   API Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://www.github.com/srenevey/neuro" target="_blank" ><span> <i class='fab fa-github'></i>  GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Knowledge Base</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/activations/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Activations</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-activations">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-linear" href="/docs/activations/linear/">Linear</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-relu" href="/docs/activations/relu/">ReLU</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-sigmoid" href="/docs/activations/sigmoid/">Sigmoid</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-softmax" href="/docs/activations/softmax/">Softmax</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-tanh" href="/docs/activations/tanh/">Tanh</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/initializers/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Initializers</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-initializers">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/layers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Layers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-layers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-batchnorm" href="/docs/layers/batchnorm/">BatchNorm</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-conv2d" href="/docs/layers/conv2d/">Conv2D</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dense" href="/docs/layers/dense/">Dense</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dropout" href="/docs/layers/dropout/">Dropout</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-maxpooling2d" href="/docs/layers/maxpooling2d/">MaxPooling2D</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/losses/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Losses</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-losses">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-crossentropy" href="/docs/losses/crossentropy/">Cross Entropy</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mae" href="/docs/losses/mae/">Mean Absolute Error</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mse" href="/docs/losses/mse/">Mean Squared Error</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/metrics/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Metrics</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-metrics">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/optimizers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Optimizers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-optimizers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-adam" href="/docs/optimizers/adam/">Adam</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-rmsprop" href="/docs/optimizers/rmsprop/">RMSProp</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-sgd" href="/docs/optimizers/sgd/">SGD</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#glorot-normal">Glorot Normal</a></li>
+<li><a href="#glorot-uniform">Glorot Uniform</a></li>
+<li><a href="#he-normal">He Normal</a></li>
+<li><a href="#he-uniform">He Uniform</a></li>
+<li><a href="#lecun-normal">Lecun Normal</a></li>
+<li><a href="#lecun-uniform">Lecun Uniform</a></li>
+<li><a href="#random-normal">Random Normal</a></li>
+<li><a href="#random-uniform">Random Uniform</a></li>
+<li><a href="#zeros-ones-constant">Zeros, Ones, Constant</a></li>
+<li><a href="#references">References</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/">Knowledge Base</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/docs/initializers/">Initializers</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Initializers</h1>
+	
+	
+
+<p>Parameters initialization plays a very important role in deep learning. A proper initialization can determine wether the optimization algorithm will converge at all, and influences the convergence speed. Symmetry breaking is also an important part of the initialization process. If two units are connected to the same input and with the same initial weights and activation function,  then their weights will be updated identically during the optimization process, assuming a deterministic loss function is used. This means that the units will learn the same function, thus reducing the overall ability of the network to learn complex functions. In order to avoid this symmetry, we need to break it by initializing the parameters randomly such that each unit has different weights and biases. Several methods have been developed over the last decades and the ones implemented in neuro are presented here.</p>
+
+<h2 id="glorot-normal">Glorot Normal</h2>
+
+<p>This distribution has first been introduced by Glorot and Bengio [1]. The authors propose to use a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2&space;=&space;2/(n_i&plus;n_{i&plus;1})" title="\sigma^2 = 2/(n_i+n_{i+1})" />, that is</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,\frac{2}{n_i&plus;n_{i&plus;1}}&space;\right&space;)=\sqrt{\frac{2}{n_i&plus;n_{i&plus;1}}}\mathcal{N}(0,1)" title="X \sim \mathcal{N}\left(0,\frac{2}{n_i+n_{i+1}} \right )=\sqrt{\frac{2}{n_i+n_{i+1}}}\mathcal{N}(0,1)" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units (sometimes called fan in) and <img src="https://latex.codecogs.com/svg.latex?n_{i&plus;1}" title="n_{i+1}" /> the number of output units (sometimes called fan out). Note that this initialization method is sometimes called Xavier normal from the first name of the first author, Xavier Glorot.</p>
+
+<h2 id="glorot-uniform">Glorot Uniform</h2>
+
+<p>In this initialization scheme also proposed by Glorot and Bengio [1], the initial values are drawn from the uniform distribution:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{6}{n_i&plus;n_{i&plus;1}}},\sqrt{\frac{6}{n_i&plus;n_{i&plus;1}}}\right)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i+n_{i+1}}},\sqrt{\frac{6}{n_i+n_{i+1}}}\right)" /></p>
+
+<p>where, similarly to the Glorot Normal initializer, <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units and <img src="https://latex.codecogs.com/svg.latex?n_{i&plus;1}" title="n_{i+1}" /> the number of output units. Note that this initialization method is sometimes called Xavier uniform from the first name of the first author, Xavier Glorot.</p>
+
+<h2 id="he-normal">He Normal</h2>
+
+<p>He et al. [2] build on top of the results obtained by Glorot and Bengio and propose to draw the initial values from a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2&space;=&space;2/n_i" title="\sigma^2 = 2/n_i" />:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,\frac{2}{n_i}\right)=\sqrt{\frac{2}{n_i}}\mathcal{N}\left(0,1\right)" title="X \sim \mathcal{N}\left(0,\frac{2}{n_i}\right)=\sqrt{\frac{2}{n_i}}\mathcal{N}\left(0,1\right)" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+
+<h2 id="he-uniform">He Uniform</h2>
+
+<p>The He uniform initializer generates random values using a uniform distribution within <img src="https://latex.codecogs.com/svg.latex?\pm\sqrt{6/n_i}" title="\pm\sqrt{6/n_i}" />:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{6}{n_i}},\sqrt{\frac{6}{n_i}}\right)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i}},\sqrt{\frac{6}{n_i}}\right)" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+
+<h2 id="lecun-normal">Lecun Normal</h2>
+
+<p>LeCun et al. [3] propose to initialize the weights using a normal distribution scaled by a factor <img src="https://latex.codecogs.com/svg.latex?\sqrt{1/n_i}" title="\sqrt{1/n_i}" /> where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units. That is, the random values are drawn from the following distribution:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,&space;\frac{1}{n_i}&space;\right&space;)&space;=&space;\sqrt{\frac{1}{n_i}}\mathcal{N}\left(0,&space;1&space;\right&space;)" title="X \sim \mathcal{N}\left(0, \frac{1}{n_i} \right ) = \sqrt{\frac{1}{n_i}}\mathcal{N}\left(0, 1 \right )" /></p>
+
+<h2 id="lecun-uniform">Lecun Uniform</h2>
+
+<p>The Lecun uniform initializer uses a uniform distribution within <img src="https://latex.codecogs.com/svg.latex?\pm\sqrt{3/n_i}" title="\pm\sqrt{3/n_i}" />:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{3}{n_i}},&space;\sqrt{\frac{3}{n_i}}&space;\right&space;)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{3}{n_i}}, \sqrt{\frac{3}{n_i}} \right )" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+
+<h2 id="random-normal">Random Normal</h2>
+
+<p>The initial values are drawn from a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2=0.1" title="\sigma^2=0.1" />, i.e.</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}(0,0.1)" title="X \sim \mathcal{N}(0,0.1)" /></p>
+
+<h2 id="random-uniform">Random Uniform</h2>
+
+<p>In the random uniform distribution initializer, the initial values are drawn from a uniform distribution between -0.01 an 0.01:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}(-0.01,0.01)" title="X \sim \mathcal{U}(-0.01,0.01)" /></p>
+
+<h2 id="zeros-ones-constant">Zeros, Ones, Constant</h2>
+
+<p>Initializes all values with zeros, ones, or the given value. Not that it is very common to initialize the biases with zeros. The weights, however, should be initialized with random values in order to break the symmetry as discussed at the top of the page.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] <a href="http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf" target="_blank">Glorot, X., Bengio, Y., Understanding the difficulty of training deep feedforward neural networks. In Proceedings of the 13th International Conference on Artificial Intelligence and Statistics, Sardinia, Italy, 2010.</a></p>
+
+<p>[2] He, K., Zhang, X., Ren, S., Sun, J., Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification. <a href="https://arxiv.org/abs/1502.01852" target="_blank">arXiv:1502.01852</a>, Feb. 2015.</p>
+
+<p>[3] <a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf" target="_blank">LeCun, Y.A., Bottou, L., Orr, G.B., Müller, K.-R., Efficient BackProp. In: Neural networks: Tricks of the trade, pp. 9-48, Springer, Berlin, Heidelberg, 1998.</a></p>
+
+        <div class="section-index">
+    
+    
+    
+    
+    <hr class="panel-line">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+</div>
+
+	
+	
+	
+</div>
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/srenevey">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="LinkedIn" aria-label="LinkedIn">
+    <a class="text-white" target="_blank" href="https://linkedin.com/in/sylvainrenevey">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script src="/js/main.min.29b0315468c00226fa6f4556a9cebc0ac4fe1ce1457a01b22c0a06b329877383.js" integrity="sha256-KbAxVGjAAib6b0VWqc68CsT&#43;HOFFegGyLAoGsymHc4M=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

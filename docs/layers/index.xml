@@ -1,0 +1,125 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>neuro – Layers</title>
+    <link>/docs/layers/</link>
+    <description>Recent content in Layers on neuro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/layers/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: BatchNorm</title>
+      <link>/docs/layers/batchnorm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/layers/batchnorm/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TBD&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Conv2D</title>
+      <link>/docs/layers/conv2d/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/layers/conv2d/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TBD&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Dense</title>
+      <link>/docs/layers/dense/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/layers/dense/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The dense, or fully connected, layer is one of the basic building blocks of neural networks. It is defined by the number of units and is&lt;/p&gt;
+
+&lt;h2 id=&#34;forward-pass&#34;&gt;Forward Pass&lt;/h2&gt;
+
+&lt;p&gt;During the forward pass, the inputs &lt;img src=&#34;https://latex.codecogs.com/svg.latex?o_{l-1}&#34; title=&#34;o_{l-1}&#34; /&gt;, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights &lt;img src=&#34;https://latex.codecogs.com/svg.latex?W^{[l]}&#34; title=&#34;W^{[l]}&#34; /&gt; of the layer and the biases &lt;img src=&#34;https://latex.codecogs.com/svg.latex?b^{[l]}&#34; title=&#34;b^{[l]}&#34; /&gt; are added to form the linear activation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?z^{[l]}&amp;space;=&amp;space;W^{[l]}o_{l-1}&amp;plus;b^{[l]}&#34; title=&#34;z^{[l]} = W^{[l]}o_{l-1}+b^{[l]}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The linear activation is then used as input for the activation function to compute the nonlinear activation of the layer:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?o_l&amp;space;=&amp;space;g(z^{[l]})&#34; title=&#34;o_l = g(z^{[l]})&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This value is the output of the layer and is passed on to the next layer or is used to compute the loss if it is the output layer.&lt;/p&gt;
+
+&lt;h2 id=&#34;backward-pass&#34;&gt;Backward Pass&lt;/h2&gt;
+
+&lt;p&gt;In the backward pass, we compute how the loss function used to train the model reacts to small variations in the weights, biases, and inputs. That is, if &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}&#34; title=&#34;\mathcal{L}&#34; /&gt; is the loss function, we compute &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\nabla_{W^{[l]}}\mathcal{L}&#34; title=&#34;\nabla_{W^{[l]}}\mathcal{L}&#34; /&gt;, &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\nabla_{b^{[l]}}\mathcal{L}&#34; title=&#34;\nabla_{b^{[l]}}\mathcal{L}&#34; /&gt;, and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\nabla_{o_{l-1}}\mathcal{L}&#34; title=&#34;\nabla_{o_{l-1}}\mathcal{L}&#34; /&gt;. The input of the backward pass corresponds to the gradient of the loss function with respect to the output of the layer. That is, if &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;o^{&#39;}_l&#34; title=&#34;o^{&#39;}_l&#34; /&gt; is the input of the backward pass, we have&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?o^{&#39;}_l&amp;space;\equiv&amp;space;\nabla_{o_l}\mathcal{L}&#34; title=&#34;o^{&#39;}_l \equiv \nabla_{o_l}\mathcal{L}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Applying the chain rule, we start by computing the partial derivative with respect to the weights:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;W^{[l]}}&amp;space;=&amp;space;\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;o_l}\frac{\partial&amp;space;o_l}{\partial&amp;space;W^{[l]}}&amp;space;=&amp;space;o_l^{&#39;}\frac{\partial&amp;space;o_l}{\partial&amp;space;z^{[l]}}\frac{\partial&amp;space;z^{[l]}}{\partial&amp;space;W^{[l]}}&amp;space;=&amp;space;(o_l^{&#39;}\odot&amp;space;g&#39;(z^{[l]}))o_{l-1}^T&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial W^{[l]}} = o_l^{&#39;}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial W^{[l]}} = (o_l^{&#39;}\odot g&#39;(z^{[l]}))o_{l-1}^T&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\odot&#34; title=&#34;\odot&#34; /&gt; denotes the Hadamard product (i.e. element-wise product) and the transpose of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?o_{l-1}&#34; title=&#34;o_{l-1}&#34; /&gt; is taken to have consistent dimensions. We then proceed with the partial derivative with respect to the biases:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;b^{[l]}}&amp;space;=&amp;space;\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;o_l}\frac{\partial&amp;space;o_l}{\partial&amp;space;b^{[l]}}&amp;space;=&amp;space;o_l^{&#39;}\frac{\partial&amp;space;o_l}{\partial&amp;space;z^{[l]}}\frac{\partial&amp;space;z^{[l]}}{\partial&amp;space;b^{[l]}}&amp;space;=&amp;space;o_l^{&#39;}\odot&amp;space;g&#39;(z^{[l]})&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial b^{[l]}} = o_l^{&#39;}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial b^{[l]}} = o_l^{&#39;}\odot g&#39;(z^{[l]})&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And finally, the partial derivatives with respect to the layer&amp;rsquo;s inputs:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;o_{l-1}}&amp;space;=&amp;space;\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;o_l}\frac{\partial&amp;space;o_l}{\partial&amp;space;o_{l-1}}&amp;space;=&amp;space;o_l^{&#39;}\frac{\partial&amp;space;o_l}{\partial&amp;space;z^{[l]}}\frac{\partial&amp;space;z^{[l]}}{\partial&amp;space;o_{l-1}}&amp;space;=&amp;space;{W^{[l]}}^T&amp;space;(o_l^{&#39;}\odot&amp;space;g&#39;(z^{[l]}))&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial o_{l-1}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial o_{l-1}} = o_l^{&#39;}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial o_{l-1}} = {W^{[l]}}^T (o_l^{&#39;}\odot g&#39;(z^{[l]}))&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Dropout</title>
+      <link>/docs/layers/dropout/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/layers/dropout/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TBD&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: MaxPooling2D</title>
+      <link>/docs/layers/maxpooling2d/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/layers/maxpooling2d/</guid>
+      <description>
+        
+        
+        &lt;p&gt;TBD&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

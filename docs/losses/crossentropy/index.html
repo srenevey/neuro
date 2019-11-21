@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Cross Entropy | neuro</title><meta property="og:title" content="Cross Entropy" />
+<meta property="og:description" content="The cross entropy loss function is typically used in multiclass classification problems. For a model having classes and if are the predicted labels and are the true labels, then the cross entropy is defined as
+where is the number of samples in the mini-batch. If we take the derivative of this function with respect to output of sample we get
+or in vector form
+Now, if we assume that the loss activation of the last layer is a softmax function, we have" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/losses/crossentropy/" />
+<meta property="og:site_name" content="neuro" />
+<meta itemprop="name" content="Cross Entropy">
+<meta itemprop="description" content="The cross entropy loss function is typically used in multiclass classification problems. For a model having classes and if are the predicted labels and are the true labels, then the cross entropy is defined as
+where is the number of samples in the mini-batch. If we take the derivative of this function with respect to output of sample we get
+or in vector form
+Now, if we assume that the loss activation of the last layer is a softmax function, we have">
+
+
+
+<meta itemprop="wordCount" content="236">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Cross Entropy"/>
+<meta name="twitter:description" content="The cross entropy loss function is typically used in multiclass classification problems. For a model having classes and if are the predicted labels and are the true labels, then the cross entropy is defined as
+where is the number of samples in the mini-batch. If we take the derivative of this function with respect to output of sample we get
+or in vector form
+Now, if we assume that the loss activation of the last layer is a softmax function, we have"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" as="style">
+<link href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>Cross Entropy | neuro</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 13.147345 12.788828" id="svg8" inkscape:export-filename="/Users/sylvain/Developer/Rust_projects/neuro/www/assets/logo.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="0.92.2 5c3e80d, 2017-08-06" sodipodi:docname="logo.svg"><defs id="defs2" /><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="69.202826" inkscape:cy="48.04465" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:window-width="1680" inkscape:window-height="952" inkscape:window-x="0" inkscape:window-y="1" inkscape:window-maximized="1" inkscape:pagecheckerboard="true" showborder="true" borderlayer="false" inkscape:showpageshadow="false" /><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-13.436986,-26.062207)"><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="path815" cx="19.974806" cy="27.222263" r="1.0755528" /><circle r="1.0755528" cy="31.332914" cx="25.424274" id="circle817" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle819" cx="14.597042" cy="31.332914" r="1.0755528" /><circle r="1.0755528" cy="37.690979" cx="16.533037" id="circle821" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle823" cx="23.631687" cy="37.690979" r="1.0755528" /><path style="fill:none;fill-opacity:1;stroke:#fff;stroke-width:.40561634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m14.525339 31.309365 5.377764-4.158804 5.521171 4.158804-1.792588 6.381613-7.098648-.0717z" id="path829" inkscape:connector-curvature="0" /></g></svg></span><span class="font-weight-light">neuro</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">  Knowledge Base</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/examples/" ><span>  Examples</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/api/neuro" ><span>   API Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://www.github.com/srenevey/neuro" target="_blank" ><span> <i class='fab fa-github'></i>  GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Knowledge Base</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/activations/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Activations</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-activations">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-linear" href="/docs/activations/linear/">Linear</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-relu" href="/docs/activations/relu/">ReLU</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-sigmoid" href="/docs/activations/sigmoid/">Sigmoid</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-softmax" href="/docs/activations/softmax/">Softmax</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-tanh" href="/docs/activations/tanh/">Tanh</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/initializers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Initializers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-initializers">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/layers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Layers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-layers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-batchnorm" href="/docs/layers/batchnorm/">BatchNorm</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-conv2d" href="/docs/layers/conv2d/">Conv2D</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dense" href="/docs/layers/dense/">Dense</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dropout" href="/docs/layers/dropout/">Dropout</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-maxpooling2d" href="/docs/layers/maxpooling2d/">MaxPooling2D</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/losses/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Losses</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-losses">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-losses-crossentropy" href="/docs/losses/crossentropy/">Cross Entropy</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mae" href="/docs/losses/mae/">Mean Absolute Error</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mse" href="/docs/losses/mse/">Mean Squared Error</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/metrics/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Metrics</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-metrics">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/optimizers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Optimizers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-optimizers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-adam" href="/docs/optimizers/adam/">Adam</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-rmsprop" href="/docs/optimizers/rmsprop/">RMSProp</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-sgd" href="/docs/optimizers/sgd/">SGD</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/">Knowledge Base</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/losses/">Losses</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/docs/losses/crossentropy/">Cross Entropy</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Cross Entropy</h1>
+	
+	<p>The cross entropy loss function is typically used in multiclass classification problems. For a model having <img src="https://latex.codecogs.com/svg.latex?C" title="C" /> classes and if <img src="https://latex.codecogs.com/svg.latex?\inline&space;\hat{Y}&space;=&space;\begin{bmatrix}&space;\boldsymbol{\hat{y}}^{(1)}&space;&&space;\boldsymbol{\hat{y}}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{\hat{y}}^{(m)}&space;\end{bmatrix}" title="\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} & \boldsymbol{\hat{y}}^{(2)} & \dots & \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}" /> are the predicted labels and <img src="https://latex.codecogs.com/svg.latex?\inline&space;Y&space;=&space;\begin{bmatrix}&space;\boldsymbol{y}^{(1)}&space;&&space;\boldsymbol{y}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{y}^{(m)}&space;\end{bmatrix}" title="Y = \begin{bmatrix} \boldsymbol{y}^{(1)} & \boldsymbol{y}^{(2)} & \dots & \boldsymbol{y}^{(m)} \end{bmatrix}" /> are the true labels, then the cross entropy is defined as</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},&space;Y)&space;=&space;\frac{1}{m}\sum_{i=1}^m\left(-\sum_{j=1}^Cy^{(i)}_j\log\hat{y}^{(i)}_j&space;\right)" title="\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}\sum_{i=1}^m\left(-\sum_{j=1}^Cy^{(i)}_j\log\hat{y}^{(i)}_j \right)" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?m" title="m" /> is the number of samples in the mini-batch. If we take the derivative of this function with respect to output <img src="https://latex.codecogs.com/svg.latex?j" title="j" /> of sample <img src="https://latex.codecogs.com/svg.latex?i" title="i" /> we get</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;\hat{y}_j^{(i)}}&space;=&space;-\frac{1}{m}\frac{y_j^{(i)}}{\hat{y}_j^{(i)}}" title="\frac{\partial \mathcal{L}}{\partial \hat{y}_j^{(i)}} = -\frac{1}{m}\frac{y_j^{(i)}}{\hat{y}_j^{(i)}}" />
+or in vector form</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)&space;=&space;-\frac{1}{m}\frac{Y}{\hat{Y&space;}}" title="\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y) = -\frac{1}{m}\frac{Y}{\hat{Y }}" />
+Now, if we assume that the loss activation of the last layer is a softmax function, we have</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\hat{y}_j^{(i)}&space;=&space;\frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}" title="\hat{y}_j^{(i)} = \frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}" /></p>
+
+<p>and, as seen in the derivation of the <a href="/docs/activations/softmax/" target="_blank">softmax</a>, the derivative is</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\hat{y}_j^{(i)}}{\partial&space;x_l^{(i)}}&space;=&space;\hat{y}_j^{(i)}(\delta_{jl}&space;-&space;\hat{y}_l^{(i)})" title="\frac{\partial \hat{y}_j^{(i)}}{\partial x_l^{(i)}} = \hat{y}_j^{(i)}(\delta_{jl} - \hat{y}_l^{(i)})" /></p>
+
+<p>Hence, if we compute the derivative of <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}" title="\mathcal{L}" /> with respect to <img src="https://latex.codecogs.com/svg.latex?x_l^{(i)}" title="x_l^{(i)}" />, we have</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;x_l^{(i)}}&space;=&space;\sum_{k=1}^c\frac{\partial&space;\mathcal{L}}{\partial&space;\hat{y}_k^{(i)}}\frac{\partial&space;\hat{y}_k^{(i)}}{\partial&space;x_l^{(i)}}" title="\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \sum_{k=1}^c\frac{\partial \mathcal{L}}{\partial \hat{y}_k^{(i)}}\frac{\partial \hat{y}_k^{(i)}}{\partial x_l^{(i)}}" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?C" title="C" /> is the number of classes. If we replace the two fractions on the right hand side by the equations found previously, we have</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;x_l^{(i)}}&space;=&space;-\sum_{k=1}^C\frac{y_k^{(i)}}{\hat{y}_k^{(i)}}\hat{y}_k^{(i)}(\delta_{kl}&space;-&space;\hat{y}_l^{(i)})&space;=&space;-\sum_{k=1}^Cy_k^{(i)}(\delta_{kl}&space;-&space;\hat{y}_l^{(i)})" title="\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -\sum_{k=1}^C\frac{y_k^{(i)}}{\hat{y}_k^{(i)}}\hat{y}_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)}) = -\sum_{k=1}^Cy_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)})" /></p>
+
+<p>Separating the cases <img src="https://latex.codecogs.com/svg.latex?l=k" title="l=k" /> and <img src="https://latex.codecogs.com/svg.latex?l&space;\neq&space;k" title="l \neq k" /> yields
+<img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;x_l^{(i)}}&space;=&space;-y_l^{(i)}(1&space;-&space;\hat{y}_l^{(i)})&space;&plus;&space;\sum_{k\neq&space;l}^Cy_k^{(i)}\hat{y}_l^{(i)}&space;=&space;\hat{y}_l^{(i)}\left(y_l^{(i)}&space;&plus;&space;\sum_{k\neq&space;l}^Cy_k^{(i)}&space;\right&space;)&space;-&space;y_l^{(i)}" title="\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -y_l^{(i)}(1 - \hat{y}_l^{(i)}) + \sum_{k\neq l}^Cy_k^{(i)}\hat{y}_l^{(i)} = \hat{y}_l^{(i)}\left(y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} \right ) - y_l^{(i)}" />
+Since the true label are one-hot encoded, we have
+<img class="center" src="https://latex.codecogs.com/svg.latex?y_l^{(i)}&space;&plus;&space;\sum_{k\neq&space;l}^Cy_k^{(i)}&space;=&space;1" title="y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} = 1" />
+so that</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;x_l^{(i)}}&space;=&space;\hat{y}_l^{(i)}&space;-&space;y_l^{(i)}" title="\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \hat{y}_l^{(i)} - y_l^{(i)}" /></p>
+
+<p>We see therefore that if the activation of the last layer is a softmax function, the gradient of the cross-entropy loss with respect to the linear activation of the last layer takes the simple form</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\nabla_X\mathcal{L}(\hat{Y},&space;Y)&space;=&space;\frac{1}{m}(\hat{Y}&space;-&space;Y)" title="\nabla_X\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}(\hat{Y} - Y)" /></p>
+
+<p>which can be easily computed. For this reason, the current implementation of the cross-entropy loss function in neuro assumes that the last activation is a softmax function. Conversly, the softmax activation function can only be used for the last layer of the network with the cross-entropy loss function. This might change in the future.</p>
+
+	
+	
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/srenevey">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="LinkedIn" aria-label="LinkedIn">
+    <a class="text-white" target="_blank" href="https://linkedin.com/in/sylvainrenevey">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script src="/js/main.min.29b0315468c00226fa6f4556a9cebc0ac4fe1ce1457a01b22c0a06b329877383.js" integrity="sha256-KbAxVGjAAib6b0VWqc68CsT&#43;HOFFegGyLAoGsymHc4M=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

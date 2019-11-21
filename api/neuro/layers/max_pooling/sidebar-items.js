@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MaxPooling2D","Defines a 2D max pooling layer."]]});

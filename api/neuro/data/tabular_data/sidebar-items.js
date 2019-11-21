@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["TabularDataSet","Structure representing a tabular data."]]});

@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Softmax | neuro</title><meta property="og:title" content="Softmax" />
+<meta property="og:description" content="Multiclass classification 
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/activations/softmax/" />
+<meta property="og:site_name" content="neuro" />
+<meta itemprop="name" content="Softmax">
+<meta itemprop="description" content="Multiclass classification 
+">
+
+
+
+<meta itemprop="wordCount" content="256">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Softmax"/>
+<meta name="twitter:description" content="Multiclass classification 
+"/>
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" as="style">
+<link href="/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>Softmax | neuro</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 13.147345 12.788828" id="svg8" inkscape:export-filename="/Users/sylvain/Developer/Rust_projects/neuro/www/assets/logo.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="0.92.2 5c3e80d, 2017-08-06" sodipodi:docname="logo.svg"><defs id="defs2" /><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="69.202826" inkscape:cy="48.04465" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:window-width="1680" inkscape:window-height="952" inkscape:window-x="0" inkscape:window-y="1" inkscape:window-maximized="1" inkscape:pagecheckerboard="true" showborder="true" borderlayer="false" inkscape:showpageshadow="false" /><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-13.436986,-26.062207)"><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="path815" cx="19.974806" cy="27.222263" r="1.0755528" /><circle r="1.0755528" cy="31.332914" cx="25.424274" id="circle817" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle819" cx="14.597042" cy="31.332914" r="1.0755528" /><circle r="1.0755528" cy="37.690979" cx="16.533037" id="circle821" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle823" cx="23.631687" cy="37.690979" r="1.0755528" /><path style="fill:none;fill-opacity:1;stroke:#fff;stroke-width:.40561634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m14.525339 31.309365 5.377764-4.158804 5.521171 4.158804-1.792588 6.381613-7.098648-.0717z" id="path829" inkscape:connector-curvature="0" /></g></svg></span><span class="font-weight-light">neuro</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">  Knowledge Base</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/examples/" ><span>  Examples</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/api/neuro" ><span>   API Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://www.github.com/srenevey/neuro" target="_blank" ><span> <i class='fab fa-github'></i>  GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Knowledge Base</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/activations/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Activations</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="docs-activations">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-linear" href="/docs/activations/linear/">Linear</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-relu" href="/docs/activations/relu/">ReLU</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-sigmoid" href="/docs/activations/sigmoid/">Sigmoid</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-activations-softmax" href="/docs/activations/softmax/">Softmax</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-activations-tanh" href="/docs/activations/tanh/">Tanh</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/initializers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Initializers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-initializers">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/layers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Layers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-layers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-batchnorm" href="/docs/layers/batchnorm/">BatchNorm</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-conv2d" href="/docs/layers/conv2d/">Conv2D</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dense" href="/docs/layers/dense/">Dense</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-dropout" href="/docs/layers/dropout/">Dropout</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-layers-maxpooling2d" href="/docs/layers/maxpooling2d/">MaxPooling2D</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/losses/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Losses</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-losses">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-crossentropy" href="/docs/losses/crossentropy/">Cross Entropy</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mae" href="/docs/losses/mae/">Mean Absolute Error</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-losses-mse" href="/docs/losses/mse/">Mean Squared Error</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/metrics/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Metrics</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-metrics">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/optimizers/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Optimizers</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-optimizers">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-adam" href="/docs/optimizers/adam/">Adam</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-rmsprop" href="/docs/optimizers/rmsprop/">RMSProp</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-optimizers-sgd" href="/docs/optimizers/sgd/">SGD</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/">Knowledge Base</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/docs/activations/">Activations</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/docs/activations/softmax/">Softmax</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Softmax</h1>
+	<div class="lead">Multiclass classification</div>
+	
+
+<p>The softmax activation function is a bit different than the other activation functions in that it takes a vector as input rather than a scalar:</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}" title="\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?\vec{x}&space;=&space;\begin{bmatrix}&space;x_1&space;&&space;x_2&space;&&space;\dots&space;&&space;x_n&space;\end{bmatrix}" title="\vec{x} = \begin{bmatrix} x_1 & x_2 & \dots & x_n \end{bmatrix}" />. Component-wise, we have</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}" title="g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}" /></p>
+
+<p>Note that the exponential terms in the above equation can quickly grow and cause numerical instability. In order to mitigate this undersired behavior, we can multiply both the numerator and denominator by a constant such that</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})&space;=&space;\frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}}&space;=&space;\frac{e^{\ln&space;C}e^{x_i}}{e^{&space;\ln&space;C}\sum_{k=1}^ne^{x_k}}&space;=&space;\frac{e^{x_i&space;&plus;&space;\ln&space;C}}{\sum_{k=1}^ne^{x_k&plus;\ln&space;C}}" title="g_i(\vec{x}) = \frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}} = \frac{e^{\ln C}e^{x_i}}{e^{ \ln C}\sum_{k=1}^ne^{x_k}} = \frac{e^{x_i + \ln C}}{\sum_{k=1}^ne^{x_k+\ln C}}" /></p>
+
+<p>A common choice for the constant is to set <img src="https://latex.codecogs.com/svg.latex?\inline&space;\ln&space;C&space;=&space;-\max_k(x_k)" title="\ln C = -\max_k(x_k)" />  [1]. The definiton of the softmax function is such that</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\sum_{i=1}^ng_i(\vec{x})=1" title="\sum_{i=1}^ng_i(\vec{x})=1" /></p>
+
+<p>which allows us to see <img src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})" title="g_i(\vec{x})" /> as the probability that <img src="https://latex.codecogs.com/svg.latex?\vec{x}" title="\vec{x}" /> belongs to class <img src="https://latex.codecogs.com/svg.latex?i" title="i" />. This function is therefore widely used for the last activation of multiclass classification models.</p>
+
+<p>The derivative of this function is given by</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_i}&space;=&space;\frac{e^{x_i}\sum_{k=1}^ne^{x_k}&space;-&space;e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k}&space;\right)^2}&space;=&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1&space;-&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}&space;\right&space;)" title="\frac{\partial g_i}{\partial x_i} = \frac{e^{x_i}\sum_{k=1}^ne^{x_k} - e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} = \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1 - \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}} \right )" /></p>
+
+<p>and</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_j}&space;=&space;\frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k}&space;\right)^2}&space;=-&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}" title="\frac{\partial g_i}{\partial x_j} = \frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} =- \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}" /></p>
+
+<p>These two equations can be rewritten more compactly as</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_j}&space;=&space;g_i(\vec{x})(\delta_{ij}&space;-&space;g_j(\vec{x}))" title="\frac{\partial g_i}{\partial x_j} = g_i(\vec{x})(\delta_{ij} - g_j(\vec{x}))" /></p>
+
+<p>where <img src="https://latex.codecogs.com/svg.latex?\delta_{ij}" title="\delta_{ij}" /> is the Kronecker delta and yields</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\delta_{ij}&space;=&space;\begin{cases}&space;1&space;&\text{if&space;}&space;i&space;=&space;j&space;\\&space;0&space;&\text{if&space;}&space;i&space;\neq&space;j&space;\end{cases}" title="\delta_{ij} = \begin{cases} 1 &\text{if } i = j \\ 0 &\text{if } i \neq j \end{cases}" /></p>
+
+<p>The Jacobian of <img src="https://latex.codecogs.com/svg.latex?\vec{g}" title="\vec{g}" /> is given by</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathbf{J}&space;=&space;\begin{bmatrix}&space;\frac{\partial&space;g_1}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_n}\\&space;\frac{\partial&space;g_2}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_n}\\&space;\frac{\partial&space;g_3}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_n}\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots\\&space;\frac{\partial&space;g_n}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_n}&space;\end{bmatrix}" title="\mathbf{J} = \begin{bmatrix} \frac{\partial g_1}{\partial x_1} & \frac{\partial g_1}{\partial x_2} & \frac{\partial g_1}{\partial x_3} & \dots & \frac{\partial g_1}{\partial x_n}\\ \frac{\partial g_2}{\partial x_1} & \frac{\partial g_2}{\partial x_2} & \frac{\partial g_2}{\partial x_3} & \dots & \frac{\partial g_2}{\partial x_n}\\ \frac{\partial g_3}{\partial x_1} & \frac{\partial g_3}{\partial x_2} & \frac{\partial g_3}{\partial x_3} & \dots & \frac{\partial g_3}{\partial x_n}\\ \vdots & \vdots & \vdots & \ddots & \vdots\\ \frac{\partial g_n}{\partial x_1} & \frac{\partial g_n}{\partial x_2} & \frac{\partial g_n}{\partial x_3} & \dots & \frac{\partial g_n}{\partial x_n} \end{bmatrix}" /></p>
+
+<p>which, based on the partial derivatives computed above, becomes</p>
+
+<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathbf{J}&space;=&space;\begin{bmatrix}&space;g_1(\vec{x})(1&space;-&space;g_1(\vec{x}))&space;&&space;-g_1(\vec{x})g_2(\vec{x})&space;&&space;-g_1(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;-g_1(\vec{x})g_n(\vec{x})\\&space;-g_2(\vec{x})g_1(\vec{x})&space;&&space;g_2(\vec{x})(1&space;-&space;g_2(\vec{x}))&space;&&space;-g_2(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;-g_2(\vec{x})g_n(\vec{x})\\&space;-g_3(\vec{x})g_1(\vec{x})&space;&&space;-g_3(\vec{x})g_2(\vec{x})&space;&&space;g_3(\vec{x})(1&space;-&space;g_3(\vec{x}))&space;&&space;\dots&space;&&space;-g_3(\vec{x})g_n(\vec{x})\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots\\&space;-g_n(\vec{x})g_1(\vec{x})&space;&&space;-g_n(\vec{x})g_2(\vec{x})&space;&&space;-g_n(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;g_n(\vec{x})(1-g_n(\vec{x}))&space;\end{bmatrix}" title="\mathbf{J} = \begin{bmatrix} g_1(\vec{x})(1 - g_1(\vec{x})) & -g_1(\vec{x})g_2(\vec{x}) & -g_1(\vec{x})g_3(\vec{x}) & \dots & -g_1(\vec{x})g_n(\vec{x})\\ -g_2(\vec{x})g_1(\vec{x}) & g_2(\vec{x})(1 - g_2(\vec{x})) & -g_2(\vec{x})g_3(\vec{x}) & \dots & -g_2(\vec{x})g_n(\vec{x})\\ -g_3(\vec{x})g_1(\vec{x}) & -g_3(\vec{x})g_2(\vec{x}) & g_3(\vec{x})(1 - g_3(\vec{x})) & \dots & -g_3(\vec{x})g_n(\vec{x})\\ \vdots & \vdots & \vdots & \ddots & \vdots\\ -g_n(\vec{x})g_1(\vec{x}) & -g_n(\vec{x})g_2(\vec{x}) & -g_n(\vec{x})g_3(\vec{x}) & \dots & g_n(\vec{x})(1-g_n(\vec{x})) \end{bmatrix}" /></p>
+
+<p>Note: for multiclass classification problems, the loss function is usually the cross-entropy loss function and the activation of the output layer the softmax function. When combined together, the gradient of the cross-entropy loss function with respect to the linear activation of the output layer (that is, the activation pre-softmax) takes a very simple form as shown <a href="/docs/losses/crossentropy/" target="_blank">here</a>. For this reason, the gradient of the softmax activation function in neuro returns its output and should only be used for the output layer when the cross-entropy loss function is used. This might change in the future.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Stanford CS231n course notes: <a href="https://cs231n.github.io/linear-classify/#softmax" target="_blank">https://cs231n.github.io/linear-classify/#softmax</a>, accessed November 2019.</p>
+
+	
+	
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/srenevey">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="LinkedIn" aria-label="LinkedIn">
+    <a class="text-white" target="_blank" href="https://linkedin.com/in/sylvainrenevey">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script src="/js/main.min.29b0315468c00226fa6f4556a9cebc0ac4fe1ce1457a01b22c0a06b329877383.js" integrity="sha256-KbAxVGjAAib6b0VWqc68CsT&#43;HOFFegGyLAoGsymHc4M=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

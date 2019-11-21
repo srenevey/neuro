@@ -1,0 +1,124 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>neuro – Optimizers</title>
+    <link>/docs/optimizers/</link>
+    <description>Recent content in Optimizers on neuro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/optimizers/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Adam</title>
+      <link>/docs/optimizers/adam/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/optimizers/adam/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The Adam optimizer is an adaptive learning rate algorithm and is widely used due in part to its robustness to the choice of the hyperparameters. The algorithm keeps track of the first- and second-order moment estimates for each parameter &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\theta&#34; title=&#34;\theta&#34; /&gt;, thus natively incorporating momentum (with the first-order moment). The moment estimates are initialized with &lt;img src=&#34;https://latex.codecogs.com/svg.latex?v&amp;space;=&amp;space;0&#34; title=&#34;v = 0&#34; /&gt; and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?s&amp;space;=&amp;space;0&#34; title=&#34;s = 0&#34; /&gt;. At each iteration, the first moment estimate is updated with&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?v&amp;space;=&amp;space;\beta_1v&amp;space;&amp;plus;&amp;space;(1-\beta_1)\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;v = \beta_1v + (1-\beta_1)\nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and the second one with&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?s&amp;space;=&amp;space;\beta_2s&amp;space;&amp;plus;&amp;space;(1&amp;space;-&amp;space;\beta_2)[\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)]^2&#34; title=&#34;s = \beta_2s + (1 - \beta_2)[\nabla_\theta\mathcal{L}(\hat{Y}, Y)]^2&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta_1&#34; title=&#34;\beta_1&#34; /&gt; and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta_2&#34; title=&#34;\beta_2&#34; /&gt; are the exponential decay rates for the first and second moment estimates respectively, and the gradient of the loss function &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;\nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt; is obtained from the backpropagation algorithm. Once these estimates have been computed, we correct for the bias in the first and second moments:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\hat{v}&amp;space;=&amp;space;\frac{v}{1&amp;space;-&amp;space;\beta_1^t}&#34; title=&#34;\hat{v} = \frac{v}{1 - \beta_1^t}&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\hat{s}&amp;space;=&amp;space;\frac{s}{1&amp;space;-&amp;space;\beta_2^t}&#34; title=&#34;\hat{s} = \frac{s}{1 - \beta_2^t}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?t&#34; title=&#34;t&#34; /&gt; is the time step and is updated after each batch has been processed. The parameter is finally updated with&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\theta&amp;space;=&amp;space;\theta&amp;space;-&amp;space;\alpha\frac{\hat{v}}{\sqrt{\hat{s}}&amp;space;&amp;plus;&amp;space;\varepsilon}&#34; title=&#34;\theta = \theta - \alpha\frac{\hat{v}}{\sqrt{\hat{s}} + \varepsilon}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\alpha&#34; title=&#34;\alpha&#34; /&gt; is the learning rate and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\varepsilon&#34; title=&#34;\varepsilon&#34; /&gt; is a small number added for numerical stability. In neuro, the default values for the parameters of the optimizer are set based on Goodfellow et at. [1] recommendations:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\begin{align*}&amp;space;\beta_1&amp;space;&amp;=&amp;space;0.9&amp;space;\\&amp;space;\beta_2&amp;space;&amp;=&amp;space;0.999&amp;space;\\&amp;space;\varepsilon&amp;space;&amp;=&amp;space;10^{-8}&amp;space;\end{align*}&#34; title=&#34;\begin{align*} \beta_1 &amp;= 0.9 \\ \beta_2 &amp;= 0.999 \\ \varepsilon &amp;= 10^{-8} \end{align*}&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;[1] Goodfellow, I., Bengio, Y., and Courville, A., &lt;em&gt;Deep Learning&lt;/em&gt;, MIT Press, Cambridge MA, 2017&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: RMSProp</title>
+      <link>/docs/optimizers/rmsprop/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/optimizers/rmsprop/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The RMSProp optimization algorithm has first been introduced by Hinton [1]. This algorithm keeps track of the moving average of the square of the gradient:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?s&amp;space;=&amp;space;\beta&amp;space;s&amp;space;&amp;plus;&amp;space;(1&amp;space;-&amp;space;\beta)(\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y))^2&#34; title=&#34;s = \beta s + (1 - \beta)(\nabla_\theta\mathcal{L}(\hat{Y}, Y))^2&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta&#34; title=&#34;\beta&#34; /&gt; is the decay rate of the moving average and the gradient of the loss function &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;\nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt; is computed with the backpropagation algorithm. The parameters are then updated according to&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\theta&amp;space;=&amp;space;\theta&amp;space;-&amp;space;\alpha\frac{\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)}{\sqrt{s}&amp;space;&amp;plus;&amp;space;\varepsilon}&#34; title=&#34;\theta = \theta - \alpha\frac{\nabla_\theta\mathcal{L}(\hat{Y}, Y)}{\sqrt{s} + \varepsilon}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\alpha&#34; title=&#34;\alpha&#34; /&gt; is the learning rate and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\varepsilon&#34; title=&#34;\varepsilon&#34; /&gt; is a small quantity added to ensure numerical stability. Note that &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\sqrt{s}&#34; title=&#34;\sqrt{s}&#34; /&gt; is applied element-wise. By default, the hyperparameters of the optimizer are set to&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\begin{align*}&amp;space;\beta&amp;space;&amp;=&amp;space;0.9&amp;space;\\&amp;space;\varepsilon&amp;space;&amp;=&amp;space;10^{-8}&amp;space;\end{align*}&#34; title=&#34;\begin{align*} \beta &amp;= 0.9 \\ \varepsilon &amp;= 10^{-8} \end{align*}&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;[1] Lecture notes: &lt;a href=&#34;http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf&#34; target=&#34;_blank&#34;&gt;http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf&lt;/a&gt;, accessed November 2019.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: SGD</title>
+      <link>/docs/optimizers/sgd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/optimizers/sgd/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The stochastic gradient descent optimizer updates the parameters by following the direction of steepest descent of the gradient. That is, for parameter &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\theta&#34; title=&#34;\theta&#34; /&gt;, the update rule is&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\theta&amp;space;=&amp;space;\theta&amp;space;-&amp;space;\alpha&amp;space;\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;\theta = \theta - \alpha \nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\alpha&#34; title=&#34;\alpha&#34; /&gt; is the learning rate and the gradient of the loss function &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;\nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt; is computed with the backpropagation algorithm.&lt;/p&gt;
+
+&lt;h4 id=&#34;stochastic-gradient-descent-with-momentum&#34;&gt;Stochastic Gradient Descent with Momentum&lt;/h4&gt;
+
+&lt;p&gt;Training a neural network with the SGD optimizer can be slow. A method to improve the convergence rate is to introduce momentum. This method keeps track of the past gradients by storing the moving average of the gradient. The moving average (sometimes called velocity by analogy with physical kinematic systems) is initialized as &lt;img src=&#34;https://latex.codecogs.com/svg.latex?v&amp;space;=&amp;space;0&#34; title=&#34;v = 0&#34; /&gt; and is then updated according to&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?v&amp;space;=&amp;space;\beta&amp;space;v&amp;space;-&amp;space;\alpha\nabla_\theta\mathcal{L}(\hat{Y},&amp;space;Y)&#34; title=&#34;v = \beta v - \alpha\nabla_\theta\mathcal{L}(\hat{Y}, Y)&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta&#34; title=&#34;\beta&#34; /&gt; is the exponential delay rate of the first-moment estimate (the momentum). The update rule for &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\theta&#34; title=&#34;\theta&#34; /&gt; for the SGD with momentum becomes&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\theta&amp;space;=&amp;space;\theta&amp;space;&amp;plus;&amp;space;v&#34; title=&#34;\theta = \theta + v&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;By default &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta&#34; title=&#34;\beta&#34; /&gt; is set to 0 in neuro&amp;rsquo;s SGD optimizer implementation. It can be turned on by creating the optimizer with the method &lt;code&gt;with_param&lt;/code&gt;. A typical value is &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\beta&amp;space;=&amp;space;0.9&#34; title=&#34;\beta = 0.9&#34; /&gt; [1].&lt;/p&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;[1] Stanford CS231n course notes: &lt;a href=&#34;https://cs231n.github.io/neural-networks-3/#sgd&#34; target=&#34;_blank&#34;&gt;https://cs231n.github.io/neural-networks-3/#sgd&lt;/a&gt;, accessed November 2019.&lt;/p&gt;
+
+&lt;p&gt;[2] Goodfellow, I., Bengio, Y., and Courville, A., &lt;em&gt;Deep Learning&lt;/em&gt;, MIT Press, Cambridge MA, 2017&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

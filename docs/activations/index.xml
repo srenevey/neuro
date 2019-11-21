@@ -1,0 +1,194 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>neuro – Activations</title>
+    <link>/docs/activations/</link>
+    <description>Recent content in Activations on neuro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/activations/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Linear</title>
+      <link>/docs/activations/linear/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/activations/linear/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The linear activation function simply returns its input without applying any modification:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;x&#34; title=&#34;g(x) = x&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Its derivative is then given by:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&#34; title=&#34;\frac{\partial g}{\partial x} = 1&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: ReLU</title>
+      <link>/docs/activations/relu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/activations/relu/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The ReLU or rectified linear unit is one of the most widely used activation functions. This function is defined as follows:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;\max(0,&amp;space;x)&#34; title=&#34;g(x) = \max(0, x)&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;That is, the function returns the input value if it is positive and zero otherwise.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;/images/relu.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Its derivative can be expressed as:
+&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}1&amp;\text{if&amp;space;}x&gt;0\&amp;space;\text{undefined}&amp;amp;\text{if&amp;space;}x=0\&amp;space;0&amp;space;&amp;amp;\text{if&amp;space;}x&lt;0\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases}1&amp;\text{if }x&gt;0\ \text{undefined}&amp;amp;\text{if }x=0\ 0 &amp;amp;\text{if }x&lt;0\end{cases}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Since the case &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt; is undefined, the derivative can be arbitrarily set to 1 for this value such that&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}&amp;space;1&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;\geq&amp;space;0&amp;space;\\&amp;space;0&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;&lt;&amp;space;0&amp;space;\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases} 1 &amp;\text{if } x \geq 0 \\ 0 &amp;\text{if } x &lt; 0 \end{cases}&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/drelu.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].&lt;/p&gt;
+
+&lt;h3 id=&#34;references&#34;&gt;References&lt;/h3&gt;
+
+&lt;p&gt;[1] &lt;a href=&#34;http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf&#34; target=&#34;_blank&#34;&gt;Glorot X., Bordes A., Bengio Y., &amp;ldquo;Deep Sparse Rectifier Neural Networks&amp;rdquo;, Proceedings of the 14th International Conference on Artificial Intelligence and Statistics, 2011, Fort Lauderdale, FL, USA.&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Sigmoid</title>
+      <link>/docs/activations/sigmoid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/activations/sigmoid/</guid>
+      <description>
+        
+        
+        &lt;p&gt;A sigmoid function is a mathematical function that maps an input to an output following an &amp;ldquo;S&amp;rdquo;-shaped curve. The sigmoid function commonly used in deep learning is the logistic function given by&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\sigma(x)=\frac{1}{1&amp;plus;e^{-x}}&#34; title=&#34;\sigma(x)=\frac{1}{1+e^{-x}}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This function maps any input to an output in the interval (0,1).&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;/images/sigmoid.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Its derivative can be computed as&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\frac{e^{-x}}{(1&amp;plus;e^{-x})^2}&#34; title=&#34;\frac{d\sigma}{dx}=\frac{e^{-x}}{(1+e^{-x})^2}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;which can be rewritten in terms of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\sigma&#34; title=&#34;\sigma&#34; /&gt; as&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; title=&#34;\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Softmax</title>
+      <link>/docs/activations/softmax/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/activations/softmax/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The softmax activation function is a bit different than the other activation functions in that it takes a vector as input rather than a scalar:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}&#34; title=&#34;\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\vec{x}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;x_1&amp;space;&amp;&amp;space;x_2&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;x_n&amp;space;\end{bmatrix}&#34; title=&#34;\vec{x} = \begin{bmatrix} x_1 &amp; x_2 &amp; \dots &amp; x_n \end{bmatrix}&#34; /&gt;. Component-wise, we have&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}&#34; title=&#34;g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that the exponential terms in the above equation can quickly grow and cause numerical instability. In order to mitigate this undersired behavior, we can multiply both the numerator and denominator by a constant such that&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g_i(\vec{x})&amp;space;=&amp;space;\frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}}&amp;space;=&amp;space;\frac{e^{\ln&amp;space;C}e^{x_i}}{e^{&amp;space;\ln&amp;space;C}\sum_{k=1}^ne^{x_k}}&amp;space;=&amp;space;\frac{e^{x_i&amp;space;&amp;plus;&amp;space;\ln&amp;space;C}}{\sum_{k=1}^ne^{x_k&amp;plus;\ln&amp;space;C}}&#34; title=&#34;g_i(\vec{x}) = \frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}} = \frac{e^{\ln C}e^{x_i}}{e^{ \ln C}\sum_{k=1}^ne^{x_k}} = \frac{e^{x_i + \ln C}}{\sum_{k=1}^ne^{x_k+\ln C}}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A common choice for the constant is to set &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\ln&amp;space;C&amp;space;=&amp;space;-\max_k(x_k)&#34; title=&#34;\ln C = -\max_k(x_k)&#34; /&gt;  [1]. The definiton of the softmax function is such that&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\sum_{i=1}^ng_i(\vec{x})=1&#34; title=&#34;\sum_{i=1}^ng_i(\vec{x})=1&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;which allows us to see &lt;img src=&#34;https://latex.codecogs.com/svg.latex?g_i(\vec{x})&#34; title=&#34;g_i(\vec{x})&#34; /&gt; as the probability that &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\vec{x}&#34; title=&#34;\vec{x}&#34; /&gt; belongs to class &lt;img src=&#34;https://latex.codecogs.com/svg.latex?i&#34; title=&#34;i&#34; /&gt;. This function is therefore widely used for the last activation of multiclass classification models.&lt;/p&gt;
+
+&lt;p&gt;The derivative of this function is given by&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g_i}{\partial&amp;space;x_i}&amp;space;=&amp;space;\frac{e^{x_i}\sum_{k=1}^ne^{x_k}&amp;space;-&amp;space;e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k}&amp;space;\right)^2}&amp;space;=&amp;space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1&amp;space;-&amp;space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}&amp;space;\right&amp;space;)&#34; title=&#34;\frac{\partial g_i}{\partial x_i} = \frac{e^{x_i}\sum_{k=1}^ne^{x_k} - e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} = \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1 - \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}} \right )&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g_i}{\partial&amp;space;x_j}&amp;space;=&amp;space;\frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k}&amp;space;\right)^2}&amp;space;=-&amp;space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}&#34; title=&#34;\frac{\partial g_i}{\partial x_j} = \frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} =- \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;These two equations can be rewritten more compactly as&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g_i}{\partial&amp;space;x_j}&amp;space;=&amp;space;g_i(\vec{x})(\delta_{ij}&amp;space;-&amp;space;g_j(\vec{x}))&#34; title=&#34;\frac{\partial g_i}{\partial x_j} = g_i(\vec{x})(\delta_{ij} - g_j(\vec{x}))&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\delta_{ij}&#34; title=&#34;\delta_{ij}&#34; /&gt; is the Kronecker delta and yields&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\delta_{ij}&amp;space;=&amp;space;\begin{cases}&amp;space;1&amp;space;&amp;\text{if&amp;space;}&amp;space;i&amp;space;=&amp;space;j&amp;space;\\&amp;space;0&amp;space;&amp;\text{if&amp;space;}&amp;space;i&amp;space;\neq&amp;space;j&amp;space;\end{cases}&#34; title=&#34;\delta_{ij} = \begin{cases} 1 &amp;\text{if } i = j \\ 0 &amp;\text{if } i \neq j \end{cases}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The Jacobian of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\vec{g}&#34; title=&#34;\vec{g}&#34; /&gt; is given by&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathbf{J}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\frac{\partial&amp;space;g_1}{\partial&amp;space;x_1}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_1}{\partial&amp;space;x_2}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_1}{\partial&amp;space;x_3}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_1}{\partial&amp;space;x_n}\\&amp;space;\frac{\partial&amp;space;g_2}{\partial&amp;space;x_1}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_2}{\partial&amp;space;x_2}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_2}{\partial&amp;space;x_3}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_2}{\partial&amp;space;x_n}\\&amp;space;\frac{\partial&amp;space;g_3}{\partial&amp;space;x_1}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_3}{\partial&amp;space;x_2}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_3}{\partial&amp;space;x_3}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_3}{\partial&amp;space;x_n}\\&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\ddots&amp;space;&amp;&amp;space;\vdots\\&amp;space;\frac{\partial&amp;space;g_n}{\partial&amp;space;x_1}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_n}{\partial&amp;space;x_2}&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_n}{\partial&amp;space;x_3}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\frac{\partial&amp;space;g_n}{\partial&amp;space;x_n}&amp;space;\end{bmatrix}&#34; title=&#34;\mathbf{J} = \begin{bmatrix} \frac{\partial g_1}{\partial x_1} &amp; \frac{\partial g_1}{\partial x_2} &amp; \frac{\partial g_1}{\partial x_3} &amp; \dots &amp; \frac{\partial g_1}{\partial x_n}\\ \frac{\partial g_2}{\partial x_1} &amp; \frac{\partial g_2}{\partial x_2} &amp; \frac{\partial g_2}{\partial x_3} &amp; \dots &amp; \frac{\partial g_2}{\partial x_n}\\ \frac{\partial g_3}{\partial x_1} &amp; \frac{\partial g_3}{\partial x_2} &amp; \frac{\partial g_3}{\partial x_3} &amp; \dots &amp; \frac{\partial g_3}{\partial x_n}\\ \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\ \frac{\partial g_n}{\partial x_1} &amp; \frac{\partial g_n}{\partial x_2} &amp; \frac{\partial g_n}{\partial x_3} &amp; \dots &amp; \frac{\partial g_n}{\partial x_n} \end{bmatrix}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;which, based on the partial derivatives computed above, becomes&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathbf{J}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;g_1(\vec{x})(1&amp;space;-&amp;space;g_1(\vec{x}))&amp;space;&amp;&amp;space;-g_1(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;-g_1(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_1(\vec{x})g_n(\vec{x})\\&amp;space;-g_2(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;g_2(\vec{x})(1&amp;space;-&amp;space;g_2(\vec{x}))&amp;space;&amp;&amp;space;-g_2(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_2(\vec{x})g_n(\vec{x})\\&amp;space;-g_3(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;-g_3(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;g_3(\vec{x})(1&amp;space;-&amp;space;g_3(\vec{x}))&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_3(\vec{x})g_n(\vec{x})\\&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\ddots&amp;space;&amp;&amp;space;\vdots\\&amp;space;-g_n(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;-g_n(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;-g_n(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;g_n(\vec{x})(1-g_n(\vec{x}))&amp;space;\end{bmatrix}&#34; title=&#34;\mathbf{J} = \begin{bmatrix} g_1(\vec{x})(1 - g_1(\vec{x})) &amp; -g_1(\vec{x})g_2(\vec{x}) &amp; -g_1(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_1(\vec{x})g_n(\vec{x})\\ -g_2(\vec{x})g_1(\vec{x}) &amp; g_2(\vec{x})(1 - g_2(\vec{x})) &amp; -g_2(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_2(\vec{x})g_n(\vec{x})\\ -g_3(\vec{x})g_1(\vec{x}) &amp; -g_3(\vec{x})g_2(\vec{x}) &amp; g_3(\vec{x})(1 - g_3(\vec{x})) &amp; \dots &amp; -g_3(\vec{x})g_n(\vec{x})\\ \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\ -g_n(\vec{x})g_1(\vec{x}) &amp; -g_n(\vec{x})g_2(\vec{x}) &amp; -g_n(\vec{x})g_3(\vec{x}) &amp; \dots &amp; g_n(\vec{x})(1-g_n(\vec{x})) \end{bmatrix}&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Note: for multiclass classification problems, the loss function is usually the cross-entropy loss function and the activation of the output layer the softmax function. When combined together, the gradient of the cross-entropy loss function with respect to the linear activation of the output layer (that is, the activation pre-softmax) takes a very simple form as shown &lt;a href=&#34;/docs/losses/crossentropy/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. For this reason, the gradient of the softmax activation function in neuro returns its output and should only be used for the output layer when the cross-entropy loss function is used. This might change in the future.&lt;/p&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;[1] Stanford CS231n course notes: &lt;a href=&#34;https://cs231n.github.io/linear-classify/#softmax&#34; target=&#34;_blank&#34;&gt;https://cs231n.github.io/linear-classify/#softmax&lt;/a&gt;, accessed November 2019.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Tanh</title>
+      <link>/docs/activations/tanh/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/activations/tanh/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The hyperbolic tangent activation function is given by&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;\tanh(x)&amp;space;=&amp;space;\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&#34; title=&#34;g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/tanh.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and its derivative is&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&amp;space;-&amp;space;\left(\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&amp;space;\right)^2&amp;space;=&amp;space;1&amp;space;-&amp;space;g(x)^2&#34; title=&#34;\frac{\partial g}{\partial x} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2&#34; /&gt;
+&lt;img class=&#34;center&#34; src=&#34;/images/dtanh.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt;. This activation function is usually used with hidden layers and is a relatively common choice.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
