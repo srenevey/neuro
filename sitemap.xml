@@ -3,115 +3,115 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://srenevey.github.io/docs/losses/crossentropy/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/losses/crossentropy/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/examples/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/losses/mae/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/losses/mae/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/losses/mse/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/losses/mse/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/batchnorm/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/batchnorm/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/examples/binary-classification/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/binary-classification/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/conv2d/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/conv2d/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/dense/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/dense/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/dropout/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/dropout/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/initializers/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/initializers/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/linear/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/linear/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/losses/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/losses/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/layers/maxpooling2d/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/metrics/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/metrics/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/examples/multiclass-classification/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/multiclass-classification/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/optimizers/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/optimizers/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/examples/regression/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/regression/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/relu/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/relu/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/sigmoid/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/sigmoid/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/softmax/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/softmax/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/activations/tanh/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/activations/tanh/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/optimizers/adam/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/optimizers/adam/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/optimizers/rmsprop/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/optimizers/rmsprop/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/optimizers/sgd/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/optimizers/sgd/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/docs/</loc>
+    <loc>https://srenevey.github.io/neuro/docs/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/</loc>
+    <loc>https://srenevey.github.io/neuro/</loc>
   </url>
   
 </urlset>

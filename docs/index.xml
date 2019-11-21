@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – Knowledge Base</title>
-    <link>https://srenevey.github.io/docs/</link>
+    <link>https://srenevey.github.io/neuro/docs/</link>
     <description>Recent content in Knowledge Base on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://srenevey.github.io/docs/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://srenevey.github.io/neuro/docs/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Cross Entropy</title>
-      <link>https://srenevey.github.io/docs/losses/crossentropy/</link>
+      <link>https://srenevey.github.io/neuro/docs/losses/crossentropy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/losses/crossentropy/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/losses/crossentropy/</guid>
       <description>
         
         
@@ -36,7 +36,7 @@ Now, if we assume that the loss activation of the last layer is a softmax functi
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\hat{y}_j^{(i)}&amp;space;=&amp;space;\frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; title=&#34;\hat{y}_j^{(i)} = \frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;and, as seen in the derivation of the &lt;a href=&#34;https://srenevey.github.io/docs/activations/softmax/&#34; target=&#34;_blank&#34;&gt;softmax&lt;/a&gt;, the derivative is&lt;/p&gt;
+&lt;p&gt;and, as seen in the derivation of the &lt;a href=&#34;https://srenevey.github.io/neuro/docs/activations/softmax/&#34; target=&#34;_blank&#34;&gt;softmax&lt;/a&gt;, the derivative is&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\hat{y}_j^{(i)}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;\hat{y}_j^{(i)}(\delta_{jl}&amp;space;-&amp;space;\hat{y}_l^{(i)})&#34; title=&#34;\frac{\partial \hat{y}_j^{(i)}}{\partial x_l^{(i)}} = \hat{y}_j^{(i)}(\delta_{jl} - \hat{y}_l^{(i)})&#34; /&gt;&lt;/p&gt;
 
@@ -67,10 +67,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Mean Absolute Error</title>
-      <link>https://srenevey.github.io/docs/losses/mae/</link>
+      <link>https://srenevey.github.io/neuro/docs/losses/mae/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/losses/mae/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/losses/mae/</guid>
       <description>
         
         
@@ -93,10 +93,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Mean Squared Error</title>
-      <link>https://srenevey.github.io/docs/losses/mse/</link>
+      <link>https://srenevey.github.io/neuro/docs/losses/mse/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/losses/mse/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/losses/mse/</guid>
       <description>
         
         
@@ -113,10 +113,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: BatchNorm</title>
-      <link>https://srenevey.github.io/docs/layers/batchnorm/</link>
+      <link>https://srenevey.github.io/neuro/docs/layers/batchnorm/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/layers/batchnorm/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/layers/batchnorm/</guid>
       <description>
         
         
@@ -127,10 +127,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Conv2D</title>
-      <link>https://srenevey.github.io/docs/layers/conv2d/</link>
+      <link>https://srenevey.github.io/neuro/docs/layers/conv2d/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/layers/conv2d/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/layers/conv2d/</guid>
       <description>
         
         
@@ -141,10 +141,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Dense</title>
-      <link>https://srenevey.github.io/docs/layers/dense/</link>
+      <link>https://srenevey.github.io/neuro/docs/layers/dense/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/layers/dense/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/layers/dense/</guid>
       <description>
         
         
@@ -184,7 +184,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
 
@@ -193,10 +193,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Dropout</title>
-      <link>https://srenevey.github.io/docs/layers/dropout/</link>
+      <link>https://srenevey.github.io/neuro/docs/layers/dropout/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/layers/dropout/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/layers/dropout/</guid>
       <description>
         
         
@@ -207,22 +207,22 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Linear</title>
-      <link>https://srenevey.github.io/docs/activations/linear/</link>
+      <link>https://srenevey.github.io/neuro/docs/activations/linear/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/activations/linear/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/activations/linear/</guid>
       <description>
         
         
         &lt;p&gt;The linear activation function simply returns its input without applying any modification:&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;x&#34; title=&#34;g(x) = x&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative is then given by:&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&#34; title=&#34;\frac{\partial g}{\partial x} = 1&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
 
@@ -231,10 +231,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: MaxPooling2D</title>
-      <link>https://srenevey.github.io/docs/layers/maxpooling2d/</link>
+      <link>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/layers/maxpooling2d/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</guid>
       <description>
         
         
@@ -245,10 +245,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: ReLU</title>
-      <link>https://srenevey.github.io/docs/activations/relu/</link>
+      <link>https://srenevey.github.io/neuro/docs/activations/relu/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/activations/relu/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/activations/relu/</guid>
       <description>
         
         
@@ -260,7 +260,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;That is, the function returns the input value if it is positive and zero otherwise.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/relu.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/relu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be expressed as:
 &lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}1&amp;\text{if&amp;space;}x&gt;0\&amp;space;\text{undefined}&amp;amp;\text{if&amp;space;}x=0\&amp;space;0&amp;space;&amp;amp;\text{if&amp;space;}x&lt;0\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases}1&amp;\text{if }x&gt;0\ \text{undefined}&amp;amp;\text{if }x=0\ 0 &amp;amp;\text{if }x&lt;0\end{cases}&#34; /&gt;&lt;/p&gt;
@@ -268,7 +268,7 @@ so that&lt;/p&gt;
 &lt;p&gt;Since the case &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt; is undefined, the derivative can be arbitrarily set to 1 for this value such that&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}&amp;space;1&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;\geq&amp;space;0&amp;space;\\&amp;space;0&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;&lt;&amp;space;0&amp;space;\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases} 1 &amp;\text{if } x \geq 0 \\ 0 &amp;\text{if } x &lt; 0 \end{cases}&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/drelu.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/drelu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].&lt;/p&gt;
 
@@ -281,10 +281,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Sigmoid</title>
-      <link>https://srenevey.github.io/docs/activations/sigmoid/</link>
+      <link>https://srenevey.github.io/neuro/docs/activations/sigmoid/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/activations/sigmoid/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/activations/sigmoid/</guid>
       <description>
         
         
@@ -294,7 +294,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;This function maps any input to an output in the interval (0,1).&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/sigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/sigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be computed as&lt;/p&gt;
 
@@ -303,7 +303,7 @@ so that&lt;/p&gt;
 &lt;p&gt;which can be rewritten in terms of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\sigma&#34; title=&#34;\sigma&#34; /&gt; as&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; title=&#34;\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.&lt;/p&gt;
 
@@ -312,10 +312,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Softmax</title>
-      <link>https://srenevey.github.io/docs/activations/softmax/</link>
+      <link>https://srenevey.github.io/neuro/docs/activations/softmax/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/activations/softmax/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/activations/softmax/</guid>
       <description>
         
         
@@ -363,7 +363,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathbf{J}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;g_1(\vec{x})(1&amp;space;-&amp;space;g_1(\vec{x}))&amp;space;&amp;&amp;space;-g_1(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;-g_1(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_1(\vec{x})g_n(\vec{x})\\&amp;space;-g_2(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;g_2(\vec{x})(1&amp;space;-&amp;space;g_2(\vec{x}))&amp;space;&amp;&amp;space;-g_2(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_2(\vec{x})g_n(\vec{x})\\&amp;space;-g_3(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;-g_3(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;g_3(\vec{x})(1&amp;space;-&amp;space;g_3(\vec{x}))&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;-g_3(\vec{x})g_n(\vec{x})\\&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\vdots&amp;space;&amp;&amp;space;\ddots&amp;space;&amp;&amp;space;\vdots\\&amp;space;-g_n(\vec{x})g_1(\vec{x})&amp;space;&amp;&amp;space;-g_n(\vec{x})g_2(\vec{x})&amp;space;&amp;&amp;space;-g_n(\vec{x})g_3(\vec{x})&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;g_n(\vec{x})(1-g_n(\vec{x}))&amp;space;\end{bmatrix}&#34; title=&#34;\mathbf{J} = \begin{bmatrix} g_1(\vec{x})(1 - g_1(\vec{x})) &amp; -g_1(\vec{x})g_2(\vec{x}) &amp; -g_1(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_1(\vec{x})g_n(\vec{x})\\ -g_2(\vec{x})g_1(\vec{x}) &amp; g_2(\vec{x})(1 - g_2(\vec{x})) &amp; -g_2(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_2(\vec{x})g_n(\vec{x})\\ -g_3(\vec{x})g_1(\vec{x}) &amp; -g_3(\vec{x})g_2(\vec{x}) &amp; g_3(\vec{x})(1 - g_3(\vec{x})) &amp; \dots &amp; -g_3(\vec{x})g_n(\vec{x})\\ \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\ -g_n(\vec{x})g_1(\vec{x}) &amp; -g_n(\vec{x})g_2(\vec{x}) &amp; -g_n(\vec{x})g_3(\vec{x}) &amp; \dots &amp; g_n(\vec{x})(1-g_n(\vec{x})) \end{bmatrix}&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Note: for multiclass classification problems, the loss function is usually the cross-entropy loss function and the activation of the output layer the softmax function. When combined together, the gradient of the cross-entropy loss function with respect to the linear activation of the output layer (that is, the activation pre-softmax) takes a very simple form as shown &lt;a href=&#34;https://srenevey.github.io/docs/losses/crossentropy/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. For this reason, the gradient of the softmax activation function in neuro returns its output and should only be used for the output layer when the cross-entropy loss function is used. This might change in the future.&lt;/p&gt;
+&lt;p&gt;Note: for multiclass classification problems, the loss function is usually the cross-entropy loss function and the activation of the output layer the softmax function. When combined together, the gradient of the cross-entropy loss function with respect to the linear activation of the output layer (that is, the activation pre-softmax) takes a very simple form as shown &lt;a href=&#34;https://srenevey.github.io/neuro/docs/losses/crossentropy/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. For this reason, the gradient of the softmax activation function in neuro returns its output and should only be used for the output layer when the cross-entropy loss function is used. This might change in the future.&lt;/p&gt;
 
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
 
@@ -374,22 +374,22 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Tanh</title>
-      <link>https://srenevey.github.io/docs/activations/tanh/</link>
+      <link>https://srenevey.github.io/neuro/docs/activations/tanh/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/activations/tanh/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/activations/tanh/</guid>
       <description>
         
         
         &lt;p&gt;The hyperbolic tangent activation function is given by&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;\tanh(x)&amp;space;=&amp;space;\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&#34; title=&#34;g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/tanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/tanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;and its derivative is&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&amp;space;-&amp;space;\left(\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&amp;space;\right)^2&amp;space;=&amp;space;1&amp;space;-&amp;space;g(x)^2&#34; title=&#34;\frac{\partial g}{\partial x} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/images/dtanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dtanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt;. This activation function is usually used with hidden layers and is a relatively common choice.&lt;/p&gt;
 
@@ -398,10 +398,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Adam</title>
-      <link>https://srenevey.github.io/docs/optimizers/adam/</link>
+      <link>https://srenevey.github.io/neuro/docs/optimizers/adam/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/optimizers/adam/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/optimizers/adam/</guid>
       <description>
         
         
@@ -437,10 +437,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: RMSProp</title>
-      <link>https://srenevey.github.io/docs/optimizers/rmsprop/</link>
+      <link>https://srenevey.github.io/neuro/docs/optimizers/rmsprop/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/optimizers/rmsprop/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/optimizers/rmsprop/</guid>
       <description>
         
         
@@ -467,10 +467,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: SGD</title>
-      <link>https://srenevey.github.io/docs/optimizers/sgd/</link>
+      <link>https://srenevey.github.io/neuro/docs/optimizers/sgd/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/docs/optimizers/sgd/</guid>
+      <guid>https://srenevey.github.io/neuro/docs/optimizers/sgd/</guid>
       <description>
         
         
