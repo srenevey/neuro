@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – Layers</title>
-    <link>https://srenevey.github.io/neuro/docs/layers/</link>
+    <link>https://srenevey.github.io/docs/layers/</link>
     <description>Recent content in Layers on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://srenevey.github.io/neuro/docs/layers/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://srenevey.github.io/docs/layers/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: BatchNorm</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/batchnorm/</link>
+      <link>https://srenevey.github.io/docs/layers/batchnorm/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/layers/batchnorm/</guid>
+      <guid>https://srenevey.github.io/docs/layers/batchnorm/</guid>
       <description>
         
         
@@ -29,10 +29,10 @@
     
     <item>
       <title>Docs: Conv2D</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/conv2d/</link>
+      <link>https://srenevey.github.io/docs/layers/conv2d/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/layers/conv2d/</guid>
+      <guid>https://srenevey.github.io/docs/layers/conv2d/</guid>
       <description>
         
         
@@ -43,10 +43,10 @@
     
     <item>
       <title>Docs: Dense</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/dense/</link>
+      <link>https://srenevey.github.io/docs/layers/dense/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/layers/dense/</guid>
+      <guid>https://srenevey.github.io/docs/layers/dense/</guid>
       <description>
         
         
@@ -86,7 +86,7 @@
 
 &lt;p&gt;where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
 
@@ -95,10 +95,10 @@
     
     <item>
       <title>Docs: Dropout</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/dropout/</link>
+      <link>https://srenevey.github.io/docs/layers/dropout/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/layers/dropout/</guid>
+      <guid>https://srenevey.github.io/docs/layers/dropout/</guid>
       <description>
         
         
@@ -109,10 +109,10 @@
     
     <item>
       <title>Docs: MaxPooling2D</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</link>
+      <link>https://srenevey.github.io/docs/layers/maxpooling2d/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</guid>
+      <guid>https://srenevey.github.io/docs/layers/maxpooling2d/</guid>
       <description>
         
         

@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – neuro</title>
-    <link>https://srenevey.github.io/neuro/</link>
+    <link>https://srenevey.github.io/</link>
     <description>Recent content on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://srenevey.github.io/neuro/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://srenevey.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
       
