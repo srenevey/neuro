@@ -23,18 +23,20 @@
 <title>Mean Absolute Error | neuro</title><meta property="og:title" content="Mean Absolute Error" />
 <meta property="og:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
 where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-&space;0&space;\&space;\text{undefined}&space;&amp;\text{if&space;}&space;x&space;=&space;0&space;\&space;-1&space;&amp;\text{if&space;}&space;x&space;&lt;&space;0&space;\end{cases}&rdquo; title=&rdquo;\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;\text{if } x &gt; 0 \ \text{undefined} &amp;\text{if } x = 0 \ -1 &amp;\text{if } x &lt; 0 \end{cases}&rdquo; /&gt;" />
+the gradient of with respect to yields
+where the case is arbitrarily set to ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/losses/mae/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Mean Absolute Error">
 <meta itemprop="description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
 where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-&space;0&space;\&space;\text{undefined}&space;&amp;\text{if&space;}&space;x&space;=&space;0&space;\&space;-1&space;&amp;\text{if&space;}&space;x&space;&lt;&space;0&space;\end{cases}&rdquo; title=&rdquo;\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;\text{if } x &gt; 0 \ \text{undefined} &amp;\text{if } x = 0 \ -1 &amp;\text{if } x &lt; 0 \end{cases}&rdquo; /&gt;">
+the gradient of with respect to yields
+where the case is arbitrarily set to .">
 
 
 
-<meta itemprop="wordCount" content="99">
+<meta itemprop="wordCount" content="71">
 
 
 
@@ -43,7 +45,8 @@ where is the number of samples in the mini-batch. Since the derivative of the ab
 <meta name="twitter:title" content="Mean Absolute Error"/>
 <meta name="twitter:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
 where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-&space;0&space;\&space;\text{undefined}&space;&amp;\text{if&space;}&space;x&space;=&space;0&space;\&space;-1&space;&amp;\text{if&space;}&space;x&space;&lt;&space;0&space;\end{cases}&rdquo; title=&rdquo;\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;\text{if } x &gt; 0 \ \text{undefined} &amp;\text{if } x = 0 \ -1 &amp;\text{if } x &lt; 0 \end{cases}&rdquo; /&gt;"/>
+the gradient of with respect to yields
+where the case is arbitrarily set to ."/>
 
 
 
@@ -452,7 +455,7 @@ where is the number of samples in the mini-batch. Since the derivative of the ab
 
 <p>where <img src="https://latex.codecogs.com/svg.latex?m" title="m" /> is the number of samples in the mini-batch. Since the derivative of the absolute value is given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{d|x|}{dx}&space;=&space;\frac{x}{|x|}&space;=&space;\begin{cases}&space;1&space;&\text{if&space;}&space;x&space;>&space;0&space;\&space;\text{undefined}&space;&amp;\text{if&space;}&space;x&space;=&space;0&space;\&space;-1&space;&amp;\text{if&space;}&space;x&space;&lt;&space;0&space;\end{cases}&rdquo; title=&rdquo;\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;\text{if } x &gt; 0 \ \text{undefined} &amp;\text{if } x = 0 \ -1 &amp;\text{if } x &lt; 0 \end{cases}&rdquo; /&gt;</p>
+<p><img class="center" src="/neuro/images/abs_val_derivative.svg" /></p>
 
 <p>the gradient of <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}" title="\mathcal{L}" /> with respect to <img src="https://latex.codecogs.com/svg.latex?\inline&space;\hat{Y}" title="\hat{Y}" /> yields</p>
 

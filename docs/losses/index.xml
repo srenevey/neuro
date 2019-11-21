@@ -80,7 +80,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?m&#34; title=&#34;m&#34; /&gt; is the number of samples in the mini-batch. Since the derivative of the absolute value is given by&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{d|x|}{dx}&amp;space;=&amp;space;\frac{x}{|x|}&amp;space;=&amp;space;\begin{cases}&amp;space;1&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;&gt;&amp;space;0&amp;space;\&amp;space;\text{undefined}&amp;space;&amp;amp;\text{if&amp;space;}&amp;space;x&amp;space;=&amp;space;0&amp;space;\&amp;space;-1&amp;space;&amp;amp;\text{if&amp;space;}&amp;space;x&amp;space;&amp;lt;&amp;space;0&amp;space;\end{cases}&amp;rdquo; title=&amp;rdquo;\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;amp;\text{if } x &amp;gt; 0 \ \text{undefined} &amp;amp;\text{if } x = 0 \ -1 &amp;amp;\text{if } x &amp;lt; 0 \end{cases}&amp;rdquo; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/abs_val_derivative.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;the gradient of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}&#34; title=&#34;\mathcal{L}&#34; /&gt; with respect to &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\hat{Y}&#34; title=&#34;\hat{Y}&#34; /&gt; yields&lt;/p&gt;
 
