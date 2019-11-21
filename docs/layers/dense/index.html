@@ -481,7 +481,7 @@ Forward Pass During the forward pass, the inputs , which correspond to the outpu
 
 <p>where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.</p>
 
-<p><img class="center" width="320px" height="396.23px" src="/images/dense_layer.svg" /></p>
+<p><img class="center" width="320px" height="396.23px" src="/neuro/images/dense_layer.svg" /></p>
 
 <p>The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.</p>
 

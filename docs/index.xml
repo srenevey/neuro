@@ -184,7 +184,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
 
@@ -260,7 +260,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;That is, the function returns the input value if it is positive and zero otherwise.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/relu.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/relu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be expressed as:
 &lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}1&amp;\text{if&amp;space;}x&gt;0\&amp;space;\text{undefined}&amp;amp;\text{if&amp;space;}x=0\&amp;space;0&amp;space;&amp;amp;\text{if&amp;space;}x&lt;0\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases}1&amp;\text{if }x&gt;0\ \text{undefined}&amp;amp;\text{if }x=0\ 0 &amp;amp;\text{if }x&lt;0\end{cases}&#34; /&gt;&lt;/p&gt;
@@ -268,7 +268,7 @@ so that&lt;/p&gt;
 &lt;p&gt;Since the case &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt; is undefined, the derivative can be arbitrarily set to 1 for this value such that&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;\begin{cases}&amp;space;1&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;\geq&amp;space;0&amp;space;\\&amp;space;0&amp;space;&amp;\text{if&amp;space;}&amp;space;x&amp;space;&lt;&amp;space;0&amp;space;\end{cases}&#34; title=&#34;\frac{\partial g}{\partial x} = \begin{cases} 1 &amp;\text{if } x \geq 0 \\ 0 &amp;\text{if } x &lt; 0 \end{cases}&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/drelu.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/drelu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].&lt;/p&gt;
 
@@ -294,7 +294,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;This function maps any input to an output in the interval (0,1).&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/sigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/sigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be computed as&lt;/p&gt;
 
@@ -303,7 +303,7 @@ so that&lt;/p&gt;
 &lt;p&gt;which can be rewritten in terms of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\sigma&#34; title=&#34;\sigma&#34; /&gt; as&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; title=&#34;\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.&lt;/p&gt;
 
@@ -384,12 +384,12 @@ so that&lt;/p&gt;
         &lt;p&gt;The hyperbolic tangent activation function is given by&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?g(x)&amp;space;=&amp;space;\tanh(x)&amp;space;=&amp;space;\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&#34; title=&#34;g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/tanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/tanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;and its derivative is&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;g}{\partial&amp;space;x}&amp;space;=&amp;space;1&amp;space;-&amp;space;\left(\frac{e^x&amp;space;-&amp;space;e^{-x}}{e^x&amp;space;&amp;plus;&amp;space;e^{-x}}&amp;space;\right)^2&amp;space;=&amp;space;1&amp;space;-&amp;space;g(x)^2&#34; title=&#34;\frac{\partial g}{\partial x} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2&#34; /&gt;
-&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/dtanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dtanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x&amp;space;=&amp;space;0&#34; title=&#34;x = 0&#34; /&gt;. This activation function is usually used with hidden layers and is a relatively common choice.&lt;/p&gt;
 

@@ -264,7 +264,7 @@
 	<div class="lead">Learning the XOR gate with a neural network.</div>
 	<p>In this example, we will train a simple feedforward neural network to learn an approximation of the XOR gate. The XOR function takes two inputs and returns a single output. Each input can be 0 or 1. If one and only one of the inputs is 1, then the XOR function returns 1. It returns 0 otherwise. The following table shows the training samples used to train the model.</p>
 
-<p><img class="center" src="/images/xor.svg" /></p>
+<p><img class="center" src="/neuro/images/xor.svg" /></p>
 
 <p>The first step to create a neural network with neuro is to bring the required modules into scope.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">activations</span>::<span style="color:#000">Activation</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">

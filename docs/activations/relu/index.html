@@ -453,7 +453,7 @@
 
 <p>That is, the function returns the input value if it is positive and zero otherwise.</p>
 
-<p><img class="center" src="/images/relu.svg" /></p>
+<p><img class="center" src="/neuro/images/relu.svg" /></p>
 
 <p>Its derivative can be expressed as:
 <img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g}{\partial&space;x}&space;=&space;\begin{cases}1&\text{if&space;}x>0\&space;\text{undefined}&amp;\text{if&space;}x=0\&space;0&space;&amp;\text{if&space;}x<0\end{cases}" title="\frac{\partial g}{\partial x} = \begin{cases}1&\text{if }x>0\ \text{undefined}&amp;\text{if }x=0\ 0 &amp;\text{if }x<0\end{cases}" /></p>
@@ -461,7 +461,7 @@
 <p>Since the case <img src="https://latex.codecogs.com/svg.latex?x&space;=&space;0" title="x = 0" /> is undefined, the derivative can be arbitrarily set to 1 for this value such that</p>
 
 <p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g}{\partial&space;x}&space;=&space;\begin{cases}&space;1&space;&\text{if&space;}&space;x&space;\geq&space;0&space;\\&space;0&space;&\text{if&space;}&space;x&space;<&space;0&space;\end{cases}" title="\frac{\partial g}{\partial x} = \begin{cases} 1 &\text{if } x \geq 0 \\ 0 &\text{if } x < 0 \end{cases}" />
-<img class="center" src="/images/drelu.svg" /></p>
+<img class="center" src="/neuro/images/drelu.svg" /></p>
 
 <p>The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].</p>
 
