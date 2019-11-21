@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – Binary Classification</title>
-    <link>/examples/binary-classification/</link>
+    <link>https://srenevey.github.io/neuro/examples/binary-classification/</link>
     <description>Recent content in Binary Classification on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/examples/binary-classification/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://srenevey.github.io/neuro/examples/binary-classification/index.xml" rel="self" type="application/rss+xml" />
     
     
       
