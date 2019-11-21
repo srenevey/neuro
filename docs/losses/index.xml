@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>neuro – Losses</title>
-    <link>https://srenevey.github.com/docs/losses/</link>
+    <link>https://github.com/srenevey/neuro/docs/losses/</link>
     <description>Recent content in Losses on neuro</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://srenevey.github.com/docs/losses/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://github.com/srenevey/neuro/docs/losses/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Cross Entropy</title>
-      <link>https://srenevey.github.com/docs/losses/crossentropy/</link>
+      <link>https://github.com/srenevey/neuro/docs/losses/crossentropy/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.com/docs/losses/crossentropy/</guid>
+      <guid>https://github.com/srenevey/neuro/docs/losses/crossentropy/</guid>
       <description>
         
         
@@ -36,7 +36,7 @@ Now, if we assume that the loss activation of the last layer is a softmax functi
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\hat{y}_j^{(i)}&amp;space;=&amp;space;\frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; title=&#34;\hat{y}_j^{(i)} = \frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;and, as seen in the derivation of the &lt;a href=&#34;https://srenevey.github.com/docs/activations/softmax/&#34; target=&#34;_blank&#34;&gt;softmax&lt;/a&gt;, the derivative is&lt;/p&gt;
+&lt;p&gt;and, as seen in the derivation of the &lt;a href=&#34;https://github.com/srenevey/neuro/docs/activations/softmax/&#34; target=&#34;_blank&#34;&gt;softmax&lt;/a&gt;, the derivative is&lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\hat{y}_j^{(i)}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;\hat{y}_j^{(i)}(\delta_{jl}&amp;space;-&amp;space;\hat{y}_l^{(i)})&#34; title=&#34;\frac{\partial \hat{y}_j^{(i)}}{\partial x_l^{(i)}} = \hat{y}_j^{(i)}(\delta_{jl} - \hat{y}_l^{(i)})&#34; /&gt;&lt;/p&gt;
 
@@ -67,10 +67,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Mean Absolute Error</title>
-      <link>https://srenevey.github.com/docs/losses/mae/</link>
+      <link>https://github.com/srenevey/neuro/docs/losses/mae/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.com/docs/losses/mae/</guid>
+      <guid>https://github.com/srenevey/neuro/docs/losses/mae/</guid>
       <description>
         
         
@@ -93,10 +93,10 @@ so that&lt;/p&gt;
     
     <item>
       <title>Docs: Mean Squared Error</title>
-      <link>https://srenevey.github.com/docs/losses/mse/</link>
+      <link>https://github.com/srenevey/neuro/docs/losses/mse/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://srenevey.github.com/docs/losses/mse/</guid>
+      <guid>https://github.com/srenevey/neuro/docs/losses/mse/</guid>
       <description>
         
         
