@@ -44,6 +44,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Metrics | neuro</title>
@@ -351,6 +375,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -434,21 +464,21 @@
 
 <p>The accuracy is computed as the ratio of correctly labeled samples to the total number of samples:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{&space;\text{\&hash;&space;correctly&space;classified&space;samples}}{\text{\&hash;&space;samples}}" title="\frac{ \text{\# correctly classified samples}}{\text{\# samples}}" /></p>
+<p>$$\frac{\text{# correctly classified samples}}{\text{# samples}}$$</p>
 
 <p>For a multiclass classification problem, the output of the network for a single sample will be of the form</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\hat{\vec{y}}&space;=&space;\begin{bmatrix}&space;\hat{y}_1&space;&&space;\hat{y}_2&space;&&space;\dots&space;&&space;\hat{y}_C&space;\end{bmatrix}^T" title="\hat{\vec{y}} = \begin{bmatrix} \hat{y}_1 & \hat{y}_2 & \dots & \hat{y}_C \end{bmatrix}^T" /></p>
+<p>$$\boldsymbol{\hat{y}} = \begin{bmatrix} \hat{y}_1 &amp; \hat{y}_2 &amp; \dots &amp; \hat{y}_C \end{bmatrix}^T$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\hat{y}_i" title="\hat{y}_i" /> is the probability that the sample belongs to class <img src="https://latex.codecogs.com/svg.latex?i" title="i" /> and <img src="https://latex.codecogs.com/svg.latex?C" title="C" /> the number of classes. The predicted class for that sample is thus</p>
+<p>where $\hat{y}_i$ is the probability that the sample belongs to class $i$ and $C$ the number of classes. The predicted class for that sample is thus</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\hat{c}&space;=&space;\arg&space;\max_i&space;\hat{y}_i" title="\hat{c} = \arg \max_i \hat{y}_i" /></p>
+<p>$$\hat{c} = \arg \max_i \hat{y}_i$$</p>
 
-<p>For a binary classification problem, the output of the network will be a single number, <img src="https://latex.codecogs.com/svg.latex?\hat{y}" title="\hat{y}" />. If the data set contains two classes, 0 and 1, then the predicted class will be:</p>
+<p>For a binary classification problem, the output of the network will be a single number, $\hat{y}$. If the data set contains two classes, 0 and 1, then the predicted class will be:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\hat{c}&space;=&space;\begin{cases}&space;0&space;&\text{if&space;}&space;\hat{y}&space;<&space;0.5&space;\\&space;1&space;&\text{if&space;}&space;\hat{y}&space;\geq&space;0.5&space;\end{cases}" title="\hat{c} = \begin{cases} 0 &\text{if } \hat{y} < 0.5 \\ 1 &\text{if } \hat{y} \geq 0.5 \end{cases}" /></p>
+<p>$$\hat{c} = \begin{cases} 0 &amp;\text{if } \hat{y} &lt; 0.5 \newline 1 &amp;\text{if } \hat{y} \geq 0.5 \end{cases}$$</p>
 
-<p>In both multiclass and binary classifications, if <img src="https://latex.codecogs.com/svg.latex?\hat{c}" title="\hat{c}" /> matches the true label of the sample, then the sample is counted as correctly labeled.</p>
+<p>In both multiclass and binary classifications, if $\hat{c}$ matches the true label of the sample, then the sample is counted as correctly labeled.</p>
 
 <h2 id="f-score">F-Score</h2>
 
@@ -456,19 +486,19 @@
 
 <p>In order to define the F-score, we first need to introduce the confusion matrix, the precision, P, and recall, R. The confusion matrix helps us visualize how the neural network classified the samples by looking at the samples that have been correctly classified and those that haven&rsquo;t. The following image shows a confusion matrix for a binary classification problem with classes <code>0</code> and <code>1</code>.</p>
 
-<p><img class="center" width="352.95px" height="80px" src="/neuro/images/confusion_matrix.svg" /></p>
+<p><img class="center" width="352.95px" height="80px" src="/images/confusion_matrix.svg" /></p>
 
 <p>The precision is a measure of the fraction of samples classified as positive that are actually positive. It is  defined as</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?P&space;=&space;\frac{\text{true&space;positive}}{\text{true&space;positive&space;&plus;&space;false&space;positive}}" title="P = \frac{\text{true positive}}{\text{true positive + false positive}}" /></p>
+<p>$$P = \frac{\text{true positive}}{\text{true positive + false positive}}$$</p>
 
 <p>The recall is a measure of the fraction of actual positives that were classified as positive. It expression is</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?R&space;=&space;\frac{\text{true&space;positive}}{\text{true&space;positive&space;&plus;&space;false&space;negative}}" title="R = \frac{\text{true positive}}{\text{true positive + false negative}}" /></p>
+<p>$$R = \frac{\text{true positive}}{\text{true positive + false negative}}$$</p>
 
 <p>The F-score is then defined as the harmonic mean of the precision and recall:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?F_1&space;=&space;\frac{2}{\frac{1}{P}&plus;\frac{1}{R}}&space;=&space;\frac{2PR}{P&space;&plus;&space;R}" title="F_1 = \frac{2}{\frac{1}{P}+\frac{1}{R}} = \frac{2PR}{P + R}" /></p>
+<p>$$F_1 = \frac{2}{\frac{1}{P}+\frac{1}{R}} = \frac{2PR}{P+R}$$</p>
 
         <div class="section-index">
     
@@ -476,6 +506,8 @@
     
     
     <hr class="panel-line">
+        
+            
         
             
         

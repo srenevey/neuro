@@ -44,6 +44,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Losses | neuro</title>
@@ -351,6 +375,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -458,6 +488,8 @@
                     </h5>
                     <p></p>
                 </div>
+            
+        
             
         
             

@@ -102,13 +102,10 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Parameters initialization methods.</span>
 <span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="ident">PrimitiveType</span>;
 
 <span class="doccomment">/// Used to generate the initial values for the parameters of the model.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
@@ -151,10 +148,10 @@
     <span class="doccomment">/// * `fan_in`: number of input units</span>
     <span class="doccomment">/// * `fan_out`: number of output units</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="self">self</span>,
-                      <span class="ident">dims</span>: <span class="ident">Dim4</span>,
-                      <span class="ident">fan_in</span>: <span class="ident">u64</span>,
-                      <span class="ident">fan_out</span>: <span class="ident">u64</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_tensor</span>(<span class="self">self</span>,
+                             <span class="ident">dims</span>: <span class="ident">Dim4</span>,
+                             <span class="ident">fan_in</span>: <span class="ident">u64</span>,
+                             <span class="ident">fan_out</span>: <span class="ident">u64</span>
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">Initializer</span>::<span class="ident">Constant</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">constant</span>(<span class="ident">x</span>, <span class="ident">dims</span>),
@@ -209,6 +206,5 @@
             <span class="ident">Initializer</span>::<span class="ident">Zeros</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">12</span>,
         }
     }
-
 }</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "neuro";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

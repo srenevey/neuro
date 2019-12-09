@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/neuro/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/neuro/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/neuro/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/neuro/favicons/android-192x192.png" sizes="192x192">
+
+<title>Image Classification With a CNN | neuro</title><meta property="og:title" content="Image Classification With a CNN" />
+<meta property="og:description" content="MNIST handwritten digit classification using a convolutional neural network.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://srenevey.github.io/neuro/examples/cnn_multiclass_classification/" />
+<meta property="og:site_name" content="neuro" />
+<meta itemprop="name" content="Image Classification With a CNN">
+<meta itemprop="description" content="MNIST handwritten digit classification using a convolutional neural network.
+">
+
+
+
+<meta itemprop="wordCount" content="744">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Image Classification With a CNN"/>
+<meta name="twitter:description" content="MNIST handwritten digit classification using a convolutional neural network.
+"/>
+
+
+
+
+
+<link rel="preload" href="/neuro/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" as="style">
+<link href="/neuro/scss/main.min.f56263feacc37bb1eac4441644aa123f8fe15ea3188058988a0dc4db839cea02.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
+
+
+    <title>Image Classification With a CNN | neuro</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/neuro/">
+		<span class="navbar-logo"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 13.147345 12.788828" id="svg8" inkscape:export-filename="/Users/sylvain/Developer/Rust_projects/neuro/www/assets/logo.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="0.92.2 5c3e80d, 2017-08-06" sodipodi:docname="logo.svg"><defs id="defs2" /><sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="69.202826" inkscape:cy="48.04465" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:window-width="1680" inkscape:window-height="952" inkscape:window-x="0" inkscape:window-y="1" inkscape:window-maximized="1" inkscape:pagecheckerboard="true" showborder="true" borderlayer="false" inkscape:showpageshadow="false" /><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-13.436986,-26.062207)"><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="path815" cx="19.974806" cy="27.222263" r="1.0755528" /><circle r="1.0755528" cy="31.332914" cx="25.424274" id="circle817" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle819" cx="14.597042" cy="31.332914" r="1.0755528" /><circle r="1.0755528" cy="37.690979" cx="16.533037" id="circle821" style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /><circle style="opacity:1;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:#fff;stroke-width:.16900681;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="circle823" cx="23.631687" cy="37.690979" r="1.0755528" /><path style="fill:none;fill-opacity:1;stroke:#fff;stroke-width:.40561634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m14.525339 31.309365 5.377764-4.158804 5.521171 4.158804-1.792588 6.381613-7.098648-.0717z" id="path829" inkscape:connector-curvature="0" /></g></svg></span><span class="font-weight-light">neuro</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/neuro/docs/" ><span>  Knowledge Base</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/neuro/examples/" ><span class="active">  Examples</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="/neuro/api/neuro/" ><span>   API Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				<a class="nav-link" href="https://www.github.com/srenevey/neuro" target="_blank" ><span> <i class='fab fa-github'></i>  GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/neuro/examples/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Examples</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="neuro-examples">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-binary-classification" href="/neuro/examples/binary_classification/">Binary Classification</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-neuro-examples-cnn-multiclass-classification" href="/neuro/examples/cnn_multiclass_classification/">Image Classification With a CNN</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-multiclass-classification" href="/neuro/examples/multiclass_classification/">Multiclass Classification</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-regression" href="/neuro/examples/regression/">Regression</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://srenevey.github.io/neuro/examples/">Examples</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://srenevey.github.io/neuro/examples/cnn_multiclass_classification/">Image Classification With a CNN</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Image Classification With a CNN</h1>
+	<div class="lead">MNIST handwritten digit classification using a convolutional neural network.</div>
+	<p>This example demonstrates the use of a convolutional neural network (CNN) to classify images from the MNIST dataset. In a <a href="https://srenevey.github.io/neuro/examples/multiclass_classification/" target="_blank">previous example</a>, we used a fully connected neural network to classify the handwritten digits and reached an accuracy of 96.81%. In this example, we&rsquo;ll see how a CNN can help attain a higher accuracy.</p>
+
+<p>The first step is to import the modules used in this example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">activations</span>::<span style="color:#000">Activation</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">data</span>::<span style="color:#000">ImageDataSet</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">errors</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">layers</span>::<span style="color:#000;font-weight:bold">{</span><span style="color:#000">Dense</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Conv2D</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Padding</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">MaxPooling2D</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Dropout</span><span style="color:#000;font-weight:bold">};</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">losses</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">metrics</span>::<span style="color:#000">Metrics</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">models</span>::<span style="color:#000">Network</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">optimizers</span>::<span style="color:#000;font-weight:bold">{</span><span style="color:#000">SGD</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">AdaDelta</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span><span style="color:#000;font-weight:bold">};</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">regularizers</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">std</span>::<span style="color:#000">path</span>::<span style="color:#000">Path</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>Then, we define the main function which returns a <code>Result</code>:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">fn</span> <span style="color:#000">main</span><span style="color:#000;font-weight:bold">()</span><span style="color:#f8f8f8;text-decoration:underline"> </span>-&gt; <span style="color:#204a87">Result</span><span style="color:#ce5c00;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">NeuroError</span><span style="color:#ce5c00;font-weight:bold">&gt;</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>Next, the images are loaded in an <code>ImageDataSet</code> structure. The files are located in <code>dataset/MNIST</code> and are organized with the following architecture:</p>
+
+<pre><code>MNIST/
+  train/
+    0/
+      1.png
+      21.png
+      ...
+    1/
+      3.png
+      6.png
+      ...
+    2/
+      5.png
+      16.png
+      ...
+    ...
+  test/
+    0/
+      3.png
+      10.png
+      ...
+    1/
+      2.png
+      5.png
+      ...
+    ...
+</code></pre>
+
+<p>The top-level directory contains a <code>train</code> folder and a <code>test</code> folder which both contain subfolders named after the classes present in the dataset (in this case 0 to 9). Each image representing a handwritten digit is then placed in the corresponding folder. The MNSIT dataset contains 60,000 images to train the model and 10,000 to test it. In this example, the original image size of 28 by 28 is unaltered and we select 10% of the training samples to validate the model.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Load the data
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">path</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST&#34;</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">data</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">ImageDataSet</span>::<span style="color:#000">from_path</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">path</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">28</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.1</span><span style="color:#000;font-weight:bold">)</span><span style="color:#ce5c00;font-weight:bold">?</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">println</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;{}&#34;</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>The output of the <code>println!</code> statement is:</p>
+
+<pre><code>Input shape:  [28 28 1]
+Output shape:  [10 1 1]
+Number of training samples:  54000
+Number of validation samples:  6000
+Number of test samples:  10000
+Number of classes:  10
+</code></pre>
+
+<p>Note that the labels are automatically one-hot encoded. The next step is to define the CNN. We start by creating a <code>Network</code> which will use the dataset we&rsquo;ve just created to minimize the cross-entropy loss using an Adam optimizer with a learning rate of 0.001. No L1 nor L2 regularizer is used in this example so we pass <code>None</code> for the last argument. Two <code>Conv2D</code> layers are added to the network, each containing 32 and 64 filters respectively. The filters have a height and width of 3 and a vertical and horizontal stride of 1 is used for the convolution. A <code>Same</code> padding method is used resulting in identical dimensions for the inputs and outputs of each of these layers. We then add a max pooling layer that uses a 2 by 2 window and a vertical and horizontal stride of 2. This operation is applied to reduce the number of parameters in the following layers. In order to avoid overfitting, we add a dropout layer with a drop rate of 50%. A fully connected layer comes next with 128 units and a ReLU activation function. A second dropout layer with a drop rate of 25% is added just before the output layer which contains 10 units and uses a softmax activation function.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Create the neural network
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">SoftmaxCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.001</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Conv2D</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">32</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Padding</span>::<span style="color:#000">Same</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Conv2D</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">64</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Padding</span>::<span style="color:#000">Same</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">MaxPooling2D</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">((</span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">)));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dropout</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.5</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">128</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">ReLU</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dropout</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.25</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">Softmax</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">println</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;{}&#34;</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>The output of this code snippet shows the layers in the network as well as the trainable parameters that each layer contains:</p>
+
+<pre><code>Layer 		 Parameters
+------------------------
+Conv2D 		 320
+Conv2D 		 640
+MaxPooling2D 	 0
+Dropout 	 0
+Dense 		 1605760
+Dropout 	 0
+Dense 		 1290
+</code></pre>
+
+<p>The model is then trained using a batch-size of 128 for 10 epochs. The loss and accuracy are printed at each epoch.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Fit the model
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">fit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">128</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<pre><code>Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
+[00:03:57] [##################################################] epoch: 1/10, train_loss: 0.19209713, train_metrics: [0.94103867], valid_loss: 0.19077446, valid_metrics: [0.94213045]
+[00:03:56] [##################################################] epoch: 2/10, train_loss: 0.11535329, train_metrics: [0.96535945], valid_loss: 0.122557975, valid_metrics: [0.9631459]
+[00:03:56] [##################################################] epoch: 3/10, train_loss: 0.09507526, train_metrics: [0.9722807], valid_loss: 0.10259698, valid_metrics: [0.97081596]
+[00:03:56] [##################################################] epoch: 4/10, train_loss: 0.07016009, train_metrics: [0.9787153], valid_loss: 0.07617864, valid_metrics: [0.97668123]
+[00:03:56] [##################################################] epoch: 5/10, train_loss: 0.07955978, train_metrics: [0.9751767], valid_loss: 0.086998425, valid_metrics: [0.9746628]
+[00:03:56] [##################################################] epoch: 6/10, train_loss: 0.04952572, train_metrics: [0.98462623], valid_loss: 0.06116682, valid_metrics: [0.981288]
+[00:03:56] [##################################################] epoch: 7/10, train_loss: 0.059433404, train_metrics: [0.98374027], valid_loss: 0.07112425, valid_metrics: [0.9789609]
+[00:03:56] [##################################################] epoch: 8/10, train_loss: 0.042370114, train_metrics: [0.9869748], valid_loss: 0.055109616, valid_metrics: [0.98449373]
+[00:03:56] [##################################################] epoch: 9/10, train_loss: 0.054824598, train_metrics: [0.9840312], valid_loss: 0.072369486, valid_metrics: [0.9773461]
+[00:03:56] [##################################################] epoch: 10/10, train_loss: 0.037083544, train_metrics: [0.9886462], valid_loss: 0.058777384, valid_metrics: [0.9813355]
+</code></pre>
+
+<p>We see from this output that an accuracy of 98.13% on the validation set is achieved after 10 epochs. Once the model has been trained, we can evaluate it on the test set:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Evaluate the trained model on the test set
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">evaluate</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<pre><code>Evaluation of the test set: loss: 0.049072135, metrics: [0.98516613]
+</code></pre>
+
+<p>The accuracy that this model achieves on the test test is 98.52% which represent a 1.71% increase compared with the feedforward neural network. Finally, we return <code>Ok</code> if everything went fine.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87">Ok</span><span style="color:#000;font-weight:bold">(())</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000;font-weight:bold">}</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+	
+	
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/srenevey">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="LinkedIn" aria-label="LinkedIn">
+    <a class="text-white" target="_blank" href="https://linkedin.com/in/sylvainrenevey">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script src="/neuro/js/main.min.555f79c155b14abcbf7f908ba26d55566ce5a98281a1de7dc1d15956977b3dbe.js" integrity="sha256-VV95wVWxSry/f5CLom1VVmzlqYKBod59wdFZVpd7Pb4=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

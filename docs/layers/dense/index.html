@@ -21,26 +21,32 @@
 <link rel="icon" type="image/png" href="/neuro/favicons/android-192x192.png" sizes="192x192">
 
 <title>Dense | neuro</title><meta property="og:title" content="Dense" />
-<meta property="og:description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks. It is defined by the number of units and is
-Forward Pass During the forward pass, the inputs , which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights of the layer and the biases are added to form the linear activation:" />
+<meta property="og:description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks.
+Forward Pass During the forward pass, the inputs $o_{l-1}$, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights $W^{[l]}$ of the layer and the biases $b^{[l]}$ are added to form the linear activation:
+$$z^{[l]}=W^{[l]}o_{l-1}&#43;b^{[l]}$$
+The linear activation is then used as input for the activation function to compute the nonlinear activation of the layer:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/layers/dense/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Dense">
-<meta itemprop="description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks. It is defined by the number of units and is
-Forward Pass During the forward pass, the inputs , which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights of the layer and the biases are added to form the linear activation:">
+<meta itemprop="description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks.
+Forward Pass During the forward pass, the inputs $o_{l-1}$, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights $W^{[l]}$ of the layer and the biases $b^{[l]}$ are added to form the linear activation:
+$$z^{[l]}=W^{[l]}o_{l-1}&#43;b^{[l]}$$
+The linear activation is then used as input for the activation function to compute the nonlinear activation of the layer:">
 
 
 
-<meta itemprop="wordCount" content="404">
+<meta itemprop="wordCount" content="462">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Dense"/>
-<meta name="twitter:description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks. It is defined by the number of units and is
-Forward Pass During the forward pass, the inputs , which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights of the layer and the biases are added to form the linear activation:"/>
+<meta name="twitter:description" content="The dense, or fully connected, layer is one of the basic building blocks of neural networks.
+Forward Pass During the forward pass, the inputs $o_{l-1}$, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights $W^{[l]}$ of the layer and the biases $b^{[l]}$ are added to form the linear activation:
+$$z^{[l]}=W^{[l]}o_{l-1}&#43;b^{[l]}$$
+The linear activation is then used as input for the activation function to compute the nonlinear activation of the layer:"/>
 
 
 
@@ -53,6 +59,30 @@ Forward Pass During the forward pass, the inputs , which correspond to the outpu
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Dense | neuro</title>
@@ -360,6 +390,12 @@ Forward Pass During the forward pass, the inputs , which correspond to the outpu
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -447,41 +483,41 @@ Forward Pass During the forward pass, the inputs , which correspond to the outpu
 	
 	
 
-<p>The dense, or fully connected, layer is one of the basic building blocks of neural networks. It is defined by the number of units and is</p>
+<p>The dense, or fully connected, layer is one of the basic building blocks of neural networks.</p>
 
 <h2 id="forward-pass">Forward Pass</h2>
 
-<p>During the forward pass, the inputs <img src="https://latex.codecogs.com/svg.latex?o_{l-1}" title="o_{l-1}" />, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights <img src="https://latex.codecogs.com/svg.latex?W^{[l]}" title="W^{[l]}" /> of the layer and the biases <img src="https://latex.codecogs.com/svg.latex?b^{[l]}" title="b^{[l]}" /> are added to form the linear activation:</p>
+<p>During the forward pass, the inputs $o_{l-1}$, which correspond to the output of the previous layer for a hidden layer or to the training values for the input layer, are multiplied by the weights $W^{[l]}$ of the layer and the biases $b^{[l]}$ are added to form the linear activation:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?z^{[l]}&space;=&space;W^{[l]}o_{l-1}&plus;b^{[l]}" title="z^{[l]} = W^{[l]}o_{l-1}+b^{[l]}" /></p>
+<p>$$z^{[l]}=W^{[l]}o_{l-1}+b^{[l]}$$</p>
 
 <p>The linear activation is then used as input for the activation function to compute the nonlinear activation of the layer:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?o_l&space;=&space;g(z^{[l]})" title="o_l = g(z^{[l]})" /></p>
+<p>$$o_l = g(z^{[l]})$$</p>
 
 <p>This value is the output of the layer and is passed on to the next layer or is used to compute the loss if it is the output layer.</p>
 
 <h2 id="backward-pass">Backward Pass</h2>
 
-<p>In the backward pass, we compute how the loss function used to train the model reacts to small variations in the weights, biases, and inputs. That is, if <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}" title="\mathcal{L}" /> is the loss function, we compute <img src="https://latex.codecogs.com/svg.latex?\inline&space;\nabla_{W^{[l]}}\mathcal{L}" title="\nabla_{W^{[l]}}\mathcal{L}" />, <img src="https://latex.codecogs.com/svg.latex?\inline&space;\nabla_{b^{[l]}}\mathcal{L}" title="\nabla_{b^{[l]}}\mathcal{L}" />, and <img src="https://latex.codecogs.com/svg.latex?\inline&space;\nabla_{o_{l-1}}\mathcal{L}" title="\nabla_{o_{l-1}}\mathcal{L}" />. The input of the backward pass corresponds to the gradient of the loss function with respect to the output of the layer. That is, if <img src="https://latex.codecogs.com/svg.latex?\inline&space;o^{'}_l" title="o^{'}_l" /> is the input of the backward pass, we have</p>
+<p>In the backward pass, we compute how the loss function used to train the model reacts to small variations in the weights, biases, and inputs. That is, if $\mathcal{L}$ is the loss function, we compute $\nabla_{W^{[l]}}\mathcal{L}$, $\nabla_{b^{[l]}}\mathcal{L}$, and $\nabla_{o_{l-1}}\mathcal{L}$. The input of the backward pass corresponds to the gradient of the loss function with respect to the output of the layer. That is, if $o_l^{\prime}$ is the input of the backward pass, we have</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?o^{'}_l&space;\equiv&space;\nabla_{o_l}\mathcal{L}" title="o^{'}_l \equiv \nabla_{o_l}\mathcal{L}" /></p>
+<p>$$o^{\prime}_l \equiv \nabla_{o_l}\mathcal{L}$$</p>
 
 <p>Applying the chain rule, we start by computing the partial derivative with respect to the weights:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;W^{[l]}}&space;=&space;\frac{\partial&space;\mathcal{L}}{\partial&space;o_l}\frac{\partial&space;o_l}{\partial&space;W^{[l]}}&space;=&space;o_l^{'}\frac{\partial&space;o_l}{\partial&space;z^{[l]}}\frac{\partial&space;z^{[l]}}{\partial&space;W^{[l]}}&space;=&space;(o_l^{'}\odot&space;g'(z^{[l]}))o_{l-1}^T" title="\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial W^{[l]}} = o_l^{'}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial W^{[l]}} = (o_l^{'}\odot g'(z^{[l]}))o_{l-1}^T" /></p>
+<p>$$\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial W^{[l]}} = o_l^{\prime}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial W^{[l]}} = (o_l^{\prime}\odot g&rsquo;(z^{[l]}))o_{l-1}^T$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\odot" title="\odot" /> denotes the Hadamard product (i.e. element-wise product) and the transpose of <img src="https://latex.codecogs.com/svg.latex?o_{l-1}" title="o_{l-1}" /> is taken to have consistent dimensions. We then proceed with the partial derivative with respect to the biases:</p>
+<p>where $\odot$ denotes the Hadamard product (i.e. element-wise product) and the transpose of $o_{l-1}$ is taken to have consistent dimensions. We then proceed with the partial derivative with respect to the biases:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;b^{[l]}}&space;=&space;\frac{\partial&space;\mathcal{L}}{\partial&space;o_l}\frac{\partial&space;o_l}{\partial&space;b^{[l]}}&space;=&space;o_l^{'}\frac{\partial&space;o_l}{\partial&space;z^{[l]}}\frac{\partial&space;z^{[l]}}{\partial&space;b^{[l]}}&space;=&space;o_l^{'}\odot&space;g'(z^{[l]})" title="\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial b^{[l]}} = o_l^{'}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial b^{[l]}} = o_l^{'}\odot g'(z^{[l]})" /></p>
+<p>$$\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial b^{[l]}} = o_l^{\prime}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial b^{[l]}} = o_l^{\prime}\odot g&rsquo;(z^{[l]})$$</p>
 
 <p>And finally, the partial derivatives with respect to the layer&rsquo;s inputs:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;\mathcal{L}}{\partial&space;o_{l-1}}&space;=&space;\frac{\partial&space;\mathcal{L}}{\partial&space;o_l}\frac{\partial&space;o_l}{\partial&space;o_{l-1}}&space;=&space;o_l^{'}\frac{\partial&space;o_l}{\partial&space;z^{[l]}}\frac{\partial&space;z^{[l]}}{\partial&space;o_{l-1}}&space;=&space;{W^{[l]}}^T&space;(o_l^{'}\odot&space;g'(z^{[l]}))" title="\frac{\partial \mathcal{L}}{\partial o_{l-1}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial o_{l-1}} = o_l^{'}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial o_{l-1}} = {W^{[l]}}^T (o_l^{'}\odot g'(z^{[l]}))" /></p>
+<p>$$\frac{\partial \mathcal{L}}{\partial o_{l-1}} = \frac{\partial \mathcal{L}}{\partial o_l}\frac{\partial o_l}{\partial o_{l-1}} = o_l^{\prime}\frac{\partial o_l}{\partial z^{[l]}}\frac{\partial z^{[l]}}{\partial o_{l-1}} = {W^{[l]}}^T (o_l^{\prime}\odot g&rsquo;(z^{[l]}))$$</p>
 
 <p>where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.</p>
 
-<p><img class="center" width="320px" height="396.23px" src="/neuro/images/dense_layer.svg" /></p>
+<p><img class="center" width="320px" height="396.23px" src="/images/dense_layer.svg" /></p>
 
 <p>The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.</p>
 

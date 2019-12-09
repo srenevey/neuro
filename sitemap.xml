@@ -27,7 +27,7 @@
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/neuro/examples/binary-classification/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/binary_classification/</loc>
   </url>
   
   <url>
@@ -40,6 +40,10 @@
   
   <url>
     <loc>https://srenevey.github.io/neuro/docs/layers/dropout/</loc>
+  </url>
+  
+  <url>
+    <loc>https://srenevey.github.io/neuro/examples/cnn_multiclass_classification/</loc>
   </url>
   
   <url>
@@ -67,7 +71,7 @@
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/neuro/examples/multiclass-classification/</loc>
+    <loc>https://srenevey.github.io/neuro/examples/multiclass_classification/</loc>
   </url>
   
   <url>
@@ -92,6 +96,10 @@
   
   <url>
     <loc>https://srenevey.github.io/neuro/docs/activations/tanh/</loc>
+  </url>
+  
+  <url>
+    <loc>https://srenevey.github.io/neuro/docs/optimizers/adadelta/</loc>
   </url>
   
   <url>

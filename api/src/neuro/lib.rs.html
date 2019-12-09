@@ -65,30 +65,23 @@
 <span id="65">65</span>
 <span id="66">66</span>
 <span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Neuro</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Neuro is a deep learning library that runs on the GPU. The architecture of the library is inspired by Keras and works by stacking layers.</span>
 <span class="doccomment">//! Currently supported layers are:</span>
 <span class="doccomment">//! * BatchNorm</span>
-<span class="doccomment">//! * Conv2D (currently broken, see note 2 below)</span>
+<span class="doccomment">//! * Conv2D</span>
 <span class="doccomment">//! * Dense</span>
 <span class="doccomment">//! * Dropout</span>
 <span class="doccomment">//! * MaxPooling2D</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! allowing the creation of feedforward and convolutional neural networks.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ### Note 1</span>
+<span class="doccomment">//! ### Note</span>
 <span class="doccomment">//! The crate is under heavy development and several features have not yet been implemented. Among them</span>
 <span class="doccomment">//! is the ability to save a trained network.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ### Note 2</span>
-<span class="doccomment">//! When creating convolutional neural networks, there is a bug when trying to retrieve the</span>
-<span class="doccomment">//! values from the GPU (the process freezes). This means that the loss and metrics cannot be printed</span>
-<span class="doccomment">//! and therefore there is no way to assess if the network is actually learning something.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Installation</span>
 <span class="doccomment">//! The crate is powered by ArrayFire to perform all operations on the GPU. The first step is therefore to</span>
@@ -109,6 +102,7 @@
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">activations</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">data</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">errors</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">initializers</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">layers</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">losses</span>;
@@ -120,7 +114,7 @@
 
 
 
-<span class="doccomment">/// Assert if two expressions are approximately equal.</span>
+<span class="doccomment">/// Asserts if two expressions are approximately equal.</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">assert_approx_eq</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {{

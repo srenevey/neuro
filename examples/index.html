@@ -44,6 +44,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Examples | neuro</title>
@@ -140,71 +164,26 @@
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/binary-classification/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Binary Classification</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="neuro-examples-binary-classification">
       
-      
-      
-    </li>
-  </ul>
-</ul>
-
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-binary-classification" href="/neuro/examples/binary_classification/">Binary Classification</a>
       
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/multiclass-classification/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Multiclass Classification</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="neuro-examples-multiclass-classification">
       
-      
-      
-    </li>
-  </ul>
-</ul>
-
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-cnn-multiclass-classification" href="/neuro/examples/cnn_multiclass_classification/">Image Classification With a CNN</a>
       
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/regression/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Regression</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="neuro-examples-regression">
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-multiclass-classification" href="/neuro/examples/multiclass_classification/">Multiclass Classification</a>
       
       
       
-    </li>
-  </ul>
-</ul>
-
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-regression" href="/neuro/examples/regression/">Regression</a>
       
       
     </li>
@@ -262,7 +241,7 @@
             
                 <div class="entry">
                     <h5>
-                        <a href="/neuro/examples/binary-classification/">Binary Classification</a>
+                        <a href="/neuro/examples/binary_classification/">Binary Classification</a>
                     </h5>
                     <p>Learning the XOR gate with a neural network.</p>
                 </div>
@@ -271,7 +250,16 @@
             
                 <div class="entry">
                     <h5>
-                        <a href="/neuro/examples/multiclass-classification/">Multiclass Classification</a>
+                        <a href="/neuro/examples/cnn_multiclass_classification/">Image Classification With a CNN</a>
+                    </h5>
+                    <p>MNIST handwritten digit classification using a convolutional neural network.</p>
+                </div>
+            
+        
+            
+                <div class="entry">
+                    <h5>
+                        <a href="/neuro/examples/multiclass_classification/">Multiclass Classification</a>
                     </h5>
                     <p>MNIST handwritten digit classification using a feedforward neural network.</p>
                 </div>
@@ -282,7 +270,7 @@
                     <h5>
                         <a href="/neuro/examples/regression/">Regression</a>
                     </h5>
-                    <p>Regression on a mathematical expression.</p>
+                    <p>Regression on a mathematical function.</p>
                 </div>
             
         

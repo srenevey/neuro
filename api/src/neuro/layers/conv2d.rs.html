@@ -365,95 +365,20 @@
 <span id="365">365</span>
 <span id="366">366</span>
 <span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! 2D convolution layer</span>
-<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">Tensor</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">activations</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">initializers</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">regularizers</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Layer</span>;
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufWriter</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+
+<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Defines the type of padding applied to the inputs.</span>
 <span class="doccomment">///</span>
@@ -482,11 +407,12 @@
     <span class="ident">biases</span>: <span class="ident">Tensor</span>,
     <span class="ident">dweights</span>: <span class="ident">Tensor</span>,
     <span class="ident">dbiases</span>: <span class="ident">Tensor</span>,
-    <span class="ident">z</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">a_prev</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
+    <span class="ident">linear_activation</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
+    <span class="ident">previous_activation</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
     <span class="ident">reshaped_input</span>: <span class="ident">Tensor</span>,
     <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>,
     <span class="ident">biases_initializer</span>: <span class="ident">Initializer</span>,
+    <span class="ident">regularizer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regularizer</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Conv2D</span> {
@@ -519,11 +445,12 @@
             <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
-            <span class="ident">z</span>: <span class="prelude-val">None</span>,
-            <span class="ident">a_prev</span>: <span class="prelude-val">None</span>,
+            <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
+            <span class="ident">previous_activation</span>: <span class="prelude-val">None</span>,
             <span class="ident">reshaped_input</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">HeUniform</span>,
             <span class="ident">biases_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">Zeros</span>,
+            <span class="ident">regularizer</span>: <span class="prelude-val">None</span>,
         })
     }
 
@@ -563,17 +490,19 @@
             <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
-            <span class="ident">z</span>: <span class="prelude-val">None</span>,
-            <span class="ident">a_prev</span>: <span class="prelude-val">None</span>,
+            <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
+            <span class="ident">previous_activation</span>: <span class="prelude-val">None</span>,
             <span class="ident">reshaped_input</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">weights_initializer</span>,
             <span class="ident">biases_initializer</span>,
+            <span class="ident">regularizer</span>: <span class="prelude-val">None</span>,
         })
     }
 
 
     <span class="doccomment">/// Computes the convolution.</span>
     <span class="kw">fn</span> <span class="ident">compute_convolution</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Tensor</span>, <span class="ident">Tensor</span>) {
+        <span class="kw">let</span> <span class="ident">num_channels</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">2</span>];
         <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>];
 
         <span class="kw">let</span> <span class="ident">h_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>];
@@ -589,13 +518,14 @@
         };
 
         <span class="comment">// Compute the convolution and add biases</span>
-        <span class="kw">let</span> <span class="ident">conv</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">input_values</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">tile</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="ident">num_channels</span>, <span class="number">1</span>, <span class="number">1</span>]));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conv</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">input_values</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
 
         <span class="comment">// Reshape to have each mini-batch on the last dimension</span>
-        <span class="kw">let</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">conv</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span>, <span class="number">1</span>, <span class="ident">batch_size</span>]));
+        <span class="ident">conv</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">conv</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span>, <span class="number">1</span>, <span class="ident">batch_size</span>]));
 
         <span class="comment">// Reshape to have correct output dimensions</span>
-        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">tmp</span>, <span class="bool-val">false</span>), <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">h_out</span>, <span class="ident">w_out</span>, <span class="self">self</span>.<span class="ident">num_filters</span>, <span class="ident">batch_size</span>]));
+        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">conv</span>, <span class="bool-val">false</span>), <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">h_out</span>, <span class="ident">w_out</span>, <span class="self">self</span>.<span class="ident">num_filters</span>, <span class="ident">batch_size</span>]));
         (<span class="ident">linear_activation</span>, <span class="ident">input_values</span>)
     }
 
@@ -654,76 +584,14 @@
         }
     }
 
-    <span class="comment">/*
-    fn img_to_col_indices(&amp;mut self) {
-        let kernel_size: (u64, u64) = (2, 2);
-        let stride: (u64, u64) = (1, 2);
-        let num_batches = 1;
-        let num_channels = 3;
-
-        // Create indices for the first dimension
-        let h_out = self.output_shape.get()[0];
-        let w_out = self.output_shape.get()[1];
-
-        let num_step_v = 2;
-        let idxs_dim1_val: Vec&lt;u64&gt; = (0..num_step_v).map( |i| {
-            (0..kernel_size.0).map(move |j|  j + i * stride.0)
-        }).flatten().collect();
-        println!(&quot;Indices along the first dimension: {:?}&quot;, idxs_dim1_val);
-        let i = Array::new(&amp;idxs_dim1_val, Dim4::new(&amp;[num_step_v * kernel_size.0, 1, 1, 1]));
-
-        // Create indices for the second dimension
-        let num_step_h = 2;
-        let idxs_dim0_val: Vec&lt;u64&gt; = (0..num_step_h).map( |i| {
-            (0..kernel_size.1).map(move |j|  j + i * stride.1)
-        }).flatten().collect();
-        println!(&quot;Indices along the second dimension: {:?}&quot;, idxs_dim0_val);
-        let j = Array::new(&amp;idxs_dim0_val, Dim4::new(&amp;[num_step_h * kernel_size.1, 1, 1, 1]));
-    }
-    */</span>
-
-    <span class="doccomment">/// Convert the image into a column-equivalent representation. This is required for computation speed.</span>
-    <span class="doccomment">/// There is a memory cost though.</span>
+    <span class="doccomment">/// Converts the image into a column representation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is done for computation speed but there is a memory cost.</span>
     <span class="kw">fn</span> <span class="ident">img_to_col</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-
         <span class="kw">let</span> <span class="ident">num_channels</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">2</span>];
-        <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>];
-
-        <span class="kw">let</span> <span class="ident">h_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">w_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()[<span class="number">1</span>];
-
-        <span class="comment">/*
-        // Iterate over all positions of the filtering window
-        let mut input_values = Tensor::new_empty(Dim4::new(&amp;[self.kernel_size.0 * self.kernel_size.1 * num_channels, 1, 1, batch_size]));
-        for i in 0..h_out {
-            let lb_i = i * self.stride.0;
-            let ub_i = lb_i + self.kernel_size.0 - 1;
-            let seq_i = Seq::new(lb_i as f32, ub_i as f32, 1.0);
-
-            for j in 0..w_out {
-                let lb_j = j * self.stride.1;
-                let ub_j = lb_j + self.kernel_size.1 - 1;
-                let seq_j = Seq::new(lb_j as f32, ub_j as f32, 1.0);
-                let seqs = &amp;[seq_i, seq_j, Seq::default(), Seq::default()];
-
-                // Select values in the filtering window and rearrange in columns
-                let sub = index(input, seqs);
-                let sub_col = moddims(&amp;sub, Dim4::new(&amp;[self.kernel_size.0 * self.kernel_size.1 * num_channels, 1, 1, batch_size]));
-
-                if i == 0 &amp;&amp; j == 0 {
-                    input_values = sub_col;
-                } else {
-                    input_values = join(1, &amp;input_values, &amp;sub_col);
-                }
-            }
-        }
-        // Stack mini-batches along second dimension
-        moddims(&amp;input_values, Dim4::new(&amp;[self.kernel_size.0 * self.kernel_size.1 * num_channels, input_values.dims().get()[1] * batch_size , 1, 1]))
-        */</span>
-
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">col</span> <span class="op">=</span> <span class="ident">unwrap</span>(<span class="ident">input</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="bool-val">true</span>);
         <span class="ident">col</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">col</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>]));
-        <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">col</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">num_channels</span>, <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span> <span class="op">*</span> <span class="ident">batch_size</span>, <span class="number">1</span>, <span class="number">1</span>]))
+        <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">col</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">col</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>] <span class="op">*</span> <span class="ident">num_channels</span>, <span class="ident">col</span>.<span class="ident">elements</span>() <span class="kw">as</span> <span class="ident">u64</span><span class="op">/</span>(<span class="ident">col</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>] <span class="op">*</span> <span class="ident">num_channels</span>), <span class="number">1</span>, <span class="number">1</span>]))
     }
 
     <span class="kw">fn</span> <span class="ident">dout_to_col</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
@@ -738,46 +606,16 @@
 
     <span class="doccomment">/// Transforms a columns representation of an image into an image with dimensions height x width x channels.</span>
     <span class="kw">fn</span> <span class="ident">col_to_img</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">1</span>];
         <span class="kw">let</span> <span class="ident">num_channels</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">2</span>];
         <span class="kw">let</span> <span class="ident">h_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>];
         <span class="kw">let</span> <span class="ident">w_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()[<span class="number">1</span>];
-        <span class="kw">let</span> <span class="ident">num_col</span> <span class="op">=</span> <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span>;
-        <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">1</span>] <span class="op">/</span> <span class="ident">num_col</span>;
+        <span class="kw">let</span> <span class="ident">num_cols</span> <span class="op">=</span> <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span>;
+        <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">1</span>] <span class="op">/</span> <span class="ident">num_cols</span>;
         <span class="kw">let</span> <span class="ident">height_padded</span> <span class="op">=</span> (<span class="ident">h_out</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">width_padded</span> <span class="op">=</span> (<span class="ident">w_out</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span>;
-        <span class="comment">//let mut out = Tensor::zeros(Dim4::new(&amp;[height_padded, width_padded, num_channels, mb_size]));</span>
 
-
-        <span class="comment">/*
-
-        let tmp = moddims(input, Dim4::new(&amp;[input.dims().get()[0], num_col, 1, mb_size]));
-
-        // Populate output
-        let mut col_index = 0.;
-        for i in 0..h_out {
-            let lb_i = i * self.stride.0;
-            let ub_i = lb_i + self.kernel_size.0 - 1;
-            let seq_i = Seq::new(lb_i as f32, ub_i as f32, 1.0);
-
-            for j in 0..w_out {
-                let lb_j = j * self.stride.1;
-                let ub_j = lb_j + self.kernel_size.1 - 1;
-                let seq_j = Seq::new(lb_j as f32, ub_j as f32, 1.0);
-                let seqs = &amp;[seq_i, seq_j, Seq::default(), Seq::default()];
-
-                let col = index(&amp;tmp, &amp;[Seq::default(), Seq::new(col_index, col_index, 1.), Seq::default(), Seq::default()]);
-                let filter = moddims(&amp;col, Dim4::new(&amp;[self.kernel_size.0, self.kernel_size.1, num_channels, mb_size]));
-
-                let sub = index(&amp;out, seqs) + filter;
-                out = assign_seq(&amp;out, seqs, &amp;sub);
-
-                col_index += 1.;
-            }
-        }*/</span>
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="ident">input</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span>, <span class="ident">num_channels</span>, <span class="ident">h_out</span> <span class="op">*</span> <span class="ident">w_out</span>, <span class="ident">batch_size</span>]));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>]));
+        <span class="ident">img</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">img</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>]<span class="op">/</span><span class="ident">num_channels</span>, <span class="ident">num_channels</span>, <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">1</span>]<span class="op">/</span><span class="ident">batch_size</span>, <span class="ident">batch_size</span>]));
         <span class="ident">img</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">img</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>]));
         <span class="ident">img</span> <span class="op">=</span> <span class="ident">wrap</span>(<span class="kw-2">&amp;</span><span class="ident">img</span>, <span class="ident">height_padded</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="ident">width_padded</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="bool-val">true</span>);
 
@@ -791,21 +629,16 @@
         <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>];
         <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">1</span>];
         <span class="kw">let</span> <span class="ident">num_channels</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">2</span>];
-        <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">3</span>];
 
         <span class="comment">// Compute output dimensions and padding size</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h_out</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">w_out</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">padding</span> {
+        <span class="kw">let</span> (<span class="ident">h_out</span>, <span class="ident">w_out</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">padding</span> {
             <span class="ident">Padding</span>::<span class="ident">Same</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">h_out</span> <span class="op">=</span> (<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
-                <span class="ident">w_out</span> <span class="op">=</span> (<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                ((<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>, (<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>)
             },
             <span class="ident">Padding</span>::<span class="ident">Valid</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">h_out</span> <span class="op">=</span> (((<span class="ident">height</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
-                <span class="ident">w_out</span> <span class="op">=</span> (((<span class="ident">width</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                ((((<span class="ident">height</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>, (((<span class="ident">width</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">stride</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>)
             }
-        }
+        };
         <span class="self">self</span>.<span class="ident">compute_padding_size</span>(<span class="ident">height</span>, <span class="ident">width</span>, <span class="ident">h_out</span>, <span class="ident">w_out</span>);
 
         <span class="kw">let</span> <span class="ident">fan_in</span> <span class="op">=</span> <span class="ident">height</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">*</span> <span class="ident">num_channels</span>;
@@ -814,50 +647,58 @@
         <span class="self">self</span>.<span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">input_shape</span>;
 
         <span class="comment">// Initialize weights and biases</span>
-        <span class="self">self</span>.<span class="ident">weights</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">weights_initializer</span>.<span class="ident">new</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">num_channels</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
-        <span class="self">self</span>.<span class="ident">biases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">biases_initializer</span>.<span class="ident">new</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
+        <span class="self">self</span>.<span class="ident">weights</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">weights_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
+        <span class="self">self</span>.<span class="ident">biases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">biases_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">num_filters</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
     }
 
     <span class="kw">fn</span> <span class="ident">compute_activation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
         <span class="kw">let</span> (<span class="ident">linear_activation</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_convolution</span>(<span class="ident">input</span>);
         <span class="ident">linear_activation</span>.<span class="ident">eval</span>();
         <span class="kw">let</span> <span class="ident">nonlinear_activation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="ident">linear_activation</span>);
+        <span class="ident">nonlinear_activation</span>.<span class="ident">eval</span>();
         <span class="ident">nonlinear_activation</span>
     }
 
     <span class="kw">fn</span> <span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="comment">//println!(&quot;Computing linear activation&quot;);</span>
         <span class="kw">let</span> (<span class="ident">linear_activation</span>, <span class="ident">reshaped_input</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_convolution</span>(<span class="ident">input</span>);
         <span class="ident">linear_activation</span>.<span class="ident">eval</span>();
         <span class="ident">reshaped_input</span>.<span class="ident">eval</span>();
         <span class="self">self</span>.<span class="ident">reshaped_input</span> <span class="op">=</span> <span class="ident">reshaped_input</span>;
 
-        <span class="comment">//println!(&quot;Computing nonlinear activation&quot;);</span>
         <span class="kw">let</span> <span class="ident">nonlinear_activation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="ident">linear_activation</span>);
-        <span class="comment">//nonlinear_activation.eval();</span>
 
-        <span class="self">self</span>.<span class="ident">z</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">linear_activation</span>);
-        <span class="self">self</span>.<span class="ident">a_prev</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">input</span>.<span class="ident">copy</span>());
+        <span class="self">self</span>.<span class="ident">linear_activation</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">linear_activation</span>);
+        <span class="self">self</span>.<span class="ident">previous_activation</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">input</span>.<span class="ident">copy</span>());
 
-        <span class="comment">//println!(&quot;Forward: Conv2D ouput: {} x {} x {} x {}&quot;, nonlinear_activation.dims().get()[0], nonlinear_activation.dims().get()[1], nonlinear_activation.dims().get()[2], nonlinear_activation.dims().get()[3]);</span>
         <span class="ident">nonlinear_activation</span>
     }
 
 
     <span class="kw">fn</span> <span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
 
-        <span class="comment">//println!(&quot;Backward: Conv2D input: {} x {} x {} x {}&quot;, input.dims().get()[0], input.dims().get()[1], input.dims().get()[2], input.dims().get()[3]);</span>
+        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">linear_activation</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">linear_activation</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">dz</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">grad</span>(<span class="ident">linear_activation</span>), <span class="bool-val">true</span>);
 
-        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="ident">input</span>, <span class="number">0</span>), <span class="number">1</span>), <span class="number">3</span>) <span class="op">/</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>];
-        <span class="self">self</span>.<span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>]));
-        <span class="self">self</span>.<span class="ident">dbiases</span>.<span class="ident">eval</span>();
-        <span class="kw">let</span> <span class="ident">input_flat</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dout_to_col</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">grad</span>(<span class="ident">input</span>));
-        <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">input_flat</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reshaped_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>);
-        <span class="self">self</span>.<span class="ident">dweights</span>.<span class="ident">eval</span>();
+                <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">dz</span>, <span class="number">0</span>), <span class="number">1</span>);
+                <span class="self">self</span>.<span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
+                <span class="self">self</span>.<span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">dbiases</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>]));
 
-        <span class="comment">// Compute the derivative wrt the input</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dinput</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">input_flat</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>);
-        <span class="self">self</span>.<span class="ident">col_to_img</span>(<span class="kw-2">&amp;</span><span class="ident">dinput</span>)
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dz_reshaped</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">dz</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>]));
+                <span class="ident">dz_reshaped</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">dz_reshaped</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">dz_reshaped</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>], <span class="ident">dz_reshaped</span>.<span class="ident">elements</span>() <span class="kw">as</span> <span class="ident">u64</span><span class="op">/</span><span class="ident">dz_reshaped</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>], <span class="number">1</span>, <span class="number">1</span>]));
+
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prod</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">dz_reshaped</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reshaped_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>);
+                <span class="ident">prod</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">prod</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">prod</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>], <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span>, <span class="ident">prod</span>.<span class="ident">elements</span>() <span class="kw">as</span> <span class="ident">u64</span><span class="op">/</span>(<span class="ident">prod</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">0</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span>), <span class="number">1</span>]));
+                <span class="ident">prod</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="kw-2">&amp;</span><span class="ident">prod</span>, <span class="number">2</span>);
+                <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">=</span> <span class="ident">prod</span>;
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">regularizer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">regularizer</span> {  <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">+</span><span class="op">=</span> <span class="ident">regularizer</span>.<span class="ident">grad</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>) }
+
+                <span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">tile</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">2</span>], <span class="number">1</span>, <span class="number">1</span>]));
+                <span class="kw">let</span> <span class="ident">d_input</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">dz_reshaped</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>);
+                <span class="self">self</span>.<span class="ident">col_to_img</span>(<span class="kw-2">&amp;</span><span class="ident">d_input</span>)
+            },
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The linear activations have not been computed!&quot;</span>),
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">output_shape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Dim4</span> {
@@ -879,10 +720,15 @@
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="kw">fn</span> <span class="ident">set_regularizer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">regularizer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regularizer</span><span class="op">&gt;</span>) {
+        <span class="self">self</span>.<span class="ident">regularizer</span> <span class="op">=</span> <span class="ident">regularizer</span>;
+    }
+
+
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Conv2D</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="kw">let</span> <span class="ident">num_parameters</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">0</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">kernel_size</span>.<span class="number">1</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">num_filters</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">num_filters</span>;
         <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Conv2D \t\t {}&quot;</span>, <span class="ident">num_parameters</span>)
     }

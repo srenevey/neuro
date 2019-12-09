@@ -44,6 +44,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Initializers | neuro</title>
@@ -351,6 +375,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -450,61 +480,61 @@
 
 <h2 id="glorot-normal">Glorot Normal</h2>
 
-<p>This distribution has first been introduced by Glorot and Bengio [1]. The authors propose to use a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2&space;=&space;2/(n_i&plus;n_{i&plus;1})" title="\sigma^2 = 2/(n_i+n_{i+1})" />, that is</p>
+<p>This distribution has first been introduced by Glorot and Bengio [1]. The authors propose to use a normal distribution with mean $\mu=0$ and variance $\sigma^2=2/(n_i+n_{i+1})$, that is</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,\frac{2}{n_i&plus;n_{i&plus;1}}&space;\right&space;)=\sqrt{\frac{2}{n_i&plus;n_{i&plus;1}}}\mathcal{N}(0,1)" title="X \sim \mathcal{N}\left(0,\frac{2}{n_i+n_{i+1}} \right )=\sqrt{\frac{2}{n_i+n_{i+1}}}\mathcal{N}(0,1)" /></p>
+<p>$$X \sim \mathcal{N}\left(0,\frac{2}{n_i+n_{i+1}} \right )=\sqrt{\frac{2}{n_i+n_{i+1}}}\mathcal{N}(0,1)$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units (sometimes called fan in) and <img src="https://latex.codecogs.com/svg.latex?n_{i&plus;1}" title="n_{i+1}" /> the number of output units (sometimes called fan out). Note that this initialization method is sometimes called Xavier normal from the first name of the first author, Xavier Glorot.</p>
+<p>where $n_i$ is the number of input units (sometimes called fan in) and $n_{i+1}$ the number of output units (sometimes called fan out). Note that this initialization method is sometimes called Xavier normal from the first name of the first author, Xavier Glorot.</p>
 
 <h2 id="glorot-uniform">Glorot Uniform</h2>
 
 <p>In this initialization scheme also proposed by Glorot and Bengio [1], the initial values are drawn from the uniform distribution:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{6}{n_i&plus;n_{i&plus;1}}},\sqrt{\frac{6}{n_i&plus;n_{i&plus;1}}}\right)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i+n_{i+1}}},\sqrt{\frac{6}{n_i+n_{i+1}}}\right)" /></p>
+<p>$$X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i+n_{i+1}}},\sqrt{\frac{6}{n_i+n_{i+1}}}\right)$$</p>
 
-<p>where, similarly to the Glorot Normal initializer, <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units and <img src="https://latex.codecogs.com/svg.latex?n_{i&plus;1}" title="n_{i+1}" /> the number of output units. Note that this initialization method is sometimes called Xavier uniform from the first name of the first author, Xavier Glorot.</p>
+<p>where, similarly to the Glorot Normal initializer, $n_i$ is the number of input units and $n_{i+1}$ the number of output units. Note that this initialization method is sometimes called Xavier uniform from the first name of the first author, Xavier Glorot.</p>
 
 <h2 id="he-normal">He Normal</h2>
 
-<p>He et al. [2] build on top of the results obtained by Glorot and Bengio and propose to draw the initial values from a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2&space;=&space;2/n_i" title="\sigma^2 = 2/n_i" />:</p>
+<p>He et al. [2] build on top of the results obtained by Glorot and Bengio and propose to draw the initial values from a normal distribution with mean $\mu=0$ and variance $\sigma^2=2/n_i$:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,\frac{2}{n_i}\right)=\sqrt{\frac{2}{n_i}}\mathcal{N}\left(0,1\right)" title="X \sim \mathcal{N}\left(0,\frac{2}{n_i}\right)=\sqrt{\frac{2}{n_i}}\mathcal{N}\left(0,1\right)" /></p>
+<p>$$X \sim \mathcal{N}\left(0,\frac{2}{n_i}\right)=\sqrt{\frac{2}{n_i}}\mathcal{N}\left(0,1\right)$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+<p>where $n_i$ is the number of input units.</p>
 
 <h2 id="he-uniform">He Uniform</h2>
 
-<p>The He uniform initializer generates random values using a uniform distribution within <img src="https://latex.codecogs.com/svg.latex?\pm\sqrt{6/n_i}" title="\pm\sqrt{6/n_i}" />:</p>
+<p>The He uniform initializer generates random values using a uniform distribution within $\pm\sqrt{6/n_i}$:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{6}{n_i}},\sqrt{\frac{6}{n_i}}\right)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i}},\sqrt{\frac{6}{n_i}}\right)" /></p>
+<p>$$X \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_i}},\sqrt{\frac{6}{n_i}}\right)$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+<p>where $n_i$ is the number of input units.</p>
 
 <h2 id="lecun-normal">Lecun Normal</h2>
 
-<p>LeCun et al. [3] propose to initialize the weights using a normal distribution scaled by a factor <img src="https://latex.codecogs.com/svg.latex?\sqrt{1/n_i}" title="\sqrt{1/n_i}" /> where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units. That is, the random values are drawn from the following distribution:</p>
+<p>LeCun et al. [3] propose to initialize the weights using a normal distribution scaled by a factor $\sqrt{1/n_i}$  where $n_i$ is the number of input units. That is, the random values are drawn from the following distribution:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}\left(0,&space;\frac{1}{n_i}&space;\right&space;)&space;=&space;\sqrt{\frac{1}{n_i}}\mathcal{N}\left(0,&space;1&space;\right&space;)" title="X \sim \mathcal{N}\left(0, \frac{1}{n_i} \right ) = \sqrt{\frac{1}{n_i}}\mathcal{N}\left(0, 1 \right )" /></p>
+<p>$$X \sim \mathcal{N}\left(0, \frac{1}{n_i} \right) = \sqrt{\frac{1}{n_i}}\mathcal{N}\left(0, 1 \right)$$</p>
 
 <h2 id="lecun-uniform">Lecun Uniform</h2>
 
-<p>The Lecun uniform initializer uses a uniform distribution within <img src="https://latex.codecogs.com/svg.latex?\pm\sqrt{3/n_i}" title="\pm\sqrt{3/n_i}" />:</p>
+<p>The Lecun uniform initializer uses a uniform distribution within $\pm \sqrt{3/n_i}$:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}\left(-\sqrt{\frac{3}{n_i}},&space;\sqrt{\frac{3}{n_i}}&space;\right&space;)" title="X \sim \mathcal{U}\left(-\sqrt{\frac{3}{n_i}}, \sqrt{\frac{3}{n_i}} \right )" /></p>
+<p>$$X \sim \mathcal{U}\left(-\sqrt{\frac{3}{n_i}}, \sqrt{\frac{3}{n_i}} \right )$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?n_i" title="n_i" /> is the number of input units.</p>
+<p>where $n_i$ is the number of input units.</p>
 
 <h2 id="random-normal">Random Normal</h2>
 
-<p>The initial values are drawn from a normal distribution with mean <img src="https://latex.codecogs.com/svg.latex?\mu&space;=&space;0" title="\mu = 0" /> and variance <img src="https://latex.codecogs.com/svg.latex?\sigma^2=0.1" title="\sigma^2=0.1" />, i.e.</p>
+<p>The initial values are drawn from a normal distribution with mean $\mu=0$ and variance $\sigma^2 = 0.1$, i.e.</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{N}(0,0.1)" title="X \sim \mathcal{N}(0,0.1)" /></p>
+<p>$$X \sim \mathcal{N}(0,0.1)$$</p>
 
 <h2 id="random-uniform">Random Uniform</h2>
 
 <p>In the random uniform distribution initializer, the initial values are drawn from a uniform distribution between -0.01 an 0.01:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?X&space;\sim&space;\mathcal{U}(-0.01,0.01)" title="X \sim \mathcal{U}(-0.01,0.01)" /></p>
+<p>$$X \sim \mathcal{U}(-0.01,0.01)$$</p>
 
 <h2 id="zeros-ones-constant">Zeros, Ones, Constant</h2>
 
@@ -524,6 +554,8 @@
     
     
     <hr class="panel-line">
+        
+            
         
             
         

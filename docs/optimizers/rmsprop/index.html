@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="92">
+<meta itemprop="wordCount" content="119">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>RMSProp | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -449,15 +479,15 @@
 
 <p>The RMSProp optimization algorithm has first been introduced by Hinton [1]. This algorithm keeps track of the moving average of the square of the gradient:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?s&space;=&space;\beta&space;s&space;&plus;&space;(1&space;-&space;\beta)(\nabla_\theta\mathcal{L}(\hat{Y},&space;Y))^2" title="s = \beta s + (1 - \beta)(\nabla_\theta\mathcal{L}(\hat{Y}, Y))^2" /></p>
+<p>$$s = \beta s + (1-\beta)[\nabla_{\theta}\mathcal{L}(\hat{Y},Y)]^2$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\beta" title="\beta" /> is the decay rate of the moving average and the gradient of the loss function <img src="https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="\nabla_\theta\mathcal{L}(\hat{Y}, Y)" /> is computed with the backpropagation algorithm. The parameters are then updated according to</p>
+<p>where $\beta$ is the decay rate of the moving average and the gradient of the loss function $\nabla_{\theta}\mathcal{L}(\hat{Y},Y)$ is computed with the backpropagation algorithm. The parameters are then updated according to</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\theta&space;=&space;\theta&space;-&space;\alpha\frac{\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)}{\sqrt{s}&space;&plus;&space;\varepsilon}" title="\theta = \theta - \alpha\frac{\nabla_\theta\mathcal{L}(\hat{Y}, Y)}{\sqrt{s} + \varepsilon}" /></p>
+<p>$$\theta = \theta - \alpha \frac{\nabla_{\theta}\mathcal{L}(\hat{Y},Y)}{\sqrt{s}+\epsilon}$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\alpha" title="\alpha" /> is the learning rate and <img src="https://latex.codecogs.com/svg.latex?\varepsilon" title="\varepsilon" /> is a small quantity added to ensure numerical stability. Note that <img src="https://latex.codecogs.com/svg.latex?\sqrt{s}" title="\sqrt{s}" /> is applied element-wise. By default, the hyperparameters of the optimizer are set to</p>
+<p>where $\alpha$ is the learning rate and $\epsilon$ is a small quantity added to ensure numerical stability. Note that $\sqrt{s}$ is applied element-wise. By default, the hyperparameters of the optimizer are set to</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\begin{align*}&space;\beta&space;&=&space;0.9&space;\\&space;\varepsilon&space;&=&space;10^{-8}&space;\end{align*}" title="\begin{align*} \beta &= 0.9 \\ \varepsilon &= 10^{-8} \end{align*}" /></p>
+<p>$$\begin{align} \beta &amp;= 0.9 \newline \epsilon &amp;= 10^{-8} \end{align} $$</p>
 
 <h2 id="references">References</h2>
 

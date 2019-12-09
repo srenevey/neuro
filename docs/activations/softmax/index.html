@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="256">
+<meta itemprop="wordCount" content="472">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Softmax | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -449,45 +479,45 @@
 
 <p>The softmax activation function is a bit different than the other activation functions in that it takes a vector as input rather than a scalar:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}" title="\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}" /></p>
+<p>$$\vec{g}(\vec{x})=\frac{e^{\vec{x}}}{\sum_{k=1}^ne^{x_k}}$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\vec{x}&space;=&space;\begin{bmatrix}&space;x_1&space;&&space;x_2&space;&&space;\dots&space;&&space;x_n&space;\end{bmatrix}" title="\vec{x} = \begin{bmatrix} x_1 & x_2 & \dots & x_n \end{bmatrix}" />. Component-wise, we have</p>
+<p>where $\vec{x} = \begin{bmatrix} x_1 &amp; x_2 &amp; \dots &amp; x_n \end{bmatrix}$. Component-wise, we have</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}" title="g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}" /></p>
+<p>$$g_i(\vec{x})=\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}$$</p>
 
 <p>Note that the exponential terms in the above equation can quickly grow and cause numerical instability. In order to mitigate this undersired behavior, we can multiply both the numerator and denominator by a constant such that</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})&space;=&space;\frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}}&space;=&space;\frac{e^{\ln&space;C}e^{x_i}}{e^{&space;\ln&space;C}\sum_{k=1}^ne^{x_k}}&space;=&space;\frac{e^{x_i&space;&plus;&space;\ln&space;C}}{\sum_{k=1}^ne^{x_k&plus;\ln&space;C}}" title="g_i(\vec{x}) = \frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}} = \frac{e^{\ln C}e^{x_i}}{e^{ \ln C}\sum_{k=1}^ne^{x_k}} = \frac{e^{x_i + \ln C}}{\sum_{k=1}^ne^{x_k+\ln C}}" /></p>
+<p>$$g_i(\vec{x}) = \frac{Ce^{x_i}}{C\sum_{k=1}^ne^{x_k}} = \frac{e^{\ln C}e^{x_i}}{e^{ \ln C}\sum_{k=1}^ne^{x_k}} = \frac{e^{x_i + \ln C}}{\sum_{k=1}^ne^{x_k+\ln C}}$$</p>
 
-<p>A common choice for the constant is to set <img src="https://latex.codecogs.com/svg.latex?\inline&space;\ln&space;C&space;=&space;-\max_k(x_k)" title="\ln C = -\max_k(x_k)" />  [1]. The definiton of the softmax function is such that</p>
+<p>A common choice for the constant is to set $\ln C = -\max_k(x_k)$ [1]. The definiton of the softmax function is such that</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\sum_{i=1}^ng_i(\vec{x})=1" title="\sum_{i=1}^ng_i(\vec{x})=1" /></p>
+<p>$$\sum_{i=1}^ng_i(\vec{x})=1$$</p>
 
-<p>which allows us to see <img src="https://latex.codecogs.com/svg.latex?g_i(\vec{x})" title="g_i(\vec{x})" /> as the probability that <img src="https://latex.codecogs.com/svg.latex?\vec{x}" title="\vec{x}" /> belongs to class <img src="https://latex.codecogs.com/svg.latex?i" title="i" />. This function is therefore widely used for the last activation of multiclass classification models.</p>
+<p>which allows us to see $g_i(\vec{x})$ as the probability that $\vec{x}$ belongs to class $i$. This function is therefore widely used for the last activation of multiclass classification models.</p>
 
 <p>The derivative of this function is given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_i}&space;=&space;\frac{e^{x_i}\sum_{k=1}^ne^{x_k}&space;-&space;e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k}&space;\right)^2}&space;=&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1&space;-&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}&space;\right&space;)" title="\frac{\partial g_i}{\partial x_i} = \frac{e^{x_i}\sum_{k=1}^ne^{x_k} - e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} = \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1 - \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}} \right )" /></p>
+<p>$$\frac{\partial g_i}{\partial x_i} = \frac{e^{x_i}\sum_{k=1}^ne^{x_k} - e^{x_i}e^{x_i}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} = \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\left(1 - \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}} \right)$$</p>
 
 <p>and</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_j}&space;=&space;\frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k}&space;\right)^2}&space;=-&space;\frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}" title="\frac{\partial g_i}{\partial x_j} = \frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} =- \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}" /></p>
+<p>$$\frac{\partial g_i}{\partial x_j} = \frac{-e^{x_i}e^{x_j}}{\left(\sum_{k=1}^ne^{x_k} \right)^2} =- \frac{e^{x_i}}{\sum_{k=1}^ne^{x_k}}\frac{e^{x_j}}{\sum_{k=1}^ne^{x_k}}$$</p>
 
 <p>These two equations can be rewritten more compactly as</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g_i}{\partial&space;x_j}&space;=&space;g_i(\vec{x})(\delta_{ij}&space;-&space;g_j(\vec{x}))" title="\frac{\partial g_i}{\partial x_j} = g_i(\vec{x})(\delta_{ij} - g_j(\vec{x}))" /></p>
+<p>$$\frac{\partial g_i}{\partial x_j} = g_i(\vec{x})(\delta_{ij} - g_j(\vec{x}))$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\delta_{ij}" title="\delta_{ij}" /> is the Kronecker delta and yields</p>
+<p>where $\delta_{ij}$ is the Kronecker delta and yields</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\delta_{ij}&space;=&space;\begin{cases}&space;1&space;&\text{if&space;}&space;i&space;=&space;j&space;\\&space;0&space;&\text{if&space;}&space;i&space;\neq&space;j&space;\end{cases}" title="\delta_{ij} = \begin{cases} 1 &\text{if } i = j \\ 0 &\text{if } i \neq j \end{cases}" /></p>
+<p>$$\delta_{ij} = \begin{cases} 1 &amp;\text{if } i = j \newline 0 &amp;\text{if } i \neq j \end{cases}$$</p>
 
-<p>The Jacobian of <img src="https://latex.codecogs.com/svg.latex?\vec{g}" title="\vec{g}" /> is given by</p>
+<p>The Jacobian of $\vec{g}$ is given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathbf{J}&space;=&space;\begin{bmatrix}&space;\frac{\partial&space;g_1}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_1}{\partial&space;x_n}\\&space;\frac{\partial&space;g_2}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_2}{\partial&space;x_n}\\&space;\frac{\partial&space;g_3}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_3}{\partial&space;x_n}\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots\\&space;\frac{\partial&space;g_n}{\partial&space;x_1}&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_2}&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_3}&space;&&space;\dots&space;&&space;\frac{\partial&space;g_n}{\partial&space;x_n}&space;\end{bmatrix}" title="\mathbf{J} = \begin{bmatrix} \frac{\partial g_1}{\partial x_1} & \frac{\partial g_1}{\partial x_2} & \frac{\partial g_1}{\partial x_3} & \dots & \frac{\partial g_1}{\partial x_n}\\ \frac{\partial g_2}{\partial x_1} & \frac{\partial g_2}{\partial x_2} & \frac{\partial g_2}{\partial x_3} & \dots & \frac{\partial g_2}{\partial x_n}\\ \frac{\partial g_3}{\partial x_1} & \frac{\partial g_3}{\partial x_2} & \frac{\partial g_3}{\partial x_3} & \dots & \frac{\partial g_3}{\partial x_n}\\ \vdots & \vdots & \vdots & \ddots & \vdots\\ \frac{\partial g_n}{\partial x_1} & \frac{\partial g_n}{\partial x_2} & \frac{\partial g_n}{\partial x_3} & \dots & \frac{\partial g_n}{\partial x_n} \end{bmatrix}" /></p>
+<p>$$\mathbf{J} = \begin{bmatrix} \frac{\partial g_1}{\partial x_1} &amp; \frac{\partial g_1}{\partial x_2} &amp; \frac{\partial g_1}{\partial x_3} &amp; \dots &amp; \frac{\partial g_1}{\partial x_n}\newline \frac{\partial g_2}{\partial x_1} &amp; \frac{\partial g_2}{\partial x_2} &amp; \frac{\partial g_2}{\partial x_3} &amp; \dots &amp; \frac{\partial g_2}{\partial x_n}\newline \frac{\partial g_3}{\partial x_1} &amp; \frac{\partial g_3}{\partial x_2} &amp; \frac{\partial g_3}{\partial x_3} &amp; \dots &amp; \frac{\partial g_3}{\partial x_n}\newline \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\newline \frac{\partial g_n}{\partial x_1} &amp; \frac{\partial g_n}{\partial x_2} &amp; \frac{\partial g_n}{\partial x_3} &amp; \dots &amp; \frac{\partial g_n}{\partial x_n} \end{bmatrix}$$</p>
 
 <p>which, based on the partial derivatives computed above, becomes</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathbf{J}&space;=&space;\begin{bmatrix}&space;g_1(\vec{x})(1&space;-&space;g_1(\vec{x}))&space;&&space;-g_1(\vec{x})g_2(\vec{x})&space;&&space;-g_1(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;-g_1(\vec{x})g_n(\vec{x})\\&space;-g_2(\vec{x})g_1(\vec{x})&space;&&space;g_2(\vec{x})(1&space;-&space;g_2(\vec{x}))&space;&&space;-g_2(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;-g_2(\vec{x})g_n(\vec{x})\\&space;-g_3(\vec{x})g_1(\vec{x})&space;&&space;-g_3(\vec{x})g_2(\vec{x})&space;&&space;g_3(\vec{x})(1&space;-&space;g_3(\vec{x}))&space;&&space;\dots&space;&&space;-g_3(\vec{x})g_n(\vec{x})\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots\\&space;-g_n(\vec{x})g_1(\vec{x})&space;&&space;-g_n(\vec{x})g_2(\vec{x})&space;&&space;-g_n(\vec{x})g_3(\vec{x})&space;&&space;\dots&space;&&space;g_n(\vec{x})(1-g_n(\vec{x}))&space;\end{bmatrix}" title="\mathbf{J} = \begin{bmatrix} g_1(\vec{x})(1 - g_1(\vec{x})) & -g_1(\vec{x})g_2(\vec{x}) & -g_1(\vec{x})g_3(\vec{x}) & \dots & -g_1(\vec{x})g_n(\vec{x})\\ -g_2(\vec{x})g_1(\vec{x}) & g_2(\vec{x})(1 - g_2(\vec{x})) & -g_2(\vec{x})g_3(\vec{x}) & \dots & -g_2(\vec{x})g_n(\vec{x})\\ -g_3(\vec{x})g_1(\vec{x}) & -g_3(\vec{x})g_2(\vec{x}) & g_3(\vec{x})(1 - g_3(\vec{x})) & \dots & -g_3(\vec{x})g_n(\vec{x})\\ \vdots & \vdots & \vdots & \ddots & \vdots\\ -g_n(\vec{x})g_1(\vec{x}) & -g_n(\vec{x})g_2(\vec{x}) & -g_n(\vec{x})g_3(\vec{x}) & \dots & g_n(\vec{x})(1-g_n(\vec{x})) \end{bmatrix}" /></p>
+<p>$$\mathbf{J} = \begin{bmatrix} g_1(\vec{x})(1 - g_1(\vec{x})) &amp; -g_1(\vec{x})g_2(\vec{x}) &amp; -g_1(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_1(\vec{x})g_n(\vec{x})\newline -g_2(\vec{x})g_1(\vec{x}) &amp; g_2(\vec{x})(1 - g_2(\vec{x})) &amp; -g_2(\vec{x})g_3(\vec{x}) &amp; \dots &amp; -g_2(\vec{x})g_n(\vec{x})\newline -g_3(\vec{x})g_1(\vec{x}) &amp; -g_3(\vec{x})g_2(\vec{x}) &amp; g_3(\vec{x})(1 - g_3(\vec{x})) &amp; \dots &amp; -g_3(\vec{x})g_n(\vec{x})\newline \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\newline -g_n(\vec{x})g_1(\vec{x}) &amp; -g_n(\vec{x})g_2(\vec{x}) &amp; -g_n(\vec{x})g_3(\vec{x}) &amp; \dots &amp; g_n(\vec{x})(1-g_n(\vec{x})) \end{bmatrix}$$</p>
 
 <p>Note: for multiclass classification problems, the loss function is usually the cross-entropy loss function and the activation of the output layer the softmax function. When combined together, the gradient of the cross-entropy loss function with respect to the linear activation of the output layer (that is, the activation pre-softmax) takes a very simple form as shown <a href="https://srenevey.github.io/neuro/docs/losses/crossentropy/" target="_blank">here</a>. For this reason, the gradient of the softmax activation function in neuro returns its output and should only be used for the output layer when the cross-entropy loss function is used. This might change in the future.</p>
 

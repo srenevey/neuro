@@ -21,32 +21,29 @@
 <link rel="icon" type="image/png" href="/neuro/favicons/android-192x192.png" sizes="192x192">
 
 <title>Mean Absolute Error | neuro</title><meta property="og:title" content="Mean Absolute Error" />
-<meta property="og:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
-where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-the gradient of with respect to yields
-where the case is arbitrarily set to ." />
+<meta property="og:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and that the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean absolute error is given by
+$$\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|$$
+where $m$ is the number of samples in the mini-batch. Since the derivative of the absolute value is given by" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/losses/mae/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Mean Absolute Error">
-<meta itemprop="description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
-where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-the gradient of with respect to yields
-where the case is arbitrarily set to .">
+<meta itemprop="description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and that the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean absolute error is given by
+$$\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|$$
+where $m$ is the number of samples in the mini-batch. Since the derivative of the absolute value is given by">
 
 
 
-<meta itemprop="wordCount" content="71">
+<meta itemprop="wordCount" content="143">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mean Absolute Error"/>
-<meta name="twitter:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are and that the true values are , then the mean absolute error is given by
-where is the number of samples in the mini-batch. Since the derivative of the absolute value is given by
-the gradient of with respect to yields
-where the case is arbitrarily set to ."/>
+<meta name="twitter:description" content="The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and that the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean absolute error is given by
+$$\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|$$
+where $m$ is the number of samples in the mini-batch. Since the derivative of the absolute value is given by"/>
 
 
 
@@ -59,6 +56,30 @@ where the case is arbitrarily set to ."/>
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Mean Absolute Error | neuro</title>
@@ -366,6 +387,12 @@ where the case is arbitrarily set to ."/>
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -449,19 +476,19 @@ where the case is arbitrarily set to ."/>
 <div class="td-content">
 	<h1>Mean Absolute Error</h1>
 	
-	<p>The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are <img src="https://latex.codecogs.com/svg.latex?\inline&space;\hat{Y}&space;=&space;\begin{bmatrix}&space;\boldsymbol{\hat{y}}^{(1)}&space;&&space;\boldsymbol{\hat{y}}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{\hat{y}}^{(m)}&space;\end{bmatrix}" title="\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} & \boldsymbol{\hat{y}}^{(2)} & \dots & \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}" /> and that the true values are <img src="https://latex.codecogs.com/svg.latex?\inline&space;Y&space;=&space;\begin{bmatrix}&space;\boldsymbol{y}^{(1)}&space;&&space;\boldsymbol{y}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{y}^{(m)}&space;\end{bmatrix}" title="Y = \begin{bmatrix} \boldsymbol{y}^{(1)} & \boldsymbol{y}^{(2)} & \dots & \boldsymbol{y}^{(m)} \end{bmatrix}" />, then the mean absolute error is given by</p>
+	<p>The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and that the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean absolute error is given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|" title="\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|" /></p>
+<p>$$\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?m" title="m" /> is the number of samples in the mini-batch. Since the derivative of the absolute value is given by</p>
+<p>where $m$ is the number of samples in the mini-batch. Since the derivative of the absolute value is given by</p>
 
-<p><img class="center" src="/neuro/images/abs_val_derivative.svg" /></p>
+<p>$$\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp; \text{if } x &gt; 0 \newline \text{undefined} &amp; \text{if } x = 0 \newline -1 &amp; \text{if } x &lt; 0 \end{cases}$$</p>
 
-<p>the gradient of <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}" title="\mathcal{L}" /> with respect to <img src="https://latex.codecogs.com/svg.latex?\inline&space;\hat{Y}" title="\hat{Y}" /> yields</p>
+<p>the gradient of $\mathcal{L}$ with respect to $\hat{Y}$ yields</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},&space;Y)=\begin{cases}\frac{1}{m}&space;&\text{if&space;}&space;\boldsymbol{\hat{y}}^{(i)}&space;\ge&space;\boldsymbol{y}^{(i)}&space;\\&space;-\frac{1}{m}&space;&\text{if&space;}&space;\boldsymbol{\hat{y}}^{(i)}&space;<&space;\boldsymbol{y}^{(i)}&space;\end{cases}" title="\nabla_{\hat{Y}}\mathcal{L}(\hat{Y}, Y)=\begin{cases}\frac{1}{m} &\text{if } \boldsymbol{\hat{y}}^{(i)} \ge \boldsymbol{y}^{(i)} \\ -\frac{1}{m} &\text{if } \boldsymbol{\hat{y}}^{(i)} < \boldsymbol{y}^{(i)} \end{cases}" /></p>
+<p>$$\nabla_{\hat{Y}}\mathcal{L}(\hat{Y}, Y)=\begin{cases}\frac{1}{m} &amp;\text{if } \boldsymbol{\hat{y}}^{(i)} \ge \boldsymbol{y}^{(i)} \newline -\frac{1}{m} &amp;\text{if } \boldsymbol{\hat{y}}^{(i)} &lt; \boldsymbol{y}^{(i)} \end{cases}$$</p>
 
-<p>where the case <img src="https://latex.codecogs.com/svg.latex?\boldsymbol{\hat{y}}^{(i)}&space;=&space;\boldsymbol{y}^{(i)}" title="\boldsymbol{\hat{y}}^{(i)} = \boldsymbol{y}^{(i)}" /> is arbitrarily set to <img src="https://latex.codecogs.com/svg.latex?\frac{1}{m}" title="\frac{1}{m}" />.</p>
+<p>where the case $\boldsymbol{\hat{y}}^{(i)} = \boldsymbol{y}^{(i)}$ is arbitrarily set to $\frac{1}{m}$.</p>
 
 	
 	

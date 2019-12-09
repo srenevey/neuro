@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Adam","Adaptive moments estimation"],["RMSProp","RMSProp"],["SGD","Stochastic Gradient Descent"]],"trait":[["Optimizer","Defines the trait that needs to be implemented by any optimizer working with neuro."]]});
+initSidebarItems({"struct":[["AdaDelta","AdaDelta"],["Adam","Adaptive moments estimation"],["RMSProp","RMSProp"],["SGD","Stochastic Gradient Descent"]],"trait":[["Optimizer","Defines the trait that needs to be implemented by any optimizer working with neuro."]]});

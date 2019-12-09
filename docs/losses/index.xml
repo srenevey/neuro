@@ -22,43 +22,45 @@
       <description>
         
         
-        &lt;p&gt;The cross entropy loss function is typically used in multiclass classification problems. For a model having &lt;img src=&#34;https://latex.codecogs.com/svg.latex?C&#34; title=&#34;C&#34; /&gt; classes and if &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\hat{Y}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{\hat{y}}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}&#34; /&gt; are the predicted labels and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;Y&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{y}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{y}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{y}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}&#34; /&gt; are the true labels, then the cross entropy is defined as&lt;/p&gt;
+        &lt;p&gt;The cross entropy loss function is typically used in multiclass classification problems. For a model having $C$ classes and if $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp;amp; \boldsymbol{\hat{y}}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ are the predicted labels and $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp;amp; \boldsymbol{y}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{y}^{(m)} \end{bmatrix}$ are the true labels, then the cross entropy is defined as&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},&amp;space;Y)&amp;space;=&amp;space;\frac{1}{m}\sum_{i=1}^m\left(-\sum_{j=1}^Cy^{(i)}_j\log\hat{y}^{(i)}_j&amp;space;\right)&#34; title=&#34;\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}\sum_{i=1}^m\left(-\sum_{j=1}^Cy^{(i)}_j\log\hat{y}^{(i)}_j \right)&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}\sum_{i=1}^m\left(-\sum_{j=1}^Cy^{(i)}_j\log\hat{y}^{(i)}_j \right)$$&lt;/p&gt;
 
-&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?m&#34; title=&#34;m&#34; /&gt; is the number of samples in the mini-batch. If we take the derivative of this function with respect to output &lt;img src=&#34;https://latex.codecogs.com/svg.latex?j&#34; title=&#34;j&#34; /&gt; of sample &lt;img src=&#34;https://latex.codecogs.com/svg.latex?i&#34; title=&#34;i&#34; /&gt; we get&lt;/p&gt;
+&lt;p&gt;where $m$ is the number of samples in the mini-batch. If we take the derivative of this function with respect to output $j$ of sample $i$ we get&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;\hat{y}_j^{(i)}}&amp;space;=&amp;space;-\frac{1}{m}\frac{y_j^{(i)}}{\hat{y}_j^{(i)}}&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial \hat{y}_j^{(i)}} = -\frac{1}{m}\frac{y_j^{(i)}}{\hat{y}_j^{(i)}}&#34; /&gt;
+&lt;p&gt;$$\frac{\partial \mathcal{L}}{\partial \hat{y}_j^{(i)}} = -\frac{1}{m}\frac{y_j^{(i)}}{\hat{y}_j^{(i)}}$$
 or in vector form&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)&amp;space;=&amp;space;-\frac{1}{m}\frac{Y}{\hat{Y&amp;space;}}&#34; title=&#34;\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y) = -\frac{1}{m}\frac{Y}{\hat{Y }}&#34; /&gt;
+&lt;p&gt;$$\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y) = -\frac{1}{m}\frac{Y}{\hat{Y }}$$
 Now, if we assume that the loss activation of the last layer is a softmax function, we have&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\hat{y}_j^{(i)}&amp;space;=&amp;space;\frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; title=&#34;\hat{y}_j^{(i)} = \frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\hat{y}_j^{(i)} = \frac{e^{x_j^{(i)}}}{\sum_{k=1}^ne^{x_k^{(i)}}}$$&lt;/p&gt;
 
 &lt;p&gt;and, as seen in the derivation of the &lt;a href=&#34;https://srenevey.github.io/neuro/docs/activations/softmax/&#34; target=&#34;_blank&#34;&gt;softmax&lt;/a&gt;, the derivative is&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\hat{y}_j^{(i)}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;\hat{y}_j^{(i)}(\delta_{jl}&amp;space;-&amp;space;\hat{y}_l^{(i)})&#34; title=&#34;\frac{\partial \hat{y}_j^{(i)}}{\partial x_l^{(i)}} = \hat{y}_j^{(i)}(\delta_{jl} - \hat{y}_l^{(i)})&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\frac{\partial \hat{y}_j^{(i)}}{\partial x_l^{(i)}} = \hat{y}_j^{(i)}(\delta_{jl} - \hat{y}_l^{(i)})$$&lt;/p&gt;
 
-&lt;p&gt;Hence, if we compute the derivative of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}&#34; title=&#34;\mathcal{L}&#34; /&gt; with respect to &lt;img src=&#34;https://latex.codecogs.com/svg.latex?x_l^{(i)}&#34; title=&#34;x_l^{(i)}&#34; /&gt;, we have&lt;/p&gt;
+&lt;p&gt;Hence, if we compute the derivative of $\mathcal{L}$ with respect to $x_l^{(i)}$, we have&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;\sum_{k=1}^c\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;\hat{y}_k^{(i)}}\frac{\partial&amp;space;\hat{y}_k^{(i)}}{\partial&amp;space;x_l^{(i)}}&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \sum_{k=1}^c\frac{\partial \mathcal{L}}{\partial \hat{y}_k^{(i)}}\frac{\partial \hat{y}_k^{(i)}}{\partial x_l^{(i)}}&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \sum_{k=1}^c\frac{\partial \mathcal{L}}{\partial \hat{y}_k^{(i)}}\frac{\partial \hat{y}_k^{(i)}}{\partial x_l^{(i)}}$$&lt;/p&gt;
 
-&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?C&#34; title=&#34;C&#34; /&gt; is the number of classes. If we replace the two fractions on the right hand side by the equations found previously, we have&lt;/p&gt;
+&lt;p&gt;where $C$ is the number of classes. If we replace the two fractions on the right hand side by the equations found previously, we have&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;-\sum_{k=1}^C\frac{y_k^{(i)}}{\hat{y}_k^{(i)}}\hat{y}_k^{(i)}(\delta_{kl}&amp;space;-&amp;space;\hat{y}_l^{(i)})&amp;space;=&amp;space;-\sum_{k=1}^Cy_k^{(i)}(\delta_{kl}&amp;space;-&amp;space;\hat{y}_l^{(i)})&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -\sum_{k=1}^C\frac{y_k^{(i)}}{\hat{y}_k^{(i)}}\hat{y}_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)}) = -\sum_{k=1}^Cy_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)})&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -\sum_{k=1}^C\frac{y_k^{(i)}}{\hat{y}_k^{(i)}}\hat{y}_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)}) = -\sum_{k=1}^Cy_k^{(i)}(\delta_{kl} - \hat{y}_l^{(i)})$$&lt;/p&gt;
 
-&lt;p&gt;Separating the cases &lt;img src=&#34;https://latex.codecogs.com/svg.latex?l=k&#34; title=&#34;l=k&#34; /&gt; and &lt;img src=&#34;https://latex.codecogs.com/svg.latex?l&amp;space;\neq&amp;space;k&#34; title=&#34;l \neq k&#34; /&gt; yields
-&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;-y_l^{(i)}(1&amp;space;-&amp;space;\hat{y}_l^{(i)})&amp;space;&amp;plus;&amp;space;\sum_{k\neq&amp;space;l}^Cy_k^{(i)}\hat{y}_l^{(i)}&amp;space;=&amp;space;\hat{y}_l^{(i)}\left(y_l^{(i)}&amp;space;&amp;plus;&amp;space;\sum_{k\neq&amp;space;l}^Cy_k^{(i)}&amp;space;\right&amp;space;)&amp;space;-&amp;space;y_l^{(i)}&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -y_l^{(i)}(1 - \hat{y}_l^{(i)}) + \sum_{k\neq l}^Cy_k^{(i)}\hat{y}_l^{(i)} = \hat{y}_l^{(i)}\left(y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} \right ) - y_l^{(i)}&#34; /&gt;
-Since the true label are one-hot encoded, we have
-&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?y_l^{(i)}&amp;space;&amp;plus;&amp;space;\sum_{k\neq&amp;space;l}^Cy_k^{(i)}&amp;space;=&amp;space;1&#34; title=&#34;y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} = 1&#34; /&gt;
+&lt;p&gt;Separating the cases $l=k$ and $l \neq k$ yields&lt;/p&gt;
+
+&lt;p&gt;$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = -y_l^{(i)}(1 - \hat{y}_l^{(i)}) + \sum_{k\neq l}^Cy_k^{(i)}\hat{y}_l^{(i)} = \hat{y}_l^{(i)}\left(y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} \right ) - y_l^{(i)}$$
+Since the true label are one-hot encoded, we have&lt;/p&gt;
+
+&lt;p&gt;$$y_l^{(i)} + \sum_{k\neq l}^Cy_k^{(i)} = 1$$
 so that&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\frac{\partial&amp;space;\mathcal{L}}{\partial&amp;space;x_l^{(i)}}&amp;space;=&amp;space;\hat{y}_l^{(i)}&amp;space;-&amp;space;y_l^{(i)}&#34; title=&#34;\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \hat{y}_l^{(i)} - y_l^{(i)}&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \hat{y}_l^{(i)} - y_l^{(i)}$$&lt;/p&gt;
 
 &lt;p&gt;We see therefore that if the activation of the last layer is a softmax function, the gradient of the cross-entropy loss with respect to the linear activation of the last layer takes the simple form&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\nabla_X\mathcal{L}(\hat{Y},&amp;space;Y)&amp;space;=&amp;space;\frac{1}{m}(\hat{Y}&amp;space;-&amp;space;Y)&#34; title=&#34;\nabla_X\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}(\hat{Y} - Y)&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\nabla_X\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}(\hat{Y} - Y)$$&lt;/p&gt;
 
 &lt;p&gt;which can be easily computed. For this reason, the current implementation of the cross-entropy loss function in neuro assumes that the last activation is a softmax function. Conversly, the softmax activation function can only be used for the last layer of the network with the cross-entropy loss function. This might change in the future.&lt;/p&gt;
 
@@ -74,19 +76,19 @@ so that&lt;/p&gt;
       <description>
         
         
-        &lt;p&gt;The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\hat{Y}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{\hat{y}}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}&#34; /&gt; and that the true values are &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;Y&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{y}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{y}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{y}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}&#34; /&gt;, then the mean absolute error is given by&lt;/p&gt;
+        &lt;p&gt;The mean absolute error loss function computes the mean of the absolute values of the error. Assuming that the predicted values are $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp;amp; \boldsymbol{\hat{y}}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and that the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp;amp; \boldsymbol{y}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean absolute error is given by&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|&#34; title=&#34;\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\mathcal{L}(\hat{Y},Y)=\frac{1}{m}\sum_{i=1}^m|\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}|$$&lt;/p&gt;
 
-&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?m&#34; title=&#34;m&#34; /&gt; is the number of samples in the mini-batch. Since the derivative of the absolute value is given by&lt;/p&gt;
+&lt;p&gt;where $m$ is the number of samples in the mini-batch. Since the derivative of the absolute value is given by&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/abs_val_derivative.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\frac{d|x|}{dx} = \frac{x}{|x|} = \begin{cases} 1 &amp;amp; \text{if } x &amp;gt; 0 \newline \text{undefined} &amp;amp; \text{if } x = 0 \newline -1 &amp;amp; \text{if } x &amp;lt; 0 \end{cases}$$&lt;/p&gt;
 
-&lt;p&gt;the gradient of &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}&#34; title=&#34;\mathcal{L}&#34; /&gt; with respect to &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\hat{Y}&#34; title=&#34;\hat{Y}&#34; /&gt; yields&lt;/p&gt;
+&lt;p&gt;the gradient of $\mathcal{L}$ with respect to $\hat{Y}$ yields&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},&amp;space;Y)=\begin{cases}\frac{1}{m}&amp;space;&amp;\text{if&amp;space;}&amp;space;\boldsymbol{\hat{y}}^{(i)}&amp;space;\ge&amp;space;\boldsymbol{y}^{(i)}&amp;space;\\&amp;space;-\frac{1}{m}&amp;space;&amp;\text{if&amp;space;}&amp;space;\boldsymbol{\hat{y}}^{(i)}&amp;space;&lt;&amp;space;\boldsymbol{y}^{(i)}&amp;space;\end{cases}&#34; title=&#34;\nabla_{\hat{Y}}\mathcal{L}(\hat{Y}, Y)=\begin{cases}\frac{1}{m} &amp;\text{if } \boldsymbol{\hat{y}}^{(i)} \ge \boldsymbol{y}^{(i)} \\ -\frac{1}{m} &amp;\text{if } \boldsymbol{\hat{y}}^{(i)} &lt; \boldsymbol{y}^{(i)} \end{cases}&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\nabla_{\hat{Y}}\mathcal{L}(\hat{Y}, Y)=\begin{cases}\frac{1}{m} &amp;amp;\text{if } \boldsymbol{\hat{y}}^{(i)} \ge \boldsymbol{y}^{(i)} \newline -\frac{1}{m} &amp;amp;\text{if } \boldsymbol{\hat{y}}^{(i)} &amp;lt; \boldsymbol{y}^{(i)} \end{cases}$$&lt;/p&gt;
 
-&lt;p&gt;where the case &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\boldsymbol{\hat{y}}^{(i)}&amp;space;=&amp;space;\boldsymbol{y}^{(i)}&#34; title=&#34;\boldsymbol{\hat{y}}^{(i)} = \boldsymbol{y}^{(i)}&#34; /&gt; is arbitrarily set to &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\frac{1}{m}&#34; title=&#34;\frac{1}{m}&#34; /&gt;.&lt;/p&gt;
+&lt;p&gt;where the case $\boldsymbol{\hat{y}}^{(i)} = \boldsymbol{y}^{(i)}$ is arbitrarily set to $\frac{1}{m}$.&lt;/p&gt;
 
       </description>
     </item>
@@ -100,13 +102,13 @@ so that&lt;/p&gt;
       <description>
         
         
-        &lt;p&gt;The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;\hat{Y}&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{\hat{y}}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{\hat{y}}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}&#34; /&gt; and the true values are &lt;img src=&#34;https://latex.codecogs.com/svg.latex?\inline&amp;space;Y&amp;space;=&amp;space;\begin{bmatrix}&amp;space;\boldsymbol{y}^{(1)}&amp;space;&amp;&amp;space;\boldsymbol{y}^{(2)}&amp;space;&amp;&amp;space;\dots&amp;space;&amp;&amp;space;\boldsymbol{y}^{(m)}&amp;space;\end{bmatrix}&#34; title=&#34;Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}&#34; /&gt;, then  the mean squared error is computed as&lt;/p&gt;
+        &lt;p&gt;The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp;amp; \boldsymbol{\hat{y}}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp;amp; \boldsymbol{y}^{(2)} &amp;amp; \dots &amp;amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then  the mean squared error is computed as&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},Y)&amp;space;=&amp;space;\frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2&#34; title=&#34;\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2$$&lt;/p&gt;
 
-&lt;p&gt;where &lt;img src=&#34;https://latex.codecogs.com/svg.latex?m&#34; title=&#34;m&#34; /&gt; is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields&lt;/p&gt;
+&lt;p&gt;where $m$ is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)&#34; title=&#34;\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;$$\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)$$&lt;/p&gt;
 
       </description>
     </item>

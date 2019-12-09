@@ -154,6 +154,40 @@
 <span id="154">154</span>
 <span id="155">155</span>
 <span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Batch normalization layer</span>
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
@@ -165,6 +199,7 @@
 
 <span class="doccomment">/// Defines a batch normalization layer.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BatchNormalization</span> {
+    <span class="ident">follow_conv2d</span>: <span class="ident">bool</span>,
     <span class="ident">mb_mean</span>: <span class="ident">Tensor</span>,
     <span class="ident">mb_variance</span>: <span class="ident">Tensor</span>,
     <span class="ident">mean</span>: <span class="ident">Tensor</span>,
@@ -176,6 +211,7 @@
     <span class="ident">dbeta</span>: <span class="ident">Tensor</span>,
     <span class="ident">momentum</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>,
+    <span class="ident">output_shape</span>: <span class="ident">Dim4</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">BatchNormalization</span> {
@@ -185,8 +221,9 @@
     <span class="doccomment">/// By default, the momentum used by the running averages is set to 0.99 and the epsilon value</span>
     <span class="doccomment">/// used for numerical stability to 1e-5.</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BatchNormalization</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">follow_conv2d</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BatchNormalization</span><span class="op">&gt;</span> {
         <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">BatchNormalization</span> {
+            <span class="ident">follow_conv2d</span>,
             <span class="ident">mb_mean</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">mb_variance</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">mean</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
@@ -198,6 +235,7 @@
             <span class="ident">dbeta</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">momentum</span>: <span class="number">0.99</span>,
             <span class="ident">eps</span>: <span class="number">1e-5</span>,
+            <span class="ident">output_shape</span>: <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
         })
     }
 
@@ -207,8 +245,9 @@
     <span class="doccomment">/// * `momentum`: momentum used by the running averages to compute the mean and standard deviation of the data set</span>
     <span class="doccomment">/// * `eps`: small constant used for numerical stability</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">momentum</span>: <span class="ident">PrimitiveType</span>, <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BatchNormalization</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">follow_conv2d</span>: <span class="ident">bool</span>, <span class="ident">momentum</span>: <span class="ident">PrimitiveType</span>, <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BatchNormalization</span><span class="op">&gt;</span> {
         <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">BatchNormalization</span> {
+            <span class="ident">follow_conv2d</span>,
             <span class="ident">mb_mean</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">mb_variance</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">mean</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
@@ -220,26 +259,53 @@
             <span class="ident">dbeta</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">momentum</span>,
             <span class="ident">eps</span>,
+            <span class="ident">output_shape</span>: <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
         })
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mean</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
+        <span class="self">self</span>.<span class="ident">mean</span>.<span class="ident">copy</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">variance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
+        <span class="self">self</span>.<span class="ident">variance</span>.<span class="ident">copy</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Layer</span> <span class="kw">for</span> <span class="ident">BatchNormalization</span> {
     <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input_shape</span>: <span class="ident">Dim4</span>) {
-        <span class="self">self</span>.<span class="ident">gamma</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">input_shape</span>);
-        <span class="self">self</span>.<span class="ident">beta</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">input_shape</span>);
-        <span class="self">self</span>.<span class="ident">mean</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">input_shape</span>);
-        <span class="self">self</span>.<span class="ident">variance</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">input_shape</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">follow_conv2d</span> {
+            <span class="kw">let</span> <span class="ident">num_channels</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">2</span>];
+            <span class="self">self</span>.<span class="ident">gamma</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="ident">num_channels</span>, <span class="number">1</span>]));
+            <span class="self">self</span>.<span class="ident">beta</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="ident">num_channels</span>, <span class="number">1</span>]));
+            <span class="self">self</span>.<span class="ident">mean</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="ident">num_channels</span>, <span class="number">1</span>]));
+            <span class="self">self</span>.<span class="ident">variance</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="ident">num_channels</span>, <span class="number">1</span>]));
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">gamma</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">input_shape</span>);
+            <span class="self">self</span>.<span class="ident">beta</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">input_shape</span>);
+            <span class="self">self</span>.<span class="ident">mean</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">input_shape</span>);
+            <span class="self">self</span>.<span class="ident">variance</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">ones</span>(<span class="ident">input_shape</span>);
+        }
+        <span class="self">self</span>.<span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">input_shape</span>;
     }
 
     <span class="kw">fn</span> <span class="ident">compute_activation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gamma</span>, <span class="kw-2">&amp;</span><span class="ident">div</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>(<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mean</span>, <span class="bool-val">true</span>), <span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">variance</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">eps</span>, <span class="bool-val">true</span>)), <span class="bool-val">true</span>), <span class="bool-val">true</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">beta</span>, <span class="bool-val">true</span>)
+        <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gamma</span>, <span class="kw-2">&amp;</span><span class="ident">div</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>(<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mean</span>, <span class="bool-val">true</span>), <span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">variance</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">eps</span>, <span class="bool-val">true</span>)), <span class="bool-val">true</span>), <span class="bool-val">true</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">beta</span>, <span class="bool-val">true</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
         <span class="comment">// Compute mini-batch mean and variance</span>
-        <span class="self">self</span>.<span class="ident">mb_mean</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
-        <span class="self">self</span>.<span class="ident">mb_variance</span> <span class="op">=</span> <span class="ident">var</span>(<span class="ident">input</span>, <span class="bool-val">false</span>, <span class="number">3</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">follow_conv2d</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flat</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>]));
+            <span class="ident">flat</span> <span class="op">=</span> <span class="ident">moddims</span>(<span class="kw-2">&amp;</span><span class="ident">flat</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">flat</span>.<span class="ident">elements</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">/</span> <span class="ident">flat</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>], <span class="ident">flat</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>], <span class="number">1</span>, <span class="number">1</span>]));
+            <span class="kw">let</span> <span class="ident">mean</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="kw-2">&amp;</span><span class="ident">flat</span>, <span class="number">0</span>);
+            <span class="kw">let</span> <span class="ident">var</span> <span class="op">=</span> <span class="ident">var</span>(<span class="kw-2">&amp;</span><span class="ident">flat</span>, <span class="bool-val">false</span>, <span class="number">0</span>);
+            <span class="self">self</span>.<span class="ident">mb_mean</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">mean</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>]));
+            <span class="self">self</span>.<span class="ident">mb_variance</span> <span class="op">=</span> <span class="ident">reorder</span>(<span class="kw-2">&amp;</span><span class="ident">var</span>, <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>]));
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">mb_mean</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
+            <span class="self">self</span>.<span class="ident">mb_variance</span> <span class="op">=</span> <span class="ident">var</span>(<span class="ident">input</span>, <span class="bool-val">false</span>, <span class="number">3</span>);
+        }
         <span class="self">self</span>.<span class="ident">mb_mean</span>.<span class="ident">eval</span>();
         <span class="self">self</span>.<span class="ident">mb_variance</span>.<span class="ident">eval</span>();
 
@@ -257,13 +323,18 @@
     }
 
     <span class="kw">fn</span> <span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dz</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="self">self</span>.<span class="ident">dgamma</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="ident">dz</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">normalized_input</span>, <span class="bool-val">true</span>), <span class="number">3</span>);
-        <span class="self">self</span>.<span class="ident">dbeta</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">dz</span>.<span class="ident">copy</span>(), <span class="number">3</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">follow_conv2d</span> {
+            <span class="self">self</span>.<span class="ident">dgamma</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="ident">dz</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">normalized_input</span>, <span class="bool-val">true</span>), <span class="number">3</span>), <span class="number">1</span>), <span class="number">0</span>);
+            <span class="self">self</span>.<span class="ident">dbeta</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="ident">dz</span>, <span class="number">3</span>), <span class="number">1</span>), <span class="number">0</span>);
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">dgamma</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="ident">dz</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">normalized_input</span>, <span class="bool-val">true</span>), <span class="number">3</span>);
+            <span class="self">self</span>.<span class="ident">dbeta</span> <span class="op">=</span> <span class="ident">sum</span>(<span class="ident">dz</span>, <span class="number">3</span>);
+        }
 
         <span class="comment">// Compute the derivative of the loss wrt the variance</span>
         <span class="comment">// c1 corresponds to: input - mb_mean</span>
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">normalized_input</span>, <span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mb_variance</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">eps</span>, <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="comment">// c2 corresponds to: sqrt(variance - eps)</span>
+        <span class="comment">// c2 corresponds to: sqrt(variance + eps)</span>
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mb_variance</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">eps</span>, <span class="bool-val">true</span>));
         <span class="kw">let</span> <span class="ident">fac</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">div</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gamma</span>, <span class="kw-2">&amp;</span>(<span class="op">-</span><span class="number">2.0</span> <span class="kw">as</span> <span class="ident">PrimitiveType</span>), <span class="bool-val">true</span>), <span class="kw-2">&amp;</span><span class="ident">pow</span>(<span class="kw-2">&amp;</span><span class="ident">c2</span>, <span class="kw-2">&amp;</span>(<span class="op">-</span><span class="number">3.0</span> <span class="kw">as</span> <span class="ident">PrimitiveType</span>), <span class="bool-val">true</span>), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">dmb_variance</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">sum</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="ident">dz</span>, <span class="kw-2">&amp;</span><span class="ident">c1</span>, <span class="bool-val">true</span>), <span class="number">3</span>), <span class="kw-2">&amp;</span><span class="ident">fac</span>, <span class="bool-val">true</span>);
@@ -281,15 +352,12 @@
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">normalized_input</span>.<span class="ident">dims</span>()[<span class="number">3</span>] <span class="kw">as</span> <span class="ident">PrimitiveType</span>;
         <span class="kw">let</span> <span class="ident">term2</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">dmb_variance</span>, <span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="kw-2">&amp;</span>(<span class="number">2.0</span> <span class="kw">as</span> <span class="ident">PrimitiveType</span> <span class="op">/</span> <span class="ident">m</span>), <span class="kw-2">&amp;</span><span class="ident">c1</span>, <span class="bool-val">true</span>), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">term3</span> <span class="op">=</span> <span class="ident">div</span>(<span class="kw-2">&amp;</span><span class="ident">dmb_mean</span>, <span class="kw-2">&amp;</span><span class="ident">m</span>, <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">final_term</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">term1</span>, <span class="kw-2">&amp;</span><span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">term2</span>, <span class="kw-2">&amp;</span><span class="ident">term3</span>, <span class="bool-val">true</span>), <span class="bool-val">true</span>);
-        <span class="comment">//af_print!(&quot;final&quot;, final_term);</span>
-        <span class="ident">final_term</span>
+        <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">term1</span>, <span class="kw-2">&amp;</span><span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">term2</span>, <span class="kw-2">&amp;</span><span class="ident">term3</span>, <span class="bool-val">true</span>), <span class="bool-val">true</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">output_shape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Dim4</span> {
-        <span class="self">self</span>.<span class="ident">gamma</span>.<span class="ident">dims</span>()
+        <span class="self">self</span>.<span class="ident">output_shape</span>
     }
-
 
     <span class="kw">fn</span> <span class="ident">parameters</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gamma</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">beta</span>])
@@ -307,8 +375,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">BatchNormalization</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;BatchNorm \t 2&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;BatchNorm \t {}&quot;</span>, <span class="self">self</span>.<span class="ident">gamma</span>.<span class="ident">elements</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">beta</span>.<span class="ident">elements</span>())
     }
 }</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "neuro";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

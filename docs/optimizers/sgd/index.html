@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="185">
+<meta itemprop="wordCount" content="213">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>SGD | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -463,23 +493,23 @@
 	<div class="lead">Stochastic Gradient Descent</div>
 	
 
-<p>The stochastic gradient descent optimizer updates the parameters by following the direction of steepest descent of the gradient. That is, for parameter <img src="https://latex.codecogs.com/svg.latex?\theta" title="\theta" />, the update rule is</p>
+<p>The stochastic gradient descent optimizer updates the parameters by following the direction of steepest descent of the gradient. That is, for parameter $\theta$, the update rule is</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\theta&space;=&space;\theta&space;-&space;\alpha&space;\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="\theta = \theta - \alpha \nabla_\theta\mathcal{L}(\hat{Y}, Y)" /></p>
+<p>$$\theta = \theta - \alpha \nabla_{\theta}\mathcal{L}(\hat{Y},Y)$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\alpha" title="\alpha" /> is the learning rate and the gradient of the loss function <img src="https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="\nabla_\theta\mathcal{L}(\hat{Y}, Y)" /> is computed with the backpropagation algorithm.</p>
+<p>where $\alpha$ is the learning rate and the gradient of the loss function $\nabla_{\theta}\mathcal{L}(\hat{Y},Y)$ is computed with the backpropagation algorithm.</p>
 
 <h4 id="stochastic-gradient-descent-with-momentum">Stochastic Gradient Descent with Momentum</h4>
 
-<p>Training a neural network with the SGD optimizer can be slow. A method to improve the convergence rate is to introduce momentum. This method keeps track of the past gradients by storing the moving average of the gradient. The moving average (sometimes called velocity by analogy with physical kinematic systems) is initialized as <img src="https://latex.codecogs.com/svg.latex?v&space;=&space;0" title="v = 0" /> and is then updated according to</p>
+<p>Training a neural network with the SGD optimizer can be slow. A method to improve the convergence rate is to introduce momentum. This method keeps track of the past gradients by storing the moving average of the gradient. The moving average (sometimes called velocity by analogy with physical kinematic systems) is initialized as $v=0$ and is then updated according to</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?v&space;=&space;\beta&space;v&space;-&space;\alpha\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="v = \beta v - \alpha\nabla_\theta\mathcal{L}(\hat{Y}, Y)" /></p>
+<p>$$v = \beta v - \alpha \nabla_{\theta}\mathcal{L}(\hat{Y}, Y)$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\beta" title="\beta" /> is the exponential delay rate of the first-moment estimate (the momentum). The update rule for <img src="https://latex.codecogs.com/svg.latex?\theta" title="\theta" /> for the SGD with momentum becomes</p>
+<p>where $\beta$ is the exponential delay rate of the first-moment estimate (the momentum). The update rule for $\theta$ for the SGD with momentum becomes</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\theta&space;=&space;\theta&space;&plus;&space;v" title="\theta = \theta + v" /></p>
+<p>$$\theta = \theta + v$$</p>
 
-<p>By default <img src="https://latex.codecogs.com/svg.latex?\beta" title="\beta" /> is set to 0 in neuro&rsquo;s SGD optimizer implementation. It can be turned on by creating the optimizer with the method <code>with_param</code>. A typical value is <img src="https://latex.codecogs.com/svg.latex?\beta&space;=&space;0.9" title="\beta = 0.9" /> [1].</p>
+<p>By default $\beta$ is set to 0 in neuro&rsquo;s SGD optimizer implementation. It can be turned on by creating the optimizer with the method <code>with_param</code>. A typical value is $\beta = 0.9$ [1].</p>
 
 <h2 id="references">References</h2>
 

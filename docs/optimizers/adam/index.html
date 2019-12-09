@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="186">
+<meta itemprop="wordCount" content="225">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Adam | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page  active" id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -447,26 +477,27 @@
 	<div class="lead">Adaptive moments</div>
 	
 
-<p>The Adam optimizer is an adaptive learning rate algorithm and is widely used due in part to its robustness to the choice of the hyperparameters. The algorithm keeps track of the first- and second-order moment estimates for each parameter <img src="https://latex.codecogs.com/svg.latex?\theta" title="\theta" />, thus natively incorporating momentum (with the first-order moment). The moment estimates are initialized with <img src="https://latex.codecogs.com/svg.latex?v&space;=&space;0" title="v = 0" /> and <img src="https://latex.codecogs.com/svg.latex?s&space;=&space;0" title="s = 0" />. At each iteration, the first moment estimate is updated with</p>
+<p>The Adam optimizer is an adaptive learning rate algorithm and is widely used due in part to its robustness to the choice of the hyperparameters. The algorithm keeps track of the first- and second-order moment estimates for each parameter $\theta$, thus natively incorporating momentum (with the first-order moment). The moment estimates are initialized with $v=0$ and $s=0$. At each iteration, the first moment estimate is updated with</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?v&space;=&space;\beta_1v&space;&plus;&space;(1-\beta_1)\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="v = \beta_1v + (1-\beta_1)\nabla_\theta\mathcal{L}(\hat{Y}, Y)" /></p>
+<p>$$v = \beta_1v+(1-\beta_1)\nabla_{\theta}\mathcal{L}(\hat{Y},Y)$$</p>
 
 <p>and the second one with</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?s&space;=&space;\beta_2s&space;&plus;&space;(1&space;-&space;\beta_2)[\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)]^2" title="s = \beta_2s + (1 - \beta_2)[\nabla_\theta\mathcal{L}(\hat{Y}, Y)]^2" /></p>
+<p>$$s = \beta_2s + (1-\beta_2)[\nabla_{\theta}\mathcal{L}(\hat{Y}, Y)]^2$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\beta_1" title="\beta_1" /> and <img src="https://latex.codecogs.com/svg.latex?\beta_2" title="\beta_2" /> are the exponential decay rates for the first and second moment estimates respectively, and the gradient of the loss function <img src="https://latex.codecogs.com/svg.latex?\nabla_\theta\mathcal{L}(\hat{Y},&space;Y)" title="\nabla_\theta\mathcal{L}(\hat{Y}, Y)" /> is obtained from the backpropagation algorithm. Once these estimates have been computed, we correct for the bias in the first and second moments:</p>
+<p>where $\beta_1$ and $\beta_2$ are the exponential decay rates for the first and second moment estimates respectively, and the gradient of the loss function $\nabla_{\theta}\mathcal{L}(\hat{Y},Y)$ is obtained from the backpropagation algorithm. Once these estimates have been computed, we correct for the bias in the first and second moments:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\hat{v}&space;=&space;\frac{v}{1&space;-&space;\beta_1^t}" title="\hat{v} = \frac{v}{1 - \beta_1^t}" />
-<img class="center" src="https://latex.codecogs.com/svg.latex?\hat{s}&space;=&space;\frac{s}{1&space;-&space;\beta_2^t}" title="\hat{s} = \frac{s}{1 - \beta_2^t}" /></p>
+<p>$$\hat{v}=\frac{v}{1-\beta_1^t}$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?t" title="t" /> is the time step and is updated after each batch has been processed. The parameter is finally updated with</p>
+<p>$$\hat{s} = \frac{s}{1-\beta_2^t}$$</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\theta&space;=&space;\theta&space;-&space;\alpha\frac{\hat{v}}{\sqrt{\hat{s}}&space;&plus;&space;\varepsilon}" title="\theta = \theta - \alpha\frac{\hat{v}}{\sqrt{\hat{s}} + \varepsilon}" /></p>
+<p>where $t$ is the time step and is updated after each batch has been processed. The parameter is finally updated with</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?\alpha" title="\alpha" /> is the learning rate and <img src="https://latex.codecogs.com/svg.latex?\varepsilon" title="\varepsilon" /> is a small number added for numerical stability. In neuro, the default values for the parameters of the optimizer are set based on Goodfellow et at. [1] recommendations:</p>
+<p>$$\theta = \theta - \alpha \frac{\hat{v}}{\sqrt{\hat{s}}+\epsilon}$$</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\begin{align*}&space;\beta_1&space;&=&space;0.9&space;\\&space;\beta_2&space;&=&space;0.999&space;\\&space;\varepsilon&space;&=&space;10^{-8}&space;\end{align*}" title="\begin{align*} \beta_1 &= 0.9 \\ \beta_2 &= 0.999 \\ \varepsilon &= 10^{-8} \end{align*}" /></p>
+<p>where $\alpha$ is the learning rate and $\epsilon$ is a small number added for numerical stability. In neuro, the default values for the parameters of the optimizer are set based on Goodfellow et at. [1] recommendations:</p>
+
+<p>$$\begin{align} \beta_1 &amp;= 0.9 \newline \beta_2 &amp;= 0.999 \newline \epsilon &amp;= 10^{-8} \end{align}$$</p>
 
 <h2 id="references">References</h2>
 

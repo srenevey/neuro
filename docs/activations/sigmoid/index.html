@@ -22,23 +22,29 @@
 
 <title>Sigmoid | neuro</title><meta property="og:title" content="Sigmoid" />
 <meta property="og:description" content="A sigmoid function is a mathematical function that maps an input to an output following an &ldquo;S&rdquo;-shaped curve. The sigmoid function commonly used in deep learning is the logistic function given by
+$$\sigma(x) = \frac{1}{1 &#43; e^{-x}}$$
 This function maps any input to an output in the interval (0,1).
 Its derivative can be computed as
-which can be rewritten in terms of as
+$$\frac{d\sigma}{dx} = \frac{e^{-x}}{(1&#43;e^{-x})^2}$$
+which can be rewritten in terms of $\sigma$ as
+$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$
 This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/activations/sigmoid/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Sigmoid">
 <meta itemprop="description" content="A sigmoid function is a mathematical function that maps an input to an output following an &ldquo;S&rdquo;-shaped curve. The sigmoid function commonly used in deep learning is the logistic function given by
+$$\sigma(x) = \frac{1}{1 &#43; e^{-x}}$$
 This function maps any input to an output in the interval (0,1).
 Its derivative can be computed as
-which can be rewritten in terms of as
+$$\frac{d\sigma}{dx} = \frac{e^{-x}}{(1&#43;e^{-x})^2}$$
+which can be rewritten in terms of $\sigma$ as
+$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$
 This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.">
 
 
 
-<meta itemprop="wordCount" content="87">
+<meta itemprop="wordCount" content="97">
 
 
 
@@ -46,9 +52,12 @@ This function is useful in, for instance, binary classification problems where t
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Sigmoid"/>
 <meta name="twitter:description" content="A sigmoid function is a mathematical function that maps an input to an output following an &ldquo;S&rdquo;-shaped curve. The sigmoid function commonly used in deep learning is the logistic function given by
+$$\sigma(x) = \frac{1}{1 &#43; e^{-x}}$$
 This function maps any input to an output in the interval (0,1).
 Its derivative can be computed as
-which can be rewritten in terms of as
+$$\frac{d\sigma}{dx} = \frac{e^{-x}}{(1&#43;e^{-x})^2}$$
+which can be rewritten in terms of $\sigma$ as
+$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$
 This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class."/>
 
 
@@ -62,6 +71,30 @@ This function is useful in, for instance, binary classification problems where t
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Sigmoid | neuro</title>
@@ -369,6 +402,12 @@ This function is useful in, for instance, binary classification problems where t
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -454,20 +493,21 @@ This function is useful in, for instance, binary classification problems where t
 	
 	<p>A sigmoid function is a mathematical function that maps an input to an output following an &ldquo;S&rdquo;-shaped curve. The sigmoid function commonly used in deep learning is the logistic function given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\sigma(x)=\frac{1}{1&plus;e^{-x}}" title="\sigma(x)=\frac{1}{1+e^{-x}}" /></p>
+<p>$$\sigma(x) = \frac{1}{1 + e^{-x}}$$</p>
 
 <p>This function maps any input to an output in the interval (0,1).</p>
 
-<p><img class="center" src="/neuro/images/sigmoid.svg" /></p>
+<p><img class="center" src="/images/graphs/sigmoid.svg" /></p>
 
 <p>Its derivative can be computed as</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\frac{e^{-x}}{(1&plus;e^{-x})^2}" title="\frac{d\sigma}{dx}=\frac{e^{-x}}{(1+e^{-x})^2}" /></p>
+<p>$$\frac{d\sigma}{dx} = \frac{e^{-x}}{(1+e^{-x})^2}$$</p>
 
-<p>which can be rewritten in terms of <img src="https://latex.codecogs.com/svg.latex?\sigma" title="\sigma" /> as</p>
+<p>which can be rewritten in terms of $\sigma$ as</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))" title="\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))" />
-<img class="center" src="/neuro/images/dsigmoid.svg" /></p>
+<p>$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$</p>
+
+<p><img class="center" src="/images/graphs/dsigmoid.svg" /></p>
 
 <p>This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.</p>
 

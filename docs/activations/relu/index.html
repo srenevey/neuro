@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="112">
+<meta itemprop="wordCount" content="167">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>ReLU | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -449,20 +479,21 @@
 
 <p>The ReLU or rectified linear unit is one of the most widely used activation functions. This function is defined as follows:</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?g(x)&space;=&space;\max(0,&space;x)" title="g(x) = \max(0, x)" /></p>
+<p>$$g(x) = \max(0, x)$$</p>
 
 <p>That is, the function returns the input value if it is positive and zero otherwise.</p>
 
-<p><img class="center" src="/neuro/images/relu.svg" /></p>
+<p><img class="center" src="/images/graphs/relu.svg" /></p>
 
 <p>Its derivative can be expressed as:</p>
 
-<p><img class="center" src="/neuro/images/relu_fun_derivative.svg" /></p>
+<p>$$\frac{\partial g}{\partial x} = \begin{cases} 1 &amp; \text{if } x &gt; 0 \newline \text{undefined} &amp; \text{if } x = 0 \newline 0 &amp; \text{if } x &lt; 0 \end{cases}$$</p>
 
-<p>Since the case <img src="https://latex.codecogs.com/svg.latex?x&space;=&space;0" title="x = 0" /> is undefined, the derivative can be arbitrarily set to 1 for this value such that</p>
+<p>Since the case $x=0$ is undefined, the derivative can be arbitrarily set to 1 for this value such that</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g}{\partial&space;x}&space;=&space;\begin{cases}&space;1&space;&\text{if&space;}&space;x&space;\geq&space;0&space;\\&space;0&space;&\text{if&space;}&space;x&space;<&space;0&space;\end{cases}" title="\frac{\partial g}{\partial x} = \begin{cases} 1 &\text{if } x \geq 0 \\ 0 &\text{if } x < 0 \end{cases}" />
-<img class="center" src="/neuro/images/drelu.svg" /></p>
+<p>$$\frac{\partial g}{\partial x} = \begin{cases} 1 &amp; \text{if } x \geq 0 \newline 0 &amp; \text{if } x &lt; 0 \end{cases}$$</p>
+
+<p><img class="center" src="/images/graphs/relu_derivative.svg" /></p>
 
 <p>The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].</p>
 

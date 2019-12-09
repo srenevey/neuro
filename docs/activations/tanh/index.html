@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="55">
+<meta itemprop="wordCount" content="78">
 
 
 
@@ -53,6 +53,30 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Tanh | neuro</title>
@@ -360,6 +384,12 @@
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -445,15 +475,17 @@
 	<div class="lead">Hyperbolic tangent</div>
 	<p>The hyperbolic tangent activation function is given by</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?g(x)&space;=&space;\tanh(x)&space;=&space;\frac{e^x&space;-&space;e^{-x}}{e^x&space;&plus;&space;e^{-x}}" title="g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}" />
-<img class="center" src="/neuro/images/tanh.svg" /></p>
+<p>$$g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$</p>
+
+<p><img class="center" src="/images/graphs/tanh.svg" /></p>
 
 <p>and its derivative is</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\frac{\partial&space;g}{\partial&space;x}&space;=&space;1&space;-&space;\left(\frac{e^x&space;-&space;e^{-x}}{e^x&space;&plus;&space;e^{-x}}&space;\right)^2&space;=&space;1&space;-&space;g(x)^2" title="\frac{\partial g}{\partial x} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2" />
-<img class="center" src="/neuro/images/dtanh.svg" /></p>
+<p>$$\frac{dg}{dx} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2$$</p>
 
-<p>This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at <img src="https://latex.codecogs.com/svg.latex?x&space;=&space;0" title="x = 0" />. This activation function is usually used with hidden layers and is a relatively common choice.</p>
+<p><img class="center" src="/images/graphs/dtanh.svg" /></p>
+
+<p>This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at $x=0$. This activation function is usually used with hidden layers and is a relatively common choice.</p>
 
 	
 	

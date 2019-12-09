@@ -21,26 +21,29 @@
 <link rel="icon" type="image/png" href="/neuro/favicons/android-192x192.png" sizes="192x192">
 
 <title>Mean Squared Error | neuro</title><meta property="og:title" content="Mean Squared Error" />
-<meta property="og:description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts and the true values are , then the mean squared error is computed as
-where is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields" />
+<meta property="og:description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean squared error is computed as
+$$\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2$$
+where $m$ is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/losses/mse/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Mean Squared Error">
-<meta itemprop="description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts and the true values are , then the mean squared error is computed as
-where is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields">
+<meta itemprop="description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean squared error is computed as
+$$\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2$$
+where $m$ is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields">
 
 
 
-<meta itemprop="wordCount" content="58">
+<meta itemprop="wordCount" content="84">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mean Squared Error"/>
-<meta name="twitter:description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts and the true values are , then the mean squared error is computed as
-where is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields"/>
+<meta name="twitter:description" content="The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then the mean squared error is computed as
+$$\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2$$
+where $m$ is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields"/>
 
 
 
@@ -53,6 +56,30 @@ where is the number of samples in the mini-batch. Taking the gradient of this fu
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Mean Squared Error | neuro</title>
@@ -360,6 +387,12 @@ where is the number of samples in the mini-batch. Taking the gradient of this fu
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adadelta" href="/neuro/docs/optimizers/adadelta/">Adadelta</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-docs-optimizers-adam" href="/neuro/docs/optimizers/adam/">Adam</a>
       
       
@@ -443,13 +476,13 @@ where is the number of samples in the mini-batch. Taking the gradient of this fu
 <div class="td-content">
 	<h1>Mean Squared Error</h1>
 	
-	<p>The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts <img src="https://latex.codecogs.com/svg.latex?\inline&space;\hat{Y}&space;=&space;\begin{bmatrix}&space;\boldsymbol{\hat{y}}^{(1)}&space;&&space;\boldsymbol{\hat{y}}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{\hat{y}}^{(m)}&space;\end{bmatrix}" title="\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} & \boldsymbol{\hat{y}}^{(2)} & \dots & \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}" /> and the true values are <img src="https://latex.codecogs.com/svg.latex?\inline&space;Y&space;=&space;\begin{bmatrix}&space;\boldsymbol{y}^{(1)}&space;&&space;\boldsymbol{y}^{(2)}&space;&&space;\dots&space;&&space;\boldsymbol{y}^{(m)}&space;\end{bmatrix}" title="Y = \begin{bmatrix} \boldsymbol{y}^{(1)} & \boldsymbol{y}^{(2)} & \dots & \boldsymbol{y}^{(m)} \end{bmatrix}" />, then  the mean squared error is computed as</p>
+	<p>The mean squared error loss function computes the mean of the square of the error of the model. If the model predicts $\hat{Y} = \begin{bmatrix} \boldsymbol{\hat{y}}^{(1)} &amp; \boldsymbol{\hat{y}}^{(2)} &amp; \dots &amp; \boldsymbol{\hat{y}}^{(m)} \end{bmatrix}$ and the true values are $Y = \begin{bmatrix} \boldsymbol{y}^{(1)} &amp; \boldsymbol{y}^{(2)} &amp; \dots &amp; \boldsymbol{y}^{(m)} \end{bmatrix}$, then  the mean squared error is computed as</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\mathcal{L}(\hat{Y},Y)&space;=&space;\frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2" title="\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2" /></p>
+<p>$$\mathcal{L}(\hat{Y},Y) = \frac{1}{m}\sum_{i=1}^m\Vert\boldsymbol{\hat{y}}^{(i)}-\boldsymbol{y}^{(i)}\Vert^2$$</p>
 
-<p>where <img src="https://latex.codecogs.com/svg.latex?m" title="m" /> is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields</p>
+<p>where $m$ is the number of samples in the mini-batch. Taking the gradient of this function with respect to the predicted values yields</p>
 
-<p><img class="center" src="https://latex.codecogs.com/svg.latex?\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)" title="\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)" /></p>
+<p>$$\nabla_{\hat{Y}}\mathcal{L}(\hat{Y},Y)=\frac{2}{m}(\hat{Y}-Y)$$</p>
 
 	
 	

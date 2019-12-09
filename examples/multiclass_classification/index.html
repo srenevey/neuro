@@ -7,7 +7,6 @@
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-<link rel="alternate" type="application/rss&#43;xml" href="https://srenevey.github.io/neuro/examples/multiclass-classification/index.xml">
 
 
 <link rel="shortcut icon" href="/favicons/favicon.ico" >
@@ -24,13 +23,20 @@
 <title>Multiclass Classification | neuro</title><meta property="og:title" content="Multiclass Classification" />
 <meta property="og:description" content="MNIST handwritten digit classification using a feedforward neural network.
 " />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://srenevey.github.io/neuro/examples/multiclass-classification/" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://srenevey.github.io/neuro/examples/multiclass_classification/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Multiclass Classification">
 <meta itemprop="description" content="MNIST handwritten digit classification using a feedforward neural network.
 ">
 
+
+
+<meta itemprop="wordCount" content="1113">
+
+
+
+<meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Multiclass Classification"/>
 <meta name="twitter:description" content="MNIST handwritten digit classification using a feedforward neural network.
@@ -47,11 +53,35 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/CommonHTML"],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    fonts: ["TeX", "STIX"],
+    CommonHTML: {
+      scale: 100,
+      mtextFontInherit: true,
+    }
+  });
+
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script> 
 
 
     <title>Multiclass Classification | neuro</title>
   </head>
-  <body class="td-section">
+  <body class="td-page">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
@@ -134,7 +164,7 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Examples</a>
+    <a  href="/neuro/examples/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Examples</a>
   </li>
   <ul>
     <li class="collapse show" id="neuro-examples">
@@ -143,71 +173,26 @@
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/binary-classification/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Binary Classification</a>
-  </li>
-  <ul>
-    <li class="collapse " id="neuro-examples-binary-classification">
       
-      
-      
-    </li>
-  </ul>
-</ul>
-
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-binary-classification" href="/neuro/examples/binary_classification/">Binary Classification</a>
       
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/multiclass-classification/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Multiclass Classification</a>
-  </li>
-  <ul>
-    <li class="collapse show" id="neuro-examples-multiclass-classification">
       
-      
-      
-    </li>
-  </ul>
-</ul>
-
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-cnn-multiclass-classification" href="/neuro/examples/cnn_multiclass_classification/">Image Classification With a CNN</a>
       
       
       
       
-
-
-
-
-
-
-<ul class="td-sidebar-nav__section pr-md-3">
-  <li class="td-sidebar-nav__section-title">
-    <a  href="/neuro/examples/regression/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Regression</a>
-  </li>
-  <ul>
-    <li class="collapse " id="neuro-examples-regression">
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-neuro-examples-multiclass-classification" href="/neuro/examples/multiclass_classification/">Multiclass Classification</a>
       
       
       
-    </li>
-  </ul>
-</ul>
-
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-neuro-examples-regression" href="/neuro/examples/regression/">Regression</a>
       
       
     </li>
@@ -252,7 +237,7 @@
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://srenevey.github.io/neuro/examples/multiclass-classification/">Multiclass Classification</a>
+	<a href="https://srenevey.github.io/neuro/examples/multiclass_classification/">Multiclass Classification</a>
 </li>
 
 	</ol>
@@ -265,41 +250,52 @@
 	<p>In this example, we&rsquo;ll train a network to recognize handwritten digits. We&rsquo;ll first use a direct feedforward network and then design a convolutional neural network in another example to see how the two compare.</p>
 
 <p>We start by importing the required modules.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">data</span>::<span style="color:#000;font-weight:bold">{</span><span style="color:#000">DataSetError</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">ImageDataSet</span><span style="color:#000;font-weight:bold">};</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">models</span>::<span style="color:#000">Network</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">losses</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">activations</span>::<span style="color:#000">Activation</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">metrics</span>::<span style="color:#000">Metrics</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">optimizers</span>::<span style="color:#000">Adam</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">activations</span>::<span style="color:#000">Activation</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">data</span>::<span style="color:#000">ImageDataSet</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">errors</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">layers</span>::<span style="color:#000">Dense</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">tensor</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">losses</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">metrics</span>::<span style="color:#000">Metrics</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">models</span>::<span style="color:#000">Network</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">optimizers</span>::<span style="color:#000">Adam</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">regularizers</span>::<span style="color:#000">Regularizer</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">neuro</span>::<span style="color:#000">tensor</span>::<span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">use</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">std</span>::<span style="color:#000">path</span>::<span style="color:#000">Path</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
-<p>Then, the main function is created. We choose to return a <code>Result</code> so that we can use the <code>?</code> shortcut notation and avoid several <code>match</code> statements.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">fn</span> <span style="color:#000">main</span><span style="color:#000;font-weight:bold">()</span><span style="color:#f8f8f8;text-decoration:underline"> </span>-&gt; <span style="color:#204a87">Result</span><span style="color:#ce5c00;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">DataSetError</span><span style="color:#ce5c00;font-weight:bold">&gt;</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
+<p>Then, the main function is created. We choose to return a <code>Result</code> so that we can use the <code>?</code> syntax sugar and avoid several <code>match</code> statements.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">fn</span> <span style="color:#000">main</span><span style="color:#000;font-weight:bold">()</span><span style="color:#f8f8f8;text-decoration:underline"> </span>-&gt; <span style="color:#204a87">Result</span><span style="color:#ce5c00;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">(),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">NeuroError</span><span style="color:#ce5c00;font-weight:bold">&gt;</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">{</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
-<p>The data are then loaded in an <code>ImageDataSet</code> which is created from a <code>Path</code> object. The path we give to <code>from_path</code> must contain a subfolder named <code>train</code> in which each training sample is stored in a directory containing the name of the class. That is, for the MNIST dataset, we have the following architecture:</p>
+<p>The data are then loaded in an <code>ImageDataSet</code> which is created from a <code>Path</code> object. The path we give to <code>from_path</code> must contain a subfolder named <code>train</code> in which each training sample is stored in a directory containing the name of the class, and optionally a <code>test</code> folder containing samples used to test the model once it has been trained. For the MNIST dataset, we have the following architecture:</p>
 
 <pre><code>MNIST/
   train/
     0/
-      img1.jpg
-      img2.jpg
+      1.png
+      21.png
       ...
     1/
-      img1.jpg
-      img2.jpg
+      3.png
+      6.png
       ...
     2/
-      img1.jpg
-      img2.jpg
+      5.png
+      16.png
+      ...
+    ...
+  test/
+    0/
+      3.png
+      10.png
+      ...
+    1/
+      2.png
+      5.png
       ...
     ...
 </code></pre>
 
-<p>The root directory can optionally contain a <code>test</code> subfolder used for testing purpose. The method <code>from_path</code> takes two additional arguments: the size of the images and the fraction of the train set used for validation. In this case, 10% of the images will be used for validation. All images will be resized to be squared with the given size. We then print some information on the dataset.</p>
+<p>The method <code>from_path</code> takes two additional arguments: the size of the images and the fraction of the train set used for validation. In this case, 10% of the images will be used for validation. All images will be resized to be squared with the given size. We then print some information about the dataset.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Create the dataset
 </span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">path</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST&#34;</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">data</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">ImageDataSet</span>::<span style="color:#000">from_path</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">path</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">28</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0.1</span><span style="color:#000;font-weight:bold">)</span><span style="color:#ce5c00;font-weight:bold">?</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -307,16 +303,17 @@
 </span></code></pre></div>
 <p>This code will print:</p>
 
-<pre><code>Input shape: 	 [28 28 1]
-Output shape: 	 [10 1 1]
-Number of training samples: 	 37800
-Number of validation samples: 	 4200
-Number of classes: 	 10
+<pre><code>Input shape: [28 28 1]
+Output shape: [10 1 1]
+Number of training samples: 54000
+Number of validation samples: 6000
+Number of test samples: 10000
+Number of classes: 10
 </code></pre>
 
-<p>The next step is to create a network and add some layers. For this example, we use the softmax cross-entropy loss, the Adam optimizer with a learning rate of 0.003, the accuracy as metrics, and no regularizer. Two dense layers with 32 and 10 units respectively are added to the network. The hidden layer uses a ReLU activation function and the output layer a softmax activation function. We keep the default weights and biases initializers which are uniform distribution with He scaling for the weights and zeros for the biases.  Note that in neuro, the softmax cross-entropy loss function requires that the last layer uses a softmax activation function. Also note that the dense layer will automatically reshape the input to be one-dimensional. Some information on the network are then printed.</p>
+<p>The next step is to create a network and add some layers. For this example, we use the softmax cross-entropy loss, the Adam optimizer with a learning rate of 0.003, and no regularizer. Two dense layers with 32 and 10 units respectively are added to the network. The hidden layer uses a ReLU activation function and the output layer a softmax activation function. We keep the default weights and biases initializers which are uniform distribution with He scaling for the weights and zeros for the biases.  Note that in neuro, the softmax cross-entropy loss function requires that the last layer uses a softmax activation function. Also note that the dense layer will automatically reshape the inputs to be one-dimensional. Some information about the network is then printed.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Create the neural network
-</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">SoftmaxCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.003</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">SoftmaxCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.003</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">None</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">32</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">ReLU</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Dense</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Activation</span>::<span style="color:#000">Softmax</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">
@@ -330,52 +327,58 @@ Dense 		 25120
 Dense 		 330
 </code></pre>
 
-<p>The network is trained for 10 epochs using a batch size of 128 and the training progress is displayed at each epoch.</p>
+<p>The network is trained using a batch size of 128  for 10 epochs. The training progress is displayed at each epoch and the accuracy is used as metrics.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Fit the network
-</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">fit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">128</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">fit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">128</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
 <p>The output of the training is:</p>
 
 <pre><code>Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
-epoch: 1, train_loss: 0.21287052, valid_loss: 0.21625346, metrics: [0.9398856]
-epoch: 2, train_loss: 0.1577447, valid_loss: 0.17055605, metrics: [0.94988346]
-epoch: 3, train_loss: 0.12234006, valid_loss: 0.14942798, metrics: [0.9538534]
-epoch: 4, train_loss: 0.10443835, valid_loss: 0.1347291, metrics: [0.9619573]
-epoch: 5, train_loss: 0.08777439, valid_loss: 0.12442703, metrics: [0.96698356]
-epoch: 6, train_loss: 0.08935743, valid_loss: 0.1454891, metrics: [0.9605915]
-epoch: 7, train_loss: 0.07341278, valid_loss: 0.12998268, metrics: [0.96343243]
-epoch: 8, train_loss: 0.06634305, valid_loss: 0.1276289, metrics: [0.9626675]
-epoch: 9, train_loss: 0.05812698, valid_loss: 0.13280398, metrics: [0.9629043]
-epoch: 10, train_loss: 0.05356034, valid_loss: 0.13160843, metrics: [0.9603001]
+[00:00:18] [##################################################] epoch: 1/10, train_loss: 0.19112505, train_metrics: [0.94483644], valid_loss: 0.22302048, valid_metrics: [0.93557656]
+[00:00:16] [##################################################] epoch: 2/10, train_loss: 0.13870238, train_metrics: [0.9600409], valid_loss: 0.17629611, valid_metrics: [0.94733095]
+[00:00:16] [##################################################] epoch: 3/10, train_loss: 0.11869702, train_metrics: [0.9656874], valid_loss: 0.15833354, valid_metrics: [0.95329124]
+[00:00:16] [##################################################] epoch: 4/10, train_loss: 0.10068686, train_metrics: [0.9699666], valid_loss: 0.14526764, valid_metrics: [0.9585154]
+[00:00:16] [##################################################] epoch: 5/10, train_loss: 0.08536819, train_metrics: [0.97446257], valid_loss: 0.13509062, valid_metrics: [0.9602726]
+[00:00:16] [##################################################] epoch: 6/10, train_loss: 0.07891946, train_metrics: [0.9760759], valid_loss: 0.14055155, valid_metrics: [0.96077126]
+[00:00:16] [##################################################] epoch: 7/10, train_loss: 0.072432555, train_metrics: [0.9780541], valid_loss: 0.13604301, valid_metrics: [0.96145993]
+[00:00:16] [##################################################] epoch: 8/10, train_loss: 0.06323053, train_metrics: [0.98084694], valid_loss: 0.13569942, valid_metrics: [0.96081877]
+[00:00:16] [##################################################] epoch: 9/10, train_loss: 0.060171504, train_metrics: [0.9812595], valid_loss: 0.13516739, valid_metrics: [0.9599639]
+[00:00:16] [##################################################] epoch: 10/10, train_loss: 0.05143178, train_metrics: [0.9848325], valid_loss: 0.13108796, valid_metrics: [0.9638108]
 </code></pre>
 
-<p>The first line tells us that the library uses the GPU of my computer which supports OpenCL. We then see the training loss, validation loss, and accuracy for each epoch. After a single epoch, the network already performs quite well with an accuracy of 93.99%. At the end of the 10 epochs, the network is able to classify the images with 96.03% accuracy. This is pretty good considering the simple architecture that we&rsquo;ve used. Looking at the output, we see that the best accuracy was reached after 5 epochs, with an accuracy of 96.70%. If we look at the training and validation losses for the last epochs, we see that the training loss keeps decreasing but the validation loss stays around 0.13. This indicates that the network is starting to overfit and its ability to generalize is deteriorating. In order to prevent this to happen, we can add some regularization to the network. One way to do it is by adding L2 regularization to the loss function. That is, the loss function is augmented by the sum of the L2-norm of the weights of each layer. The regularization is added by modifying the last argument of the command used previously:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">SoftmaxCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.003</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Regularizer</span>::<span style="color:#000">L2</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1e-4</span><span style="color:#000;font-weight:bold">)));</span><span style="color:#f8f8f8;text-decoration:underline">
+<p>The first line tells us that the library uses the GPU of my computer which supports OpenCL. We then see the training loss, accuracy on the training set, validation loss, and accuracy on the validation set for each epoch. After a single epoch, the network already performs quite well with an accuracy of 93.56%. At the end of the 10 epochs, the network is able to classify the images from the validation set with 96.38% accuracy. This is pretty good considering the simple architecture that we&rsquo;ve used. If we look at the training and validation losses for the last epochs, we see that the training loss keeps decreasing but the validation loss stays around 0.13. This indicates that the network is overfitting and its ability to generalize is deteriorating. In order to prevent this to happen, we can add some regularization to the network. One way to do it is by adding L2 regularization to the loss function. That is, the loss function is augmented by the sum of the L2-norm of the weights of each layer. The regularization is added by modifying the last argument of the command used previously:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">mut</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Network</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">losses</span>::<span style="color:#000">SoftmaxCrossEntropy</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Adam</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">0.003</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">Regularizer</span>::<span style="color:#000">L2</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1e-4</span><span style="color:#000;font-weight:bold">)));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
-<p>where we have chosen <img src="https://latex.codecogs.com/svg.latex?\inline&space;\lambda=&space;10^{-4}" title="\lambda= 10^{-4}" /> for the weight of the regularization.  The network is then trained again for 10 epochs:</p>
+<p>where we have chosen $\lambda = 10^{-4}$ for the weight of the regularization.  The network is then trained again for 10 epochs:</p>
 
 <pre><code>Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
-epoch: 1, train_loss: 0.22988714, valid_loss: 0.2233919, metrics: [0.93422204]
-epoch: 2, train_loss: 0.17777784, valid_loss: 0.18373887, metrics: [0.94746137]
-epoch: 3, train_loss: 0.15525685, valid_loss: 0.16784354, metrics: [0.9513039]
-epoch: 4, train_loss: 0.14045611, valid_loss: 0.15549025, metrics: [0.9545637]
-epoch: 5, train_loss: 0.12965873, valid_loss: 0.15080014, metrics: [0.95622087]
-epoch: 6, train_loss: 0.12012014, valid_loss: 0.14154653, metrics: [0.9578052]
-epoch: 7, train_loss: 0.110007234, valid_loss: 0.13859054, metrics: [0.9614292]
-epoch: 8, train_loss: 0.11046094, valid_loss: 0.13674554, metrics: [0.96019083]
-epoch: 9, train_loss: 0.09998604, valid_loss: 0.13170509, metrics: [0.9607736]
-epoch: 10, train_loss: 0.10021384, valid_loss: 0.13001752, metrics: [0.96101034]
+[00:00:18] [##################################################] epoch: 1/10, train_loss: 0.20935984, train_metrics: [0.9411153], valid_loss: 0.20642534, valid_metrics: [0.9425105]
+[00:00:17] [##################################################] epoch: 2/10, train_loss: 0.15883756, train_metrics: [0.95585966], valid_loss: 0.16198133, valid_metrics: [0.9565682]
+[00:00:17] [##################################################] epoch: 3/10, train_loss: 0.13349831, train_metrics: [0.9624291], valid_loss: 0.13836259, valid_metrics: [0.9606763]
+[00:00:17] [##################################################] epoch: 4/10, train_loss: 0.122641705, train_metrics: [0.96554196], valid_loss: 0.1296289, valid_metrics: [0.9645944]
+[00:00:17] [##################################################] epoch: 5/10, train_loss: 0.117274135, train_metrics: [0.9681867], valid_loss: 0.12705363, valid_metrics: [0.96476066]
+[00:00:17] [##################################################] epoch: 6/10, train_loss: 0.110579506, train_metrics: [0.9710377], valid_loss: 0.123594254, valid_metrics: [0.96910626]
+[00:00:17] [##################################################] epoch: 7/10, train_loss: 0.100465745, train_metrics: [0.97296304], valid_loss: 0.115246326, valid_metrics: [0.96673155]
+[00:00:17] [##################################################] epoch: 8/10, train_loss: 0.10856356, train_metrics: [0.96920484], valid_loss: 0.12507075, valid_metrics: [0.96293217]
+[00:00:17] [##################################################] epoch: 9/10, train_loss: 0.09379746, train_metrics: [0.9752454], valid_loss: 0.109608814, valid_metrics: [0.96894]
+[00:00:17] [##################################################] epoch: 10/10, train_loss: 0.09650268, train_metrics: [0.9735766], valid_loss: 0.11416366, valid_metrics: [0.9680851]
 </code></pre>
 
-<p>The final accuracy is 96.10%. We see in this case, however, that the training and validation losses are much closer than before, indicating that the network has not overfitted.</p>
+<p>The final accuracy is 96.81% which is slightly better than before. We see in this case, however, that the training and validation losses are much closer, indicating that the network has not overfitted. Once the network has been trained, we can evaluate it on the test set:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">evaluate</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+<p>which, in this case, outputs</p>
 
-<p>Once the network has been trained, it&rsquo;s time to make some predictions on unseen samples. We load a few images using the <code>load_img_vec</code> method provided by <code>ImageDataSet</code>, predict the output class for each of them, and print the prediction along with the confidence of the network (probability). Finally, we return <code>Ok(())</code> at the end of the function to exit cleanly if everything went fine.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Predict output on test images
+<pre><code>Evaluation of the test set: loss: 0.116300195, metrics: [0.9655855]
+</code></pre>
+
+<p>The network can now be used to predict the class of unseen images. We use the <code>load_img_vec</code> method provided by <code>ImageDataSet</code> to load a few images from the test set, predict the output class for each of them, and print the prediction along with the confidence of the network. Finally, we return <code>Ok(())</code> at the end of the function to exit cleanly if everything went fine.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Predict the output of some images from the test set
 </span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">input</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">load_img_vec</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/2/img_1.jpg&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/1/img_18.jpg&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/0/img_9.jpg&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/3/img_10.jpg&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/1/5.png&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/3/2008.png&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/5/59.png&#34;</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#000">Path</span>::<span style="color:#000">new</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;datasets/MNIST/test/9/104.png&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000;font-weight:bold">])</span><span style="color:#ce5c00;font-weight:bold">?</span><span style="color:#000;font-weight:bold">;</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">let</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">predictions</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">predict_class</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">input</span><span style="color:#000;font-weight:bold">);</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -396,36 +399,19 @@ epoch: 10, train_loss: 0.10021384, valid_loss: 0.13001752, metrics: [0.96101034]
 <p>The output of this last snippet is:</p>
 
 <pre><code>Predictions:
-image 1: class: 2, probability: 1
-image 2: class: 1, probability: 0.99214315
-image 3: class: 0, probability: 0.9999987
-image 4: class: 3, probability: 0.9996099
+image 1: class: 1, probability: 0.9956037
+image 2: class: 3, probability: 0.94743633
+image 3: class: 5, probability: 0.9321434
+image 4: class: 9, probability: 0.8807549
 </code></pre>
 
 <p>which indicates that the network is pretty confident in its classification and it turns out that it classified all four images correctly as indicated by the names in the paths.</p>
 
-        <div class="section-index">
-    
-    
-    
-    
-    <hr class="panel-line">
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+	
+	
+	
 </div>
 
-	
-	
-	
-</div>
 
           </main>
         </div>
