@@ -3,21 +3,17 @@
 //! Neuro is a deep learning library that runs on the GPU. The architecture of the library is inspired by Keras and works by stacking layers.
 //! Currently supported layers are:
 //! * BatchNorm
-//! * Conv2D (currently broken, see note 2 below)
+//! * Conv2D
 //! * Dense
 //! * Dropout
 //! * MaxPooling2D
 //!
 //! allowing the creation of feedforward and convolutional neural networks.
 //!
-//! ### Note 1
+//! ### Note
 //! The crate is under heavy development and several features have not yet been implemented. Among them
 //! is the ability to save a trained network.
 //!
-//! ### Note 2
-//! When creating convolutional neural networks, there is a bug when trying to retrieve the
-//! values from the GPU (the process freezes). This means that the loss and metrics cannot be printed
-//! and therefore there is no way to assess if the network is actually learning something.
 //!
 //! ## Installation
 //! The crate is powered by ArrayFire to perform all operations on the GPU. The first step is therefore to
@@ -38,6 +34,7 @@ pub use self::tensor::Tensor;
 
 pub mod activations;
 pub mod data;
+pub mod errors;
 pub mod initializers;
 pub mod layers;
 pub mod losses;
@@ -49,7 +46,7 @@ pub mod tensor;
 
 
 
-/// Assert if two expressions are approximately equal.
+/// Asserts if two expressions are approximately equal.
 #[macro_export]
 macro_rules! assert_approx_eq {
     ($a:expr, $b:expr) => {{
