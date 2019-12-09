@@ -1,16 +1,17 @@
-use neuro::data::{DataSetError, ImageDataSet};
-use neuro::models::Network;
-use neuro::losses;
 use neuro::activations::Activation;
-use neuro::metrics::Metrics;
-use neuro::optimizers::Adam;
+use neuro::data::ImageDataSet;
+use neuro::errors::*;
 use neuro::layers::Dense;
-use neuro::tensor::*;
+use neuro::losses;
+use neuro::metrics::Metrics;
+use neuro::models::Network;
+use neuro::optimizers::Adam;
 use neuro::regularizers::Regularizer;
+use neuro::tensor::*;
 
 use std::path::Path;
 
-fn main() -> Result<(), DataSetError> {
+fn main() -> Result<(), NeuroError> {
 
     // Create the dataset
     let path = Path::new("datasets/MNIST");
@@ -18,20 +19,24 @@ fn main() -> Result<(), DataSetError> {
     println!("{}", data);
 
     // Create the neural network
-    let mut nn = Network::new(&data, losses::SoftmaxCrossEntropy, Adam::new(0.003), Some(vec![Metrics::Accuracy]), Some(Regularizer::L2(1e-4)));
+    let mut nn = Network::new(&data, losses::SoftmaxCrossEntropy, Adam::new(0.003), Some(Regularizer::L2(1e-4)));
     nn.add(Dense::new(32, Activation::ReLU));
     nn.add(Dense::new(10, Activation::Softmax));
     println!("{}", nn);
 
     // Fit the network
-    nn.fit(128, 10, Some(1));
+    nn.fit(128, 10, Some(1), Some(vec![Metrics::Accuracy]));
 
-    // Predict output on test images
+    // Evaluate the trained model on the test set
+    nn.evaluate(Some(vec![Metrics::Accuracy]));
+
+
+    // Predict the output of some images from the test set
     let input = data.load_img_vec(&vec![
-        Path::new("datasets/MNIST/test/2/img_1.jpg"),
-        Path::new("datasets/MNIST/test/1/img_18.jpg"),
-        Path::new("datasets/MNIST/test/0/img_9.jpg"),
-        Path::new("datasets/MNIST/test/3/img_10.jpg")
+        Path::new("datasets/MNIST/test/1/5.png"),
+        Path::new("datasets/MNIST/test/3/2008.png"),
+        Path::new("datasets/MNIST/test/5/59.png"),
+        Path::new("datasets/MNIST/test/9/104.png")
     ])?;
 
     let predictions = nn.predict_class(&input);
