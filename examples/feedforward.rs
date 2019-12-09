@@ -25,7 +25,7 @@ fn main() -> Result<(), NeuroError> {
     nn.add(Dense::new(1, Activation::Linear));
 
     // Train
-    nn.fit(64, 50, Some(10), None);
+    nn.fit(64, 30, Some(10), None);
 
     // Predictions: create two inputs: (-0.5, 0.92, 0.35) and (0.45, -0.72, -0.12).
     let inputs = Tensor::new(&[-0.5, 0.92, 0.35, 0.45, -0.72, -0.12], Dim::new(&[3, 1, 1, 2]));
