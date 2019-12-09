@@ -27,6 +27,7 @@
 //! ```
 //! export DYLD_LIBRARY_PATH=/opt/arrayfire/lib
 //! ```
+//! Also, it is highly recommended to set the `--release` flag when building your code for considerable speedup.
 //! In order to quickly get started, check out the [examples](https://srenevey.github.io/neuro/examples).
 
 
