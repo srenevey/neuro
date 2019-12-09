@@ -4,15 +4,14 @@ use crate::layers::*;
 use crate::initializers::Initializer;
 use crate::regularizers::*;
 use crate::tensor::*;
-use crate::tensor::Reduction;
 
 use std::fmt;
 use std::fs;
 use std::io;
 use std::io::Write;
 
-use byteorder::{BigEndian, WriteBytesExt};
 use arrayfire::*;
+use byteorder::{BigEndian, WriteBytesExt};
 
 
 /// Defines a dense (or fully connected) layer.
@@ -100,27 +99,22 @@ impl Layer for Dense
     fn initialize_parameters(&mut self, input_shape: Dim4) {
         let fan_in = input_shape.get()[0] * input_shape.get()[1] * input_shape.get()[2];
         let fan_out = self.units;
-        //println!("fan_in: {}, fan_out: {}", fan_in, fan_out);
-        self.weights = self.weights_initializer.new(Dim4::new(&[fan_out, fan_in, 1, 1]), fan_in, fan_out);
-        self.biases = self.biases_initializer.new(Dim4::new(&[fan_out, 1, 1, 1]), fan_in, fan_out);
+        self.weights = self.weights_initializer.new_tensor(Dim4::new(&[fan_out, fan_in, 1, 1]), fan_in, fan_out);
+        self.biases = self.biases_initializer.new_tensor(Dim4::new(&[fan_out, 1, 1, 1]), fan_in, fan_out);
         self.input_shape = input_shape;
     }
 
     fn compute_activation(&self, input: &Tensor) -> Tensor {
-        let flat_input = Tensor::flatten(input);
+        let flat_input = input.flatten();
         let linear_activation = add(&matmul(&self.weights, &flat_input, MatProp::NONE, MatProp::NONE), &self.biases, true);
-        let nonlinear_activation = self.activation.eval(&linear_activation);
-        nonlinear_activation.eval();
-        nonlinear_activation
+        self.activation.eval(&linear_activation)
     }
 
 
     fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor {
-        let flat_input = Tensor::flatten(input);
+        let flat_input = input.flatten();
         let linear_activation = add(&matmul(&self.weights, &flat_input, MatProp::NONE, MatProp::NONE), &self.biases, true);
-        linear_activation.eval();
         let nonlinear_activation = self.activation.eval(&linear_activation);
-        nonlinear_activation.eval();
 
         // Save input and linear activation for efficient backprop
         self.previous_input = Some(flat_input);
@@ -138,11 +132,7 @@ impl Layer for Dense
                 match &mut self.previous_input {
                     Some(previous_input) => {
                         self.dweights = matmul(&dz, previous_input, MatProp::NONE, MatProp::TRANS).reduce(Reduction::MeanBatches);
-
-                        match self.regularizer {
-                            Some(regularizer) => self.dweights += regularizer.grad(&self.weights),
-                            None => {}
-                        }
+                        if let Some(regularizer) = self.regularizer { self.dweights += regularizer.grad(&self.weights) }
                         self.dbiases = dz.reduce(Reduction::MeanBatches);
                     },
                     None => panic!("The previous activations have not been computed!"),
@@ -170,55 +160,56 @@ impl Layer for Dense
 
     // Currently not used!
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
+        /*
         writer.write(b"dense\n")?;
         writer.write(&self.units.to_be_bytes())?;
-        writer.write(b"\n");
+        writer.write(b"\n")?;
         writer.write(&self.activation.id().to_be_bytes())?;
-        writer.write(b"\n");
+        writer.write(b"\n")?;
 
         // Weights dimensions
         let dims: [[u8; 8]; 4] = [self.weights.dims().get()[0].to_be_bytes(), self.weights.dims().get()[1].to_be_bytes(), self.weights.dims().get()[2].to_be_bytes(), self.weights.dims().get()[3].to_be_bytes()];
         let flat: Vec<u8> = dims.concat();
-        writer.write(flat.as_slice());
-        writer.write(b"\n");
+        writer.write(flat.as_slice())?;
+        writer.write(b"\n")?;
 
         // Weights
         let num_weights = (self.weights.dims().get()[0] * self.weights.dims().get()[1] * self.weights.dims().get()[2]) as usize;
         let mut buf: Vec<f64> = vec![0.; num_weights];
         self.weights.host(buf.as_mut_slice());
         for weight in buf.iter() {
-            writer.write_f64::<BigEndian>(*weight);
+            writer.write_f64::<BigEndian>(*weight)?;
         }
-        writer.write(b"\n");
+        writer.write(b"\n")?;
 
         // Biases dimensions
-        writer.write(&self.biases.dims().get()[0].to_be_bytes());
-        writer.write(&self.biases.dims().get()[1].to_be_bytes());
-        writer.write(&self.biases.dims().get()[2].to_be_bytes());
-        writer.write(&self.biases.dims().get()[3].to_be_bytes());
-        writer.write(b"\n");
+        writer.write(&self.biases.dims().get()[0].to_be_bytes())?;
+        writer.write(&self.biases.dims().get()[1].to_be_bytes())?;
+        writer.write(&self.biases.dims().get()[2].to_be_bytes())?;
+        writer.write(&self.biases.dims().get()[3].to_be_bytes())?;
+        writer.write(b"\n")?;
 
         // Biases
         let num_biases = (self.biases.dims().get()[0] * self.biases.dims().get()[1] * self.biases.dims().get()[2]) as usize;
         let mut buf: Vec<f64> = vec![0.; num_biases];
         self.biases.host(buf.as_mut_slice());
         for bias in buf.iter() {
-            writer.write_f64::<BigEndian>(*bias);
+            writer.write_f64::<BigEndian>(*bias)?;
         }
-        writer.write(b"\n");
+        writer.write(b"\n")?;
 
         // Input dimensions
         let dims: [[u8; 8]; 4] = [self.input_shape.get()[0].to_be_bytes(), self.input_shape.get()[1].to_be_bytes(), self.input_shape.get()[2].to_be_bytes(), self.input_shape.get()[3].to_be_bytes()];
         let flat: Vec<u8> = dims.concat();
-        writer.write(flat.as_slice());
-        writer.write(b"\n");
+        writer.write(flat.as_slice())?;
+        writer.write(b"\n")?;
 
         // Weights and biases initializers
-        writer.write(&self.weights_initializer.id().to_be_bytes());
-        writer.write(b"\n");
-        writer.write(&self.biases_initializer.id().to_be_bytes());
-        writer.write(b"\n");
-
+        writer.write(&self.weights_initializer.id().to_be_bytes())?;
+        writer.write(b"\n")?;
+        writer.write(&self.biases_initializer.id().to_be_bytes())?;
+        writer.write(b"\n")?;
+*/
         Ok(())
     }
 
@@ -228,12 +219,12 @@ impl Layer for Dense
     }
 
     fn print(&self) {
-        println!("Number of parameters: {}", self.weights.dims()[0] * self.weights.dims()[1] * self.weights.dims()[2] * self.weights.dims()[3] + self.biases.dims()[0]);
+        println!("Number of parameters: {}", self.weights.elements() + self.biases.elements());
     }
 }
 
 impl fmt::Display for Dense {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        write!(f, "Dense \t\t {}", self.weights.dims()[0] * self.weights.dims()[1] * self.weights.dims()[2] * self.weights.dims()[3] + self.biases.dims()[0])
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Dense \t\t {}", self.weights.elements() + self.biases.elements())
     }
 }
