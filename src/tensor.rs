@@ -115,9 +115,7 @@ pub trait TensorTrait {
     ///
     fn reshape_mut(&mut self, dims: Dim4);
 
-    // TODO: check if used
     fn print_tensor(&self);
-    fn get_scalar(&self) -> PrimitiveType;
 }
 
 impl TensorTrait for Tensor {
@@ -205,11 +203,5 @@ impl TensorTrait for Tensor {
 
     fn print_tensor(&self) {
         print(self);
-    }
-
-    fn get_scalar(&self) -> PrimitiveType {
-        let mut val: [PrimitiveType; 1] = [0.];
-        self.host(&mut val);
-        val[0]
     }
 }
