@@ -18,7 +18,7 @@ use walkdir::{DirEntry, WalkDir};
 pub struct ImageDataSet {
     input_shape: Dim4,
     output_shape: Dim4,
-    image_size: u32,
+    image_size: (u32, u32),
     num_train_samples: u64,
     num_valid_samples: u64,
     classes: Vec<String>,
@@ -61,10 +61,10 @@ impl ImageDataSet {
     ///
     /// # Arguments
     /// * `path`: path to load the images from. Must contain a *train* and optionally a *test* subdirectory.
-    /// * `image_size`: size the images are resized to
+    /// * `image_size`: height and width the images are resized to
     /// * `valid_frac`: fraction of the data used for validation. Must be between 0 and 1.
     ///
-    pub fn from_path(path: &Path, image_size: u32, valid_frac: f64) -> Result<ImageDataSet, NeuroError> {
+    pub fn from_path(path: &Path, image_size: (u32, u32), valid_frac: f64) -> Result<ImageDataSet, NeuroError> {
 
         if valid_frac < 0. || valid_frac > 1. {
             return Err(std::convert::From::from(DataSetError::InvalidValidationFraction));
@@ -126,14 +126,14 @@ impl ImageDataSet {
     ///
     /// # Arguments
     /// * `path`: the path to load the images from
-    /// * `image_size`: size the images are resized to
+    /// * `image_size`: height and width the images are resized to
     /// * `valid_frac`: optional fraction of the data used for validation. Must be between 0 and 1.
     ///
     /// # Returns
     /// Returns a Result containing a tuple of tensors containing the training samples, training labels,
     /// validation samples, validation labels, and a vector containing the classes of the data set.
     ///
-    fn load_images_from_dir(path: &Path, image_size: u32, valid_frac: Option<f64>) -> Result<(Tensor, Tensor, Tensor, Tensor, Vec<String>), DataSetError> {
+    fn load_images_from_dir(path: &Path, image_size: (u32, u32), valid_frac: Option<f64>) -> Result<(Tensor, Tensor, Tensor, Tensor, Vec<String>), DataSetError> {
         // Each subdirectory corresponds to a class
         let walker = WalkDir::new(&path).min_depth(1).max_depth(1).into_iter();
         let num_classes = walker.filter_entry(|e| !Self::is_hidden(e)).count();
@@ -167,7 +167,7 @@ impl ImageDataSet {
                 for image in fs::read_dir(&class.path())? {
                     let image = image?;
 
-                    let img = image::open(image.path()).unwrap().resize_exact(image_size, image_size, image::FilterType::Nearest);
+                    let img = image::open(image.path()).unwrap().resize_exact(image_size.1, image_size.0, image::FilterType::Nearest);
                     let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
                     let img_channels = Self::get_num_channels(&img)?;
 
@@ -189,7 +189,7 @@ impl ImageDataSet {
             }
         }
 
-        let mut x_arr = Tensor::new(&x[..], Dim4::new(&[image_size as u64, image_size as u64, num_channels.unwrap(), num_images as u64]));
+        let mut x_arr = Tensor::new(&x[..], Dim4::new(&[image_size.0 as u64, image_size.1 as u64, num_channels.unwrap(), num_images as u64]));
         let class_dim = if num_classes < 3 { 1 } else { num_classes as u64 };
         let mut y_arr = Tensor::new(&y[..], Dim4::new(&[class_dim, 1, 1, num_images as u64]));
 
@@ -267,11 +267,11 @@ impl ImageDataSet {
     /// * `path`: path to the image
     ///
     pub fn load_img(&self, path: &Path) -> Result<Tensor, NeuroError> {
-        let img = image::open(path).unwrap().resize_exact(self.image_size, self.image_size, image::FilterType::Nearest);
+        let img = image::open(path).unwrap().resize_exact(self.image_size.1, self.image_size.0, image::FilterType::Nearest);
         let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
         let num_channels = Self::get_num_channels(&img)?;
 
-        Ok(Tensor::new(&img_vec[..], Dim4::new(&[self.image_size as u64, self.image_size as u64, num_channels, 1])))
+        Ok(Tensor::new(&img_vec[..], Dim4::new(&[self.image_size.0 as u64, self.image_size.1 as u64, num_channels, 1])))
     }
 
     /// Loads the images from the paths.
@@ -284,7 +284,7 @@ impl ImageDataSet {
         let mut num_channels = None;
 
         for path in paths {
-            let img = image::open(path).unwrap().resize_exact(self.image_size, self.image_size, image::FilterType::Nearest);
+            let img = image::open(path).unwrap().resize_exact(self.image_size.1, self.image_size.0, image::FilterType::Nearest);
             let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
             let img_channels = Self::get_num_channels(&img)?;
 
@@ -300,7 +300,7 @@ impl ImageDataSet {
             images.extend(img_vec);
         }
 
-        Ok(Tensor::new(&images[..], Dim4::new(&[self.image_size as u64, self.image_size as u64, num_channels.unwrap(), paths.len() as u64])))
+        Ok(Tensor::new(&images[..], Dim4::new(&[self.image_size.0 as u64, self.image_size.1 as u64, num_channels.unwrap(), paths.len() as u64])))
     }
 }
 

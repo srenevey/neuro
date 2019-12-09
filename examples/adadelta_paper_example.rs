@@ -16,7 +16,7 @@ fn main() -> Result<(), NeuroError> {
 
     // Create the dataset
     let path = Path::new("datasets/MNIST");
-    let data = ImageDataSet::from_path(&path, 28, 0.1)?;
+    let data = ImageDataSet::from_path(&path, (28, 28), 0.1)?;
     println!("{}", data);
 
     // Create the neural network
