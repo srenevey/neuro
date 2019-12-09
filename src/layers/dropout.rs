@@ -1,6 +1,5 @@
 //! Dropout layer
 use crate::layers::Layer;
-use crate::Tensor;
 use crate::tensor::*;
 
 use std::fmt;
@@ -18,6 +17,7 @@ pub struct Dropout {
     output_shape: Dim4,
     grad: Tensor,
     random_engine: RandomEngine,
+    scaling_factor: PrimitiveType
 }
 
 impl Dropout {
@@ -31,60 +31,30 @@ impl Dropout {
     ///
     pub fn new(rate: f64) -> Box<Dropout> {
 
-        let mut rng = rand::thread_rng();
-        let seed: u64 = rng.gen();
-        let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, None);
-
-
         if rate < 0. || rate > 1. {
             panic!("The drop rate is invalid.");
         }
+
+        let mut rng = rand::thread_rng();
+        let seed: u64 = rng.gen();
+        let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, Some(seed));
+
+        let scaling_factor = 1. / (1. - rate) as PrimitiveType;
 
         Box::new(Dropout {
             drop_rate: rate,
             output_shape: Dim4::new(&[0, 0, 0, 0]),
             grad: Tensor::new_empty_tensor(),
             random_engine,
+            scaling_factor,
         })
     }
 
+    /// Generates a binomial mask to let some values pass through the layer.
     fn generate_binomial_mask(&self, dims: Dim4) -> Tensor {
-
-        /*
-        let height = dims.get()[0];
-        let width = dims.get()[1];
-        let num_channels = dims.get()[2];
-        let batch_size = dims.get()[3];
-        */
-
-        /*
-        let mut rng = rand::thread_rng();
-        let num_inputs = height * width;
-        let num_ones = ((1. - self.drop_rate) * height as f64 * width as f64).floor() as u64;
-        let num_zeros = num_inputs - num_ones;
-
-        let num_2d_slices = num_channels * mb_size;
-        let mut values: Vec<PrimitiveType> = Vec::new();
-
-        for _ in 0..num_2d_slices {
-            let mut tmp = Vec::with_capacity(num_inputs as usize);
-            for _ in 0..num_ones {
-                tmp.push(1.0);
-            }
-            for _ in 0..num_zeros {
-                tmp.push(0.0);
-            }
-            tmp.shuffle(&mut rng);
-            values.extend(&tmp);
-        }
-        Tensor::new(&values[..], dims)
-        */
-
-        // Alternatively
         let random_values = random_uniform::<f64>(dims, &self.random_engine);
         let cond = gt(&random_values, &self.drop_rate, true);
-        let ones = Tensor::ones(dims);
-        selectr(&ones, &cond, 0.0)
+        cond.cast()
     }
 }
 
@@ -99,17 +69,15 @@ impl Layer for Dropout {
 
     fn compute_activation_mut(&mut self, prev_activation: &Tensor) -> Tensor {
         let mask = self.generate_binomial_mask(prev_activation.dims());
-        let output = mul(prev_activation, &mask, true);
+        let output = prev_activation * &mask;
         self.grad = mask;
 
         // Inverted dropout
-        let scale = 1. / (1. - self.drop_rate) as PrimitiveType;
-        mul(&output, &scale, true)
+        &output * self.scaling_factor
     }
 
-    fn compute_dactivation_mut(&mut self, _dz: &Tensor) -> Tensor {
-        let scale = 1. / (1. - self.drop_rate) as PrimitiveType;
-        mul(&self.grad, &scale, true)
+    fn compute_dactivation_mut(&mut self, dz: &Tensor) -> Tensor {
+        &self.grad * dz * self.scaling_factor
     }
 
     fn output_shape(&self) -> Dim4 {
@@ -122,7 +90,7 @@ impl Layer for Dropout {
 }
 
 impl fmt::Display for Dropout {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        Ok(())
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Dropout \t 0")
     }
 }
