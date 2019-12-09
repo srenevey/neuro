@@ -1,14 +1,16 @@
 //! 2D convolution layer
-use arrayfire::*;
-use crate::Tensor;
-use crate::tensor::*;
 use crate::activations::*;
 use crate::initializers::*;
+use crate::regularizers::*;
+use crate::tensor::*;
 use super::Layer;
+
+use std::fmt;
+use std::fs;
 use std::io;
 use std::io::BufWriter;
-use std::fs;
-use std::fmt;
+
+use arrayfire::*;
 
 /// Defines the type of padding applied to the inputs.
 ///
@@ -37,11 +39,12 @@ pub struct Conv2D {
     biases: Tensor,
     dweights: Tensor,
     dbiases: Tensor,
-    z: Option<Tensor>,
-    a_prev: Option<Tensor>,
+    linear_activation: Option<Tensor>,
+    previous_activation: Option<Tensor>,
     reshaped_input: Tensor,
     weights_initializer: Initializer,
     biases_initializer: Initializer,
+    regularizer: Option<Regularizer>,
 }
 
 impl Conv2D {
@@ -74,11 +77,12 @@ impl Conv2D {
             biases: Tensor::new_empty_tensor(),
             dweights: Tensor::new_empty_tensor(),
             dbiases: Tensor::new_empty_tensor(),
-            z: None,
-            a_prev: None,
+            linear_activation: None,
+            previous_activation: None,
             reshaped_input: Tensor::new_empty_tensor(),
             weights_initializer: Initializer::HeUniform,
             biases_initializer: Initializer::Zeros,
+            regularizer: None,
         })
     }
 
@@ -118,17 +122,19 @@ impl Conv2D {
             biases: Tensor::new_empty_tensor(),
             dweights: Tensor::new_empty_tensor(),
             dbiases: Tensor::new_empty_tensor(),
-            z: None,
-            a_prev: None,
+            linear_activation: None,
+            previous_activation: None,
             reshaped_input: Tensor::new_empty_tensor(),
             weights_initializer,
             biases_initializer,
+            regularizer: None,
         })
     }
 
 
     /// Computes the convolution.
     fn compute_convolution(&self, input: &Tensor) -> (Tensor, Tensor) {
+        let num_channels = input.dims().get()[2];
         let batch_size = input.dims().get()[3];
 
         let h_out = self.output_shape.get()[0];
@@ -144,13 +150,14 @@ impl Conv2D {
         };
 
         // Compute the convolution and add biases
-        let conv = add(&matmul(&self.weights, &input_values, MatProp::NONE, MatProp::NONE), &self.biases, true);
+        let weights = tile(&self.weights, Dim4::new(&[1, num_channels, 1, 1]));
+        let mut conv = add(&matmul(&weights, &input_values, MatProp::NONE, MatProp::NONE), &self.biases, true);
 
         // Reshape to have each mini-batch on the last dimension
-        let tmp = moddims(&conv, Dim4::new(&[self.num_filters, h_out * w_out, 1, batch_size]));
+        conv = moddims(&conv, Dim4::new(&[self.num_filters, h_out * w_out, 1, batch_size]));
 
         // Reshape to have correct output dimensions
-        let linear_activation = moddims(&transpose(&tmp, false), Dim4::new(&[h_out, w_out, self.num_filters, batch_size]));
+        let linear_activation = moddims(&transpose(&conv, false), Dim4::new(&[h_out, w_out, self.num_filters, batch_size]));
         (linear_activation, input_values)
     }
 
@@ -209,76 +216,14 @@ impl Conv2D {
         }
     }
 
-    /*
-    fn img_to_col_indices(&mut self) {
-        let kernel_size: (u64, u64) = (2, 2);
-        let stride: (u64, u64) = (1, 2);
-        let num_batches = 1;
-        let num_channels = 3;
-
-        // Create indices for the first dimension
-        let h_out = self.output_shape.get()[0];
-        let w_out = self.output_shape.get()[1];
-
-        let num_step_v = 2;
-        let idxs_dim1_val: Vec<u64> = (0..num_step_v).map( |i| {
-            (0..kernel_size.0).map(move |j|  j + i * stride.0)
-        }).flatten().collect();
-        println!("Indices along the first dimension: {:?}", idxs_dim1_val);
-        let i = Array::new(&idxs_dim1_val, Dim4::new(&[num_step_v * kernel_size.0, 1, 1, 1]));
-
-        // Create indices for the second dimension
-        let num_step_h = 2;
-        let idxs_dim0_val: Vec<u64> = (0..num_step_h).map( |i| {
-            (0..kernel_size.1).map(move |j|  j + i * stride.1)
-        }).flatten().collect();
-        println!("Indices along the second dimension: {:?}", idxs_dim0_val);
-        let j = Array::new(&idxs_dim0_val, Dim4::new(&[num_step_h * kernel_size.1, 1, 1, 1]));
-    }
-    */
-
-    /// Convert the image into a column-equivalent representation. This is required for computation speed.
-    /// There is a memory cost though.
+    /// Converts the image into a column representation.
+    ///
+    /// This is done for computation speed but there is a memory cost.
     fn img_to_col(&self, input: &Tensor) -> Tensor {
-
         let num_channels = input.dims().get()[2];
-        let batch_size = input.dims().get()[3];
-
-        let h_out = self.output_shape.get()[0];
-        let w_out = self.output_shape.get()[1];
-
-        /*
-        // Iterate over all positions of the filtering window
-        let mut input_values = Tensor::new_empty(Dim4::new(&[self.kernel_size.0 * self.kernel_size.1 * num_channels, 1, 1, batch_size]));
-        for i in 0..h_out {
-            let lb_i = i * self.stride.0;
-            let ub_i = lb_i + self.kernel_size.0 - 1;
-            let seq_i = Seq::new(lb_i as f32, ub_i as f32, 1.0);
-
-            for j in 0..w_out {
-                let lb_j = j * self.stride.1;
-                let ub_j = lb_j + self.kernel_size.1 - 1;
-                let seq_j = Seq::new(lb_j as f32, ub_j as f32, 1.0);
-                let seqs = &[seq_i, seq_j, Seq::default(), Seq::default()];
-
-                // Select values in the filtering window and rearrange in columns
-                let sub = index(input, seqs);
-                let sub_col = moddims(&sub, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1 * num_channels, 1, 1, batch_size]));
-
-                if i == 0 && j == 0 {
-                    input_values = sub_col;
-                } else {
-                    input_values = join(1, &input_values, &sub_col);
-                }
-            }
-        }
-        // Stack mini-batches along second dimension
-        moddims(&input_values, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1 * num_channels, input_values.dims().get()[1] * batch_size , 1, 1]))
-        */
-
         let mut col = unwrap(input, self.kernel_size.0 as i64, self.kernel_size.1 as i64, self.stride.0 as i64, self.stride.1 as i64, 0, 0, true);
         col = reorder(&col, Dim4::new(&[0, 2, 1, 3]));
-        moddims(&col, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1 * num_channels, h_out * w_out * batch_size, 1, 1]))
+        moddims(&col, Dim4::new(&[col.dims().get()[0] * num_channels, col.elements() as u64/(col.dims().get()[0] * num_channels), 1, 1]))
     }
 
     fn dout_to_col(&self, input: &Tensor) -> Tensor {
@@ -293,46 +238,16 @@ impl Conv2D {
 
     /// Transforms a columns representation of an image into an image with dimensions height x width x channels.
     fn col_to_img(&self, input: &Tensor) -> Tensor {
-        let height = self.input_shape.get()[0];
-        let width = self.input_shape.get()[1];
         let num_channels = self.input_shape.get()[2];
         let h_out = self.output_shape.get()[0];
         let w_out = self.output_shape.get()[1];
-        let num_col = h_out * w_out;
-        let batch_size = input.dims().get()[1] / num_col;
+        let num_cols = h_out * w_out;
+        let batch_size = input.dims().get()[1] / num_cols;
         let height_padded = (h_out - 1) * self.stride.0 + self.kernel_size.0;
         let width_padded = (w_out - 1) * self.stride.1 + self.kernel_size.1;
-        //let mut out = Tensor::zeros(Dim4::new(&[height_padded, width_padded, num_channels, mb_size]));
 
-
-        /*
-
-        let tmp = moddims(input, Dim4::new(&[input.dims().get()[0], num_col, 1, mb_size]));
-
-        // Populate output
-        let mut col_index = 0.;
-        for i in 0..h_out {
-            let lb_i = i * self.stride.0;
-            let ub_i = lb_i + self.kernel_size.0 - 1;
-            let seq_i = Seq::new(lb_i as f32, ub_i as f32, 1.0);
-
-            for j in 0..w_out {
-                let lb_j = j * self.stride.1;
-                let ub_j = lb_j + self.kernel_size.1 - 1;
-                let seq_j = Seq::new(lb_j as f32, ub_j as f32, 1.0);
-                let seqs = &[seq_i, seq_j, Seq::default(), Seq::default()];
-
-                let col = index(&tmp, &[Seq::default(), Seq::new(col_index, col_index, 1.), Seq::default(), Seq::default()]);
-                let filter = moddims(&col, Dim4::new(&[self.kernel_size.0, self.kernel_size.1, num_channels, mb_size]));
-
-                let sub = index(&out, seqs) + filter;
-                out = assign_seq(&out, seqs, &sub);
-
-                col_index += 1.;
-            }
-        }*/
-
-        let mut img = moddims(input, Dim4::new(&[self.kernel_size.0 * self.kernel_size.1, num_channels, h_out * w_out, batch_size]));
+        let mut img = reorder(&input, Dim4::new(&[0, 2, 1, 3]));
+        img = moddims(&img, Dim4::new(&[input.dims().get()[0]/num_channels, num_channels, input.dims().get()[1]/batch_size, batch_size]));
         img = reorder(&img, Dim4::new(&[0, 2, 1, 3]));
         img = wrap(&img, height_padded as i64, width_padded as i64, self.kernel_size.0 as i64, self.kernel_size.1 as i64, self.stride.0 as i64, self.stride.1 as i64, 0, 0, true);
 
@@ -346,21 +261,16 @@ impl Layer for Conv2D {
         let height = input_shape.get()[0];
         let width = input_shape.get()[1];
         let num_channels = input_shape.get()[2];
-        let batch_size = input_shape.get()[3];
 
         // Compute output dimensions and padding size
-        let mut h_out = 0;
-        let mut w_out = 0;
-        match self.padding {
+        let (h_out, w_out) = match self.padding {
             Padding::Same => {
-                h_out = (height as f64 / self.stride.0 as f64).ceil() as u64;
-                w_out = (width as f64 / self.stride.1 as f64).ceil() as u64;
+                ((height as f64 / self.stride.0 as f64).ceil() as u64, (width as f64 / self.stride.1 as f64).ceil() as u64)
             },
             Padding::Valid => {
-                h_out = (((height - self.kernel_size.0 + 1) as f64) / self.stride.0 as f64).ceil() as u64;
-                w_out = (((width - self.kernel_size.1 + 1) as f64) / self.stride.1 as f64).ceil() as u64;
+                ((((height - self.kernel_size.0 + 1) as f64) / self.stride.0 as f64).ceil() as u64, (((width - self.kernel_size.1 + 1) as f64) / self.stride.1 as f64).ceil() as u64)
             }
-        }
+        };
         self.compute_padding_size(height, width, h_out, w_out);
 
         let fan_in = height * width * num_channels;
@@ -369,50 +279,58 @@ impl Layer for Conv2D {
         self.input_shape = input_shape;
 
         // Initialize weights and biases
-        self.weights = self.weights_initializer.new(Dim4::new(&[self.num_filters, self.kernel_size.0 * self.kernel_size.1 * num_channels, 1, 1]), fan_in, fan_out);
-        self.biases = self.biases_initializer.new(Dim4::new(&[self.num_filters, 1, 1, 1]), fan_in, fan_out);
+        self.weights = self.weights_initializer.new_tensor(Dim4::new(&[self.num_filters, self.kernel_size.0 * self.kernel_size.1, 1, 1]), fan_in, fan_out);
+        self.biases = self.biases_initializer.new_tensor(Dim4::new(&[self.num_filters, 1, 1, 1]), fan_in, fan_out);
     }
 
     fn compute_activation(&self, input: &Tensor) -> Tensor {
         let (linear_activation, _) = self.compute_convolution(input);
         linear_activation.eval();
         let nonlinear_activation = self.activation.eval(&linear_activation);
+        nonlinear_activation.eval();
         nonlinear_activation
     }
 
     fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor {
-        //println!("Computing linear activation");
         let (linear_activation, reshaped_input) = self.compute_convolution(input);
         linear_activation.eval();
         reshaped_input.eval();
         self.reshaped_input = reshaped_input;
 
-        //println!("Computing nonlinear activation");
         let nonlinear_activation = self.activation.eval(&linear_activation);
-        //nonlinear_activation.eval();
 
-        self.z = Some(linear_activation);
-        self.a_prev = Some(input.copy());
+        self.linear_activation = Some(linear_activation);
+        self.previous_activation = Some(input.copy());
 
-        //println!("Forward: Conv2D ouput: {} x {} x {} x {}", nonlinear_activation.dims().get()[0], nonlinear_activation.dims().get()[1], nonlinear_activation.dims().get()[2], nonlinear_activation.dims().get()[3]);
         nonlinear_activation
     }
 
 
     fn compute_dactivation_mut(&mut self, input: &Tensor) -> Tensor {
 
-        //println!("Backward: Conv2D input: {} x {} x {} x {}", input.dims().get()[0], input.dims().get()[1], input.dims().get()[2], input.dims().get()[3]);
+        match &self.linear_activation {
+            Some(linear_activation) => {
+                let dz = mul(input, &self.activation.grad(linear_activation), true);
 
-        let db = sum(&sum(&sum(input, 0), 1), 3) / input.dims().get()[3];
-        self.dbiases = reorder(&db, Dim4::new(&[2, 1, 0, 3]));
-        self.dbiases.eval();
-        let input_flat = self.dout_to_col(&self.activation.grad(input));
-        self.dweights = matmul(&input_flat, &self.reshaped_input, MatProp::NONE, MatProp::TRANS);
-        self.dweights.eval();
+                let db = sum(&sum(&dz, 0), 1);
+                self.dbiases = db.reduce(Reduction::MeanBatches);
+                self.dbiases = reorder(&self.dbiases, Dim4::new(&[2, 1, 0, 3]));
 
-        // Compute the derivative wrt the input
-        let mut dinput = matmul(&self.weights, &input_flat, MatProp::TRANS, MatProp::NONE);
-        self.col_to_img(&dinput)
+                let mut dz_reshaped = reorder(&dz, Dim4::new(&[2, 0, 1, 3]));
+                dz_reshaped = moddims(&dz_reshaped, Dim4::new(&[dz_reshaped.dims().get()[0], dz_reshaped.elements() as u64/dz_reshaped.dims().get()[0], 1, 1]));
+
+                let mut prod = matmul(&dz_reshaped, &self.reshaped_input, MatProp::NONE, MatProp::TRANS);
+                prod = moddims(&prod, Dim4::new(&[prod.dims().get()[0], self.kernel_size.0 * self.kernel_size.1, prod.elements() as u64/(prod.dims().get()[0] * self.kernel_size.0 * self.kernel_size.1), 1]));
+                prod = mean(&prod, 2);
+                self.dweights = prod;
+                if let Some(regularizer) = self.regularizer {  self.dweights += regularizer.grad(&self.weights) }
+
+                let weights = tile(&self.weights, Dim4::new(&[1, self.input_shape.get()[2], 1, 1]));
+                let d_input = matmul(&weights, &dz_reshaped, MatProp::TRANS, MatProp::NONE);
+                self.col_to_img(&d_input)
+            },
+            None => panic!("The linear activations have not been computed!"),
+        }
     }
 
     fn output_shape(&self) -> Dim4 {
@@ -434,10 +352,15 @@ impl Layer for Conv2D {
         Ok(())
     }
 
+    fn set_regularizer(&mut self, regularizer: Option<Regularizer>) {
+        self.regularizer = regularizer;
+    }
+
+
 }
 
 impl fmt::Display for Conv2D {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let num_parameters = self.kernel_size.0 * self.kernel_size.1 * self.num_filters + self.num_filters;
         write!(f, "Conv2D \t\t {}", num_parameters)
     }
