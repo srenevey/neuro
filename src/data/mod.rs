@@ -1,5 +1,5 @@
 //! Simple interfaces to import data.
-pub(crate) use self::batch_iterator::BatchIterator;
+pub use self::batch_iterator::BatchIterator;
 pub use self::image_data::ImageDataSet;
 pub use self::tabular_data::TabularDataSet;
 
@@ -33,7 +33,7 @@ pub enum DataSetError {
 enum Set {
     Test,
     Train,
-    Valid
+    Valid,
 }
 
 /// Types of data.
@@ -101,6 +101,12 @@ pub trait DataSet {
 
     /// Returns a reference to the validation labels.
     fn y_valid(&self) -> &Tensor;
+
+    /// Returns a reference to the test samples wrapped in an Option.
+    fn x_test(&self) -> Option<&Tensor>;
+
+    /// Returns a reference to the test labels wrapped in an Option.
+    fn y_test(&self) -> Option<&Tensor>;
 
     /// Returns a reference to the type of scaling that has been applied to the input features and the values used for the scaling.
     ///

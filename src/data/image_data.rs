@@ -1,5 +1,6 @@
 //! Helper methods to work with image data sets.
 use super::{Scaling, DataSet, DataSetError};
+use crate::errors::*;
 use crate::Tensor;
 use crate::tensor::*;
 
@@ -10,8 +11,6 @@ use std::path::Path;
 use arrayfire::*;
 use image;
 use image::DynamicImage;
-use rand::thread_rng;
-use rand::Rng;
 use walkdir::{DirEntry, WalkDir};
 
 
@@ -65,10 +64,10 @@ impl ImageDataSet {
     /// * `image_size`: size the images are resized to
     /// * `valid_frac`: fraction of the data used for validation. Must be between 0 and 1.
     ///
-    pub fn from_path(path: &Path, image_size: u32, valid_frac: f64) -> Result<ImageDataSet, DataSetError> {
+    pub fn from_path(path: &Path, image_size: u32, valid_frac: f64) -> Result<ImageDataSet, NeuroError> {
 
         if valid_frac < 0. || valid_frac > 1. {
-            return Err(DataSetError::InvalidValidationFraction);
+            return Err(std::convert::From::from(DataSetError::InvalidValidationFraction));
         }
 
         print!("Loading the data...");
@@ -78,7 +77,7 @@ impl ImageDataSet {
             // Create the paths to the training and test samples
             let train_path = path.join("train");
             if !train_path.exists() {
-                return Err(DataSetError::TrainPathDoesNotExist);
+                return Err(std::convert::From::from(DataSetError::TrainPathDoesNotExist));
             }
 
             let test_path = path.join("test");
@@ -116,7 +115,7 @@ impl ImageDataSet {
                 y_test,
             })
         } else {
-            Err(DataSetError::PathDoesNotExist)
+            Err(std::convert::From::from(DataSetError::PathDoesNotExist))
         }
     }
 
@@ -232,7 +231,7 @@ impl ImageDataSet {
     fn is_hidden(entry: &DirEntry) -> bool {
         entry.file_name()
             .to_str()
-            .map(|s| s.starts_with("."))
+            .map(|s| s.starts_with('.'))
             .unwrap_or(false)
     }
 
@@ -243,7 +242,7 @@ impl ImageDataSet {
         for class in &self.classes {
             print!("{} ", class);
         }
-        print!("\n");
+        println!();
     }
 
     /// Retrieves the number of channels for the image.
@@ -267,7 +266,7 @@ impl ImageDataSet {
     /// # Arguments
     /// * `path`: path to the image
     ///
-    pub fn load_img(&self, path: &Path) -> Result<Tensor, DataSetError> {
+    pub fn load_img(&self, path: &Path) -> Result<Tensor, NeuroError> {
         let img = image::open(path).unwrap().resize_exact(self.image_size, self.image_size, image::FilterType::Nearest);
         let img_vec = img.raw_pixels().iter().map(|it| *it as PrimitiveType / 255.0).collect::<Vec<PrimitiveType>>();
         let num_channels = Self::get_num_channels(&img)?;
@@ -278,9 +277,9 @@ impl ImageDataSet {
     /// Loads the images from the paths.
     ///
     /// # Arguments
-    /// * `paths`: vector of paths to the images. Each path must point to an individual image.
+    /// * `paths`: a slice of paths to the images. Each path must point to an individual image.
     ///
-    pub fn load_img_vec(&self, paths: &Vec<&Path>) -> Result<Tensor, DataSetError> {
+    pub fn load_img_vec(&self, paths: &[&Path]) -> Result<Tensor, NeuroError> {
         let mut images = Vec::new();
         let mut num_channels = None;
 
@@ -292,7 +291,7 @@ impl ImageDataSet {
             match num_channels {
                 Some(n) => {
                     if img_channels != n {
-                        return Err(DataSetError::DifferentNumbersOfChannels);
+                        return Err(std::convert::From::from(DataSetError::DifferentNumbersOfChannels));
                     }
                 },
                 None => num_channels = Some(img_channels),
@@ -334,6 +333,20 @@ impl DataSet for ImageDataSet {
         &self.y_valid
     }
 
+    fn x_test(&self) -> Option<&Tensor> {
+        match &self.x_test {
+            Some(values) => Some(values),
+            None => None,
+        }
+    }
+
+    fn y_test(&self) -> Option<&Tensor> {
+        match &self.y_test {
+            Some(values) => Some(values),
+            None => None,
+        }
+    }
+
     fn x_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)> {
         &None
     }
@@ -351,6 +364,10 @@ impl fmt::Display for ImageDataSet {
         writeln!(f, "Output shape: \t [{} {} {}]", self.output_shape.get()[0], self.output_shape.get()[1], self.output_shape.get()[2])?;
         writeln!(f, "Number of training samples: \t {}", self.num_train_samples)?;
         writeln!(f, "Number of validation samples: \t {}", self.num_valid_samples)?;
+        match &self.x_test {
+            Some(values) => writeln!(f, "Number of test samples: \t {}", values.dims().get()[3])?,
+            None => {},
+        }
         writeln!(f, "Number of classes: \t {}", self.classes.len())?;
 
         Ok(())

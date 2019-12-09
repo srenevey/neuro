@@ -1,5 +1,6 @@
 //! Helper methods to work with tabular data sets.
 use super::{DataSet, DataSetError, Scaling, IO};
+use crate::errors::*;
 use crate::tensor::*;
 use crate::tensor::PrimitiveType;
 
@@ -41,12 +42,12 @@ impl TabularDataSet {
                     outputs: &Path,
                     valid_frac: f64,
                     header: bool
-    ) -> Result<TabularDataSet, DataSetError> {
+    ) -> Result<TabularDataSet, NeuroError> {
         let (in_shape, num_in_samples, in_values) = TabularDataSet::load_data_from_path(&inputs, header)?;
         let (out_shape, num_out_samples, out_values) = TabularDataSet::load_data_from_path(&outputs, header)?;
 
         if num_in_samples != num_out_samples {
-            Err(DataSetError::DimensionMismatch)
+            Err(std::convert::From::from(DataSetError::DimensionMismatch))
         } else {
             let num_samples = num_in_samples;
 
@@ -101,7 +102,7 @@ impl TabularDataSet {
                        y_valid: Tensor,
                        x_test: Option<Tensor>,
                        y_test: Option<Tensor>
-    ) -> Result<TabularDataSet, DataSetError> {
+    ) -> Result<TabularDataSet, NeuroError> {
         let num_train_samples = x_train.dims()[3];
         let num_valid_samples = x_valid.dims()[3];
         let num_features = x_train.dims()[0];
@@ -286,11 +287,8 @@ impl TabularDataSet {
         *train_values = div(&sub(train_values, &mean_value, true), &standard_deviation, true);
         *valid_values = div(&sub(valid_values, &mean_value, true), &standard_deviation, true);
 
-        match test_values {
-            Some(test_values) => {
-                *test_values = div(&sub(test_values, &mean_value, true), &standard_deviation, true);
-            },
-            None => (),
+        if let Some(test_values) = test_values {
+            *test_values = div(&sub(test_values, &mean_value, true), &standard_deviation, true);
         }
 
         // Return standardization parameters
@@ -311,12 +309,8 @@ impl TabularDataSet {
         // Normalize y_train, y_valid, and y_test
         *train_values = div(&sub(train_values, &max_values, true), &sub(&max_values, &min_values, true), true);
         *valid_values = div(&sub(valid_values, &max_values, true), &sub(&max_values, &min_values, true), true);
-
-        match test_values {
-            Some(test_values) => {
-                *test_values = div(&sub(test_values, &max_values, true), &sub(&max_values, &min_values, true), true);
-            },
-            None => (),
+        if let Some(test_values) = test_values {
+            *test_values = div(&sub(test_values, &max_values, true), &sub(&max_values, &min_values, true), true);
         }
 
         // Save normalization parameters
@@ -347,6 +341,20 @@ impl DataSet for TabularDataSet {
 
     fn y_valid(&self) -> &Tensor {
         &self.y_valid
+    }
+
+    fn x_test(&self) -> Option<&Tensor> {
+        match &self.x_test {
+            Some(values) => Some(values),
+            None => None,
+        }
+    }
+
+    fn y_test(&self) -> Option<&Tensor> {
+        match &self.y_test {
+            Some(values) => Some(values),
+            None => None,
+        }
     }
 
     fn x_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)> {
