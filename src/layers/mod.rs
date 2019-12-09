@@ -15,13 +15,13 @@ mod dropout;
 mod max_pooling;
 
 use crate::regularizers::*;
-use crate::initializers::*;
+use crate::Tensor;
 
 use std::fs;
 use std::io;
 use std::io::BufWriter;
+
 use arrayfire::*;
-use crate::Tensor;
 
 /// Public trait defining the behaviors of a layer.
 pub trait Layer: std::fmt::Display {
@@ -35,23 +35,7 @@ pub trait Layer: std::fmt::Display {
     /// Returns the parameters and their derivatives.
     fn parameters_mut(&mut self) -> Option<(Vec<&mut Tensor>, Vec<&Tensor>)> { None }
     fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()>;
-    fn set_regularizer(&mut self, regularizer: Option<Regularizer>) {}
+    fn set_regularizer(&mut self, _regularizer: Option<Regularizer>) {}
     fn print(&self) {}
 }
-
-/*
-pub trait Layer: std::fmt::Display {
-    fn initialize_parameters(&mut self, input_shape: Dim4);
-    fn compute_activation(&self, input: &Array<f64>) -> Array<f64>;
-    fn compute_activation_mut(&mut self, input: &Array<f64>) -> Array<f64>;
-    fn compute_dactivation_mut(&mut self, input: &Array<f64>) -> Array<f64>;
-    fn output_shape(&self) -> Dim4;
-    fn parameters(&self) -> Option<Vec<&Array<f64>>>;
-    fn dparameters(&self) -> Option<Vec<&Array<f64>>>;
-    fn set_parameters(&mut self, parameters: Vec<Array<f64>>);
-    fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()>;
-    fn set_regularizer(&mut self, regularizer: Option<Regularizer>) {}
-    fn print(&self) {}
-}
-*/
 
