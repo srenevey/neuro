@@ -5,7 +5,6 @@ use crate::losses::*;
 use crate::metrics::*;
 use crate::optimizers::*;
 use crate::regularizers::*;
-use crate::Tensor;
 use crate::tensor::*;
 
 use std::fmt;
@@ -15,9 +14,12 @@ use std::io::{BufWriter, BufReader, Read, Write};
 use std::path::Path;
 
 use arrayfire::*;
+use indicatif::{ProgressBar, ProgressStyle};
 
-enum NetworkError {
-    NoLayers
+enum Mode {
+    Test,
+    Train,
+    Valid,
 }
 
 /// Structure representing a neural network.
@@ -27,7 +29,6 @@ where D: DataSet, O: Optimizer, L: Loss
     data: &'a D,
     layers: Vec<Box<dyn Layer>>,
     loss_function: L,
-    metrics: Option<Vec<Metrics>>,
     optimizer: O,
     regularizer: Option<Regularizer>,
     input_shape: Dim4,
@@ -45,20 +46,17 @@ where D: DataSet, O: Optimizer, L: Loss
     /// * `data`: dataset used to train the neural network
     /// * `loss_function`: loss function minimized in the optimization process
     /// * `optimizer`: algorithm used to optimize the parameters of the network
-    /// * `metrics`: (optional) vector of Metrics used to evaluate the model
     /// * `regularizer`: (optional) method used to regularize the model
     ///
     pub fn new(data: &'a D,
                loss_function: L,
                optimizer: O,
-               metrics: Option<Vec<Metrics>>,
                regularizer: Option<Regularizer>
     ) -> Network<D, O, L> {
         Network {
             data,
             layers: Vec::new(),
             loss_function,
-            metrics,
             optimizer,
             regularizer,
             input_shape: data.input_shape(),
@@ -104,18 +102,9 @@ where D: DataSet, O: Optimizer, L: Loss
     /// * `input`: array containing the samples fed into the model
     ///
     fn forward_mut(&mut self, input: &mut Tensor) {
-        /*
-        self.layers.iter_mut().fold(
-            input,
-            |a_prev, layer| layer.compute_activation_mut(&a_prev)
-        )
-        */
-
-        //let mut a_prev = x.copy();
         for layer in self.layers.iter_mut() {
             *input = layer.compute_activation_mut(input);
         }
-        //input.copy()
     }
 
     /// Computes a backward pass of the network.
@@ -153,28 +142,45 @@ where D: DataSet, O: Optimizer, L: Loss
     pub fn fit(&mut self,
                batch_size: u64,
                epochs: u64,
-               print_loss: Option<u64>
+               print_loss: Option<u64>,
+               metrics: Option<Vec<Metrics>>,
     ) {
-        device_gc();
-
+        let device = get_device();
         let (name, platform, _, _) = device_info();
         println!("Running on {} using {}.", name, platform);
 
         self.initialize_optimizer();
 
+        // Initialize progress bar
+        let num_bins = match print_loss {
+            Some(p) => {
+                let num_batches_train = 2 * p * (self.data.num_train_samples() as f64 / batch_size as f64).ceil() as u64;
+                let num_batches_valid = (self.data.num_valid_samples() as f64 / batch_size as f64).ceil() as u64;
+                num_batches_train + num_batches_valid
+            },
+            None => epochs
+        };
+        let mut progress_bar = ProgressBar::new(num_bins);
+        let sty = ProgressStyle::default_bar()
+            .template("[{elapsed_precise}] [{bar:50}] {msg}")
+            .progress_chars("##-");
+        progress_bar.set_style(sty.clone());
+
 
         for epoch in 1..=epochs {
-
             let (x_train_shuffled, y_train_shuffled) = Tensor::shuffle(self.data.x_train(), self.data.y_train());
             let batches = BatchIterator::new((&x_train_shuffled, &y_train_shuffled), batch_size);
 
+            // Reset progress bar
+            if progress_bar.is_finished() {
+                progress_bar = ProgressBar::new(num_bins);
+                progress_bar.set_style(sty.clone());
+            }
+            progress_bar.set_message(&format!("epoch: {}/{}", epoch, epochs));
 
-            //mem_info!("Memory used by Arrayfire");
-            //device_gc();
 
             // Iterate over the batches
             for (mut mini_batch_x, mini_batch_y) in batches {
-
 
                 // Compute a pass on the network
                 self.forward_mut(&mut mini_batch_x);
@@ -182,34 +188,25 @@ where D: DataSet, O: Optimizer, L: Loss
 
                 // Update the parameters of the model
                 self.update_parameters();
-                //println!("done updating the parameters");
 
-                //device_gc();
-                //println!("batch: {} done", i);
-                //mem_info!("Memory used by Arrayfire");
+                sync(device);
+                progress_bar.inc(1);
             }
 
             // Compute and print the losses and the metrics
-            match print_loss {
-                Some(print_iter) => {
-                    if epoch % print_iter == 0 {
+            if let Some(print_iter) = print_loss {
+                if epoch % print_iter == 0 {
 
-                        // Compute the loss on the training set
-                        let train_loss = self.compute_train_loss(batch_size);
-                        //println!("Train loss computed");
+                    // Compute the loss and metrics on the training set
+                    let (train_loss, train_pred) = self.compute_loss(batch_size, Mode::Train, Some(&progress_bar));
+                    let train_metrics_values = self.compute_metrics(&train_pred, &self.data.y_train(), batch_size, &metrics);
 
-                        // Compute the loss on the validation set
-                        let (valid_loss, valid_pred) = self.evaluate(batch_size);
-                        //println!("Validation loss computed");
+                    // Compute the loss and metrics on the validation set
+                    let (valid_loss, valid_pred) = self.compute_loss(batch_size, Mode::Valid, Some(&progress_bar));
+                    let valid_metrics_values = self.compute_metrics(&valid_pred, &self.data.y_valid(), batch_size, &metrics);
 
-                        // Evaluate the metrics on the validation set
-                        let metrics_values = self.compute_metrics(&valid_pred, &self.data.y_valid(), batch_size);
-                        //println!("Metrics computed");
-
-                        println!("epoch: {}, train_loss: {}, valid_loss: {}, metrics: {:?}", epoch, train_loss, valid_loss, metrics_values);
-                    }
-                },
-                None => {},
+                    progress_bar.finish_with_message(&format!("epoch: {}/{}, train_loss: {}, train_metrics: {:?}, valid_loss: {}, valid_metrics: {:?}", epoch, epochs, train_loss, train_metrics_values, valid_loss, valid_metrics_values));
+                }
             }
         }
     }
@@ -229,6 +226,7 @@ where D: DataSet, O: Optimizer, L: Loss
     }
 
 
+    /*
     /// Computes the loss for the predicted output.
     ///
     /// # Arguments
@@ -254,14 +252,69 @@ where D: DataSet, O: Optimizer, L: Loss
         };
         self.loss_function.eval(y_pred, y_true) + regularization
     }
+    */
+
+    /// Computes the loss and the predicted output.
+    ///
+    /// # Arguments
+    /// * `batch_size`: size of the mini-batches used to compute the loss
+    /// * `mode`: specifies if the loss is computed on the training, validation, or test set
+    /// * `bar`: (optional) reference to a progress bar used to show training progress
+    ///
+    /// # Returns
+    /// Tuple containing the loss and the predicted output.
+    ///
+    fn compute_loss(&self,
+                    batch_size: u64,
+                    mode: Mode,
+                    progress_bar: Option<&ProgressBar>
+    ) -> (PrimitiveType, Tensor) {
+        let mut loss = 0.;
+        let mut y_pred = Array::new_empty(self.output_shape);
+
+        // Create batch iterator
+        let (x, y) = match mode {
+            Mode::Train => (self.data.x_train(), self.data.y_train()),
+            Mode::Valid => (self.data.x_valid(), self.data.y_valid()),
+            Mode::Test => (self.data.x_test().expect("No test samples have been provided."), self.data.y_test().expect("No test labels have been provided.")),
+        };
+        let batches = BatchIterator::new((x, y), batch_size);
+        let num_batches = batches.num_batches() as PrimitiveType;
+
+        for (count, (mini_batch_x, mini_batch_y)) in batches.enumerate() {
+            let y_pred_batch = self.forward(&mini_batch_x);
+
+            let regularization = match &self.regularizer {
+                Some(regularizer) => {
+                    let mut weights: Vec<&Tensor> = Vec::new();
+                    for layer in self.layers.iter() {
+                        if let Some(parameters) = layer.parameters() { weights.push(parameters[0]) }
+                    }
+                    regularizer.eval(weights)
+                },
+                None => 0.0,
+            };
+            loss += self.loss_function.eval(&y_pred_batch, &mini_batch_y) + regularization;
+
+            if count == 0 {
+                y_pred = y_pred_batch;
+            } else {
+                y_pred = join(3, &y_pred, &y_pred_batch);
+            }
+
+            if let Some(progress_bar) = progress_bar { progress_bar.inc(1) }
+        }
+        (loss / num_batches, y_pred)
+    }
 
 
+    /*
     /// Computes the loss on the training set.
     ///
     /// # Arguments
     /// * `batch_size`: size of the mini-batches used to propagate the training data
     ///
-    fn compute_train_loss(&self, batch_size: u64) -> PrimitiveType {
+    fn compute_train_loss(&self, batch_size: u64, bar: &ProgressBar) -> PrimitiveType {
         let mut loss = 0.;
 
         // Create batch iterator
@@ -270,6 +323,7 @@ where D: DataSet, O: Optimizer, L: Loss
         for (mini_batch_x, mini_batch_y) in batches {
             let y_pred_batch = self.forward(&mini_batch_x);
             loss += self.compute_loss(&y_pred_batch, &mini_batch_y);
+            bar.inc(1);
         }
         loss / num_batches
     }
@@ -280,7 +334,7 @@ where D: DataSet, O: Optimizer, L: Loss
     /// # Returns
     /// Returns the loss computed on the validation set and the predictions in a tuple.
     ///
-    fn evaluate(&self, batch_size: u64) -> (PrimitiveType, Tensor) {
+    fn validate(&self, batch_size: u64, bar: &ProgressBar) -> (PrimitiveType, Tensor) {
         let mut loss = 0.;
         let mut y_pred = Array::new_empty(self.output_shape);
 
@@ -298,9 +352,48 @@ where D: DataSet, O: Optimizer, L: Loss
                 y_pred = join(3, &y_pred, &y_pred_batch);
             }
             count += 1;
+            bar.inc(1);
         }
         (loss / num_batches, y_pred)
     }
+    */
+
+    /// Evaluates the model on the test set.
+    ///
+    /// # Arguments
+    /// * `metrics`: vector containing the metrics that will be evaluated
+    ///
+    pub fn evaluate(&self, metrics: Option<Vec<Metrics>>) {
+        let (loss, y_pred) = self.compute_loss(128, Mode::Test, None);
+        let y_test = self.data.y_test().expect("No test labels have been provided.");
+        /*
+        let mut loss = 0.;
+        let mut y_pred = Array::new_empty(self.output_shape);
+
+        let x_test = self.data.x_test().expect("No test samples have been provided.");
+        let y_test = self.data.y_test().expect("No test labels have been provided.");
+
+        // Create batch iterator
+        let batches = BatchIterator::new((x_test, y_test), 128);
+        let num_batches = batches.num_batches() as PrimitiveType;
+        let mut count = 0;
+        for (mini_batch_x, mini_batch_y) in batches {
+            let y_pred_batch = self.forward(&mini_batch_x);
+            loss += self.compute_loss(&y_pred_batch, &mini_batch_y);
+
+            if count == 0 {
+                y_pred = y_pred_batch;
+            } else {
+                y_pred = join(3, &y_pred, &y_pred_batch);
+            }
+            count += 1;
+        }
+        loss /= num_batches;
+        */
+        let metrics_values = self.compute_metrics(&y_pred, y_test, 128, &metrics);
+        println!("Evaluation of the test set: loss: {}, metrics: {:?}", loss, metrics_values);
+    }
+
 
 
     /// Evaluates the metrics.
@@ -316,16 +409,17 @@ where D: DataSet, O: Optimizer, L: Loss
     fn compute_metrics(&self,
                        y_pred: &Tensor,
                        y_true: &Tensor,
-                       batch_size: u64
+                       batch_size: u64,
+                       metrics: &Option<Vec<Metrics>>,
     ) -> Vec<PrimitiveType> {
-        let num_metrics = match &self.metrics {
+        let num_metrics = match metrics {
             Some(m) => m.len(),
             None => 0
         };
 
         let mut metrics_values: Vec<PrimitiveType> = vec![0.; num_metrics];
 
-        match &self.metrics {
+        match metrics {
             Some(m) => {
                 let batches = BatchIterator::new((y_pred, y_true), batch_size);
                 let num_batches = batches.num_batches() as PrimitiveType;
@@ -351,7 +445,7 @@ where D: DataSet, O: Optimizer, L: Loss
     fn update_parameters(&mut self) {
         self.optimizer.update_time_step();
         for (idx, layer) in self.layers.iter_mut().enumerate() {
-            self.optimizer.update_parameters(layer, idx);
+            self.optimizer.update_parameters(&mut **layer, idx);
         }
     }
 
@@ -439,13 +533,17 @@ where D: DataSet, O: Optimizer, L: Loss
         predictions
     }
 
-    /*
+
     /// Saves the model.
     ///
     /// # Arguments
     /// * `filename`: name of the file where the model is saved
     ///
-    pub fn save(&self, filename: &str) -> io::Result<()> {
+    pub fn save(&self, filename: &str) -> hdf5::Result<()> {
+        let file = hdf5::File::open(filename, "w")?;
+
+
+        /*
         let f = fs::File::create(filename)?;
         {
             let mut writer = BufWriter::new(f);
@@ -458,9 +556,10 @@ where D: DataSet, O: Optimizer, L: Loss
                 layer.save(&mut writer)?;
             }
         }
+        */
         Ok(())
     }
-    */
+
 }
 
 
@@ -468,8 +567,8 @@ impl<'a, D, O, L> fmt::Display for Network<'a, D, O, L>
 where D: DataSet, O: Optimizer, L: Loss
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Layer \t\t Parameters\n");
-        write!(f, "------------------------\n");
+        writeln!(f, "Layer \t\t Parameters")?;
+        writeln!(f, "------------------------")?;
         for layer in self.layers.iter() {
             println!("{}", layer);
         }
