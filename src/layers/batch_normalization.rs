@@ -8,6 +8,7 @@ use arrayfire::*;
 
 /// Defines a batch normalization layer.
 pub struct BatchNormalization {
+    follow_conv2d: bool,
     mb_mean: Tensor,
     mb_variance: Tensor,
     mean: Tensor,
@@ -19,6 +20,7 @@ pub struct BatchNormalization {
     dbeta: Tensor,
     momentum: PrimitiveType,
     eps: PrimitiveType,
+    output_shape: Dim4,
 }
 
 impl BatchNormalization {
@@ -28,8 +30,9 @@ impl BatchNormalization {
     /// By default, the momentum used by the running averages is set to 0.99 and the epsilon value
     /// used for numerical stability to 1e-5.
     ///
-    pub fn new() -> Box<BatchNormalization> {
+    pub fn new(follow_conv2d: bool) -> Box<BatchNormalization> {
         Box::new(BatchNormalization {
+            follow_conv2d,
             mb_mean: Tensor::new_empty_tensor(),
             mb_variance: Tensor::new_empty_tensor(),
             mean: Tensor::new_empty_tensor(),
@@ -41,6 +44,7 @@ impl BatchNormalization {
             dbeta: Tensor::new_empty_tensor(),
             momentum: 0.99,
             eps: 1e-5,
+            output_shape: Dim4::new(&[1, 1, 1, 1]),
         })
     }
 
@@ -50,8 +54,9 @@ impl BatchNormalization {
     /// * `momentum`: momentum used by the running averages to compute the mean and standard deviation of the data set
     /// * `eps`: small constant used for numerical stability
     ///
-    pub fn with_param(momentum: PrimitiveType, eps: PrimitiveType) -> Box<BatchNormalization> {
+    pub fn with_param(follow_conv2d: bool, momentum: PrimitiveType, eps: PrimitiveType) -> Box<BatchNormalization> {
         Box::new(BatchNormalization {
+            follow_conv2d,
             mb_mean: Tensor::new_empty_tensor(),
             mb_variance: Tensor::new_empty_tensor(),
             mean: Tensor::new_empty_tensor(),
@@ -63,26 +68,53 @@ impl BatchNormalization {
             dbeta: Tensor::new_empty_tensor(),
             momentum,
             eps,
+            output_shape: Dim4::new(&[1, 1, 1, 1]),
         })
+    }
+
+    pub fn mean(&self) -> Tensor {
+        self.mean.copy()
+    }
+
+    pub fn variance(&self) -> Tensor {
+        self.variance.copy()
     }
 }
 
 impl Layer for BatchNormalization {
     fn initialize_parameters(&mut self, input_shape: Dim4) {
-        self.gamma = Tensor::ones(input_shape);
-        self.beta = Tensor::zeros(input_shape);
-        self.mean = Tensor::zeros(input_shape);
-        self.variance = Tensor::ones(input_shape);
+        if self.follow_conv2d {
+            let num_channels = input_shape.get()[2];
+            self.gamma = Tensor::ones(Dim4::new(&[1, 1, num_channels, 1]));
+            self.beta = Tensor::zeros(Dim4::new(&[1, 1, num_channels, 1]));
+            self.mean = Tensor::zeros(Dim4::new(&[1, 1, num_channels, 1]));
+            self.variance = Tensor::ones(Dim4::new(&[1, 1, num_channels, 1]));
+        } else {
+            self.gamma = Tensor::ones(input_shape);
+            self.beta = Tensor::zeros(input_shape);
+            self.mean = Tensor::zeros(input_shape);
+            self.variance = Tensor::ones(input_shape);
+        }
+        self.output_shape = input_shape;
     }
 
     fn compute_activation(&self, input: &Tensor) -> Tensor {
-        add(&mul(&self.gamma, &div(&sub(input, &self.mean, true), &sqrt(&sub(&self.variance, &self.eps, true)), true), true), &self.beta, true)
+        add(&mul(&self.gamma, &div(&sub(input, &self.mean, true), &sqrt(&add(&self.variance, &self.eps, true)), true), true), &self.beta, true)
     }
 
     fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor {
         // Compute mini-batch mean and variance
-        self.mb_mean = input.reduce(Reduction::MeanBatches);
-        self.mb_variance = var(input, false, 3);
+        if self.follow_conv2d {
+            let mut flat = reorder(&input, Dim4::new(&[0, 1, 3, 2]));
+            flat = moddims(&flat, Dim4::new(&[flat.elements() as u64 / flat.dims().get()[3], flat.dims().get()[3], 1, 1]));
+            let mean = mean(&flat, 0);
+            let var = var(&flat, false, 0);
+            self.mb_mean = reorder(&mean, Dim4::new(&[0, 2, 1, 3]));
+            self.mb_variance = reorder(&var, Dim4::new(&[0, 2, 1, 3]));
+        } else {
+            self.mb_mean = input.reduce(Reduction::MeanBatches);
+            self.mb_variance = var(input, false, 3);
+        }
         self.mb_mean.eval();
         self.mb_variance.eval();
 
@@ -100,13 +132,18 @@ impl Layer for BatchNormalization {
     }
 
     fn compute_dactivation_mut(&mut self, dz: &Tensor) -> Tensor {
-        self.dgamma = sum(&mul(dz, &self.normalized_input, true), 3);
-        self.dbeta = sum(&dz.copy(), 3);
+        if self.follow_conv2d {
+            self.dgamma = sum(&sum(&sum(&mul(dz, &self.normalized_input, true), 3), 1), 0);
+            self.dbeta = sum(&sum(&sum(dz, 3), 1), 0);
+        } else {
+            self.dgamma = sum(&mul(dz, &self.normalized_input, true), 3);
+            self.dbeta = sum(dz, 3);
+        }
 
         // Compute the derivative of the loss wrt the variance
         // c1 corresponds to: input - mb_mean
         let c1 = mul(&self.normalized_input, &sqrt(&add(&self.mb_variance, &self.eps, true)), true);
-        // c2 corresponds to: sqrt(variance - eps)
+        // c2 corresponds to: sqrt(variance + eps)
         let c2 = sqrt(&add(&self.mb_variance, &self.eps, true));
         let fac = mul(&div(&self.gamma, &(-2.0 as PrimitiveType), true), &pow(&c2, &(-3.0 as PrimitiveType), true), true);
         let dmb_variance = mul(&sum(&mul(dz, &c1, true), 3), &fac, true);
@@ -124,15 +161,12 @@ impl Layer for BatchNormalization {
         let m = self.normalized_input.dims()[3] as PrimitiveType;
         let term2 = mul(&dmb_variance, &mul(&(2.0 as PrimitiveType / m), &c1, true), true);
         let term3 = div(&dmb_mean, &m, true);
-        let final_term = add(&term1, &add(&term2, &term3, true), true);
-        //af_print!("final", final_term);
-        final_term
+        add(&term1, &add(&term2, &term3, true), true)
     }
 
     fn output_shape(&self) -> Dim4 {
-        self.gamma.dims()
+        self.output_shape
     }
-
 
     fn parameters(&self) -> Option<Vec<&Tensor>> {
         Some(vec![&self.gamma, &self.beta])
@@ -150,7 +184,7 @@ impl Layer for BatchNormalization {
 }
 
 impl fmt::Display for BatchNormalization {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        write!(f, "BatchNorm \t 2")
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "BatchNorm \t {}", self.gamma.elements() + self.beta.elements())
     }
 }
