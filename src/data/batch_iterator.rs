@@ -1,7 +1,7 @@
 use crate::tensor::*;
 use arrayfire::*;
 
-pub(crate) struct BatchIterator<'a> {
+pub struct BatchIterator<'a> {
     data: (&'a Tensor, &'a Tensor),
     num_samples: u64,
     batch_size: u64,
@@ -17,7 +17,7 @@ impl<'a> BatchIterator<'a> {
     /// * `data`: tuple of reference on the Tensors
     /// * `batch_size`: size of the mini-batches
     ///
-    pub(crate) fn new(data: (&'a Tensor, &'a Tensor), batch_size: u64) -> BatchIterator<'a> {
+    pub fn new(data: (&'a Tensor, &'a Tensor), batch_size: u64) -> BatchIterator<'a> {
         // Check that both tensors have the same number of samples
         assert_eq!(data.0.dims().get()[3], data.1.dims().get()[3]);
         let num_samples = data.0.dims().get()[3];

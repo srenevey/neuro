@@ -38,14 +38,15 @@ impl Activation {
     pub(crate) fn grad(&self, z: &Tensor) -> Tensor {
         match self {
             Activation::Sigmoid => sigmoid(z) * (Tensor::ones(z.dims()) - sigmoid(z)),
-            Activation::Softmax => Tensor::ones(z.dims()), // TODO: implement
+            Activation::Softmax => Tensor::ones(z.dims()),
             Activation::Tanh => Tensor::ones(z.dims()) - mul(&tanh(z), &tanh(z), true),
             Activation::ReLU => {
                 let cond = ge(z, &(0 as PrimitiveType), true);
-                selectr(&Tensor::ones(z.dims()), &cond, 0.0)
+                cond.cast()
             },
             Activation::LeakyReLU => {
                 let cond = ge(z, &(0 as PrimitiveType), true);
+                //cond.cast()
                 selectr(&Tensor::ones(z.dims()), &cond, 0.01)
             },
             Activation::Linear => Tensor::ones(z.dims()),
@@ -63,7 +64,6 @@ impl Activation {
         }
     }
 }
-
 
 
 #[cfg(test)]

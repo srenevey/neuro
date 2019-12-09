@@ -1,7 +1,6 @@
 //! Parameters initialization methods.
 use arrayfire::*;
 use crate::tensor::*;
-use crate::tensor::PrimitiveType;
 
 /// Used to generate the initial values for the parameters of the model.
 #[derive(Debug, Copy, Clone)]
@@ -44,10 +43,10 @@ impl Initializer {
     /// * `fan_in`: number of input units
     /// * `fan_out`: number of output units
     ///
-    pub(crate) fn new(self,
-                      dims: Dim4,
-                      fan_in: u64,
-                      fan_out: u64
+    pub(crate) fn new_tensor(self,
+                             dims: Dim4,
+                             fan_in: u64,
+                             fan_out: u64
     ) -> Tensor {
         match self {
             Initializer::Constant(x) => constant(x, dims),
@@ -102,5 +101,4 @@ impl Initializer {
             Initializer::Zeros => 12,
         }
     }
-
 }
