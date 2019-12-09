@@ -1,3 +1,4 @@
+//! Errors that may be returned by methods in the crate.
 use crate::data;
 use std::fmt;
 
