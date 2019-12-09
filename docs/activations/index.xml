@@ -26,13 +26,13 @@
 
 &lt;p&gt;$$g(x) = x$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative is then given by:&lt;/p&gt;
 
 &lt;p&gt;$$\frac{\partial g}{\partial x} = 1$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
 
@@ -56,7 +56,7 @@
 
 &lt;p&gt;That is, the function returns the input value if it is positive and zero otherwise.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/relu.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/relu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be expressed as:&lt;/p&gt;
 
@@ -66,7 +66,7 @@
 
 &lt;p&gt;$$\frac{\partial g}{\partial x} = \begin{cases} 1 &amp;amp; \text{if } x \geq 0 \newline 0 &amp;amp; \text{if } x &amp;lt; 0 \end{cases}$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/relu_derivative.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/relu_derivative.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].&lt;/p&gt;
 
@@ -92,7 +92,7 @@
 
 &lt;p&gt;This function maps any input to an output in the interval (0,1).&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/sigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/sigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be computed as&lt;/p&gt;
 
@@ -102,7 +102,7 @@
 
 &lt;p&gt;$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.&lt;/p&gt;
 
@@ -184,13 +184,13 @@
 
 &lt;p&gt;$$g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/tanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/tanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;and its derivative is&lt;/p&gt;
 
 &lt;p&gt;$$\frac{dg}{dx} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/dtanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/dtanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at $x=0$. This activation function is usually used with hidden layers and is a relatively common choice.&lt;/p&gt;
 

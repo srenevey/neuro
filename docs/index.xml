@@ -138,7 +138,7 @@ so that&lt;/p&gt;
         
         &lt;p&gt;In this example, we will train a simple feedforward neural network to learn an approximation of the XOR gate. The XOR function takes two inputs and returns a single output. Each input can be 0 or 1. If one and only one of the inputs is 1, then the XOR function returns 1. It returns 0 otherwise. The following table shows the training samples used to train the model.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/xor.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/xor.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The first step to create a neural network with neuro is to bring the required modules into scope.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;use&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;neuro&lt;/span&gt;::&lt;span style=&#34;color:#000&#34;&gt;activations&lt;/span&gt;::&lt;span style=&#34;color:#000&#34;&gt;Activation&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -274,7 +274,7 @@ so that&lt;/p&gt;
 
 &lt;p&gt;where the transpose of the weights is taken to have consistent dimensions. This last value is the output of the backward pass and is passed on to the previous layer. The following figure illustrates the forward and backward passes of the dense layer.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
 
@@ -420,6 +420,32 @@ Dense 		 1290
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;Ok&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(())&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Linear</title>
+      <link>https://srenevey.github.io/neuro/docs/activations/linear/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://srenevey.github.io/neuro/docs/activations/linear/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The linear activation function simply returns its input without applying any modification:&lt;/p&gt;
+
+&lt;p&gt;$$g(x) = x$$&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/linear_activation.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Its derivative is then given by:&lt;/p&gt;
+
+&lt;p&gt;$$\frac{\partial g}{\partial x} = 1$$&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
+
       </description>
     </item>
     
@@ -715,7 +741,7 @@ Number of validation samples: 	 500
 
 &lt;p&gt;That is, the function returns the input value if it is positive and zero otherwise.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/relu.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/relu.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be expressed as:&lt;/p&gt;
 
@@ -725,7 +751,7 @@ Number of validation samples: 	 500
 
 &lt;p&gt;$$\frac{\partial g}{\partial x} = \begin{cases} 1 &amp;amp; \text{if } x \geq 0 \newline 0 &amp;amp; \text{if } x &amp;lt; 0 \end{cases}$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/relu_derivative.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/relu_derivative.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The ReLU activation function has been shown to help with the vanishing gradient problem that may arise when training very deep networks [1].&lt;/p&gt;
 
@@ -751,7 +777,7 @@ Number of validation samples: 	 500
 
 &lt;p&gt;This function maps any input to an output in the interval (0,1).&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/sigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/sigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Its derivative can be computed as&lt;/p&gt;
 
@@ -761,7 +787,7 @@ Number of validation samples: 	 500
 
 &lt;p&gt;$$\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/dsigmoid.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This function is useful in, for instance, binary classification problems where the output of the sigmoid can be seen as the probability that the input belongs to the class.&lt;/p&gt;
 
@@ -843,13 +869,13 @@ Number of validation samples: 	 500
 
 &lt;p&gt;$$g(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/tanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/tanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;and its derivative is&lt;/p&gt;
 
 &lt;p&gt;$$\frac{dg}{dx} = 1 - \left(\frac{e^x - e^{-x}}{e^x + e^{-x}} \right)^2 = 1 - g(x)^2$$&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/images/graphs/dtanh.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/dtanh.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function has a similar shape as the logisitc function except that its domain definition is centered on 0. It also has a steeper derivative at $x=0$. This activation function is usually used with hidden layers and is a relatively common choice.&lt;/p&gt;
 
