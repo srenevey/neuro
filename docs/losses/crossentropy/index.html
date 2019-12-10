@@ -496,7 +496,7 @@ Now, if we assume that the loss activation of the last layer is a softmax functi
 
 <p>Hence, if we compute the derivative of $\mathcal{L}$ with respect to $x_l^{(i)}$, we have</p>
 
-<p>$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \sum_{k=1}^c\frac{\partial \mathcal{L}}{\partial \hat{y}_k^{(i)}}\frac{\partial \hat{y}_k^{(i)}}{\partial x_l^{(i)}}$$</p>
+<p>$$\frac{\partial \mathcal{L}}{\partial x_l^{(i)}} = \sum_{k=1}^C\frac{\partial \mathcal{L}}{\partial \hat{y}_k^{(i)}}\frac{\partial \hat{y}_k^{(i)}}{\partial x_l^{(i)}}$$</p>
 
 <p>where $C$ is the number of classes. If we replace the two fractions on the right hand side by the equations found previously, we have</p>
 
@@ -516,7 +516,7 @@ so that</p>
 
 <p>$$\nabla_X\mathcal{L}(\hat{Y}, Y) = \frac{1}{m}(\hat{Y} - Y)$$</p>
 
-<p>which can be easily computed. For this reason, the current implementation of the cross-entropy loss function in neuro assumes that the last activation is a softmax function. Conversly, the softmax activation function can only be used for the last layer of the network with the cross-entropy loss function. This might change in the future.</p>
+<p>which can be easily computed. For this reason, the current implementation of the cross-entropy loss function in neuro assumes that the last activation is a softmax function. Similarly, the softmax activation function can only be used for the last layer of the network with the cross-entropy loss function. This might change in the future.</p>
 
 	
 	
