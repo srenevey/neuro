@@ -114,20 +114,6 @@ so that&lt;/p&gt;
     </item>
     
     <item>
-      <title>Docs: BatchNorm</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/batchnorm/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://srenevey.github.io/neuro/docs/layers/batchnorm/</guid>
-      <description>
-        
-        
-        &lt;p&gt;TBD&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Examples: Binary Classification</title>
       <link>https://srenevey.github.io/neuro/examples/binary_classification/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -216,20 +202,6 @@ so that&lt;/p&gt;
     </item>
     
     <item>
-      <title>Docs: Conv2D</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/conv2d/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://srenevey.github.io/neuro/docs/layers/conv2d/</guid>
-      <description>
-        
-        
-        &lt;p&gt;TBD&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Dense</title>
       <link>https://srenevey.github.io/neuro/docs/layers/dense/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -240,7 +212,7 @@ so that&lt;/p&gt;
         
         
 
-&lt;p&gt;The dense, or fully connected, layer is one of the basic building blocks of neural networks.&lt;/p&gt;
+&lt;p&gt;This page is in a draft status.&lt;/p&gt;
 
 &lt;h2 id=&#34;forward-pass&#34;&gt;Forward Pass&lt;/h2&gt;
 
@@ -277,20 +249,6 @@ so that&lt;/p&gt;
 &lt;p&gt;&lt;img class=&#34;center&#34; width=&#34;320px&#34; height=&#34;396.23px&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/dense_layer.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The parameters of the layer are the weights and biases. During the forward pass, the parameters are used to compute the linear and nonlinear activations. The inputs and the linear activations are cached for later use by the backprop algorithm. During the backward pass, the parameters and the previously cached values are used to compute the gradients with respect to the weights and biases which are cached. These values will be used once the backprop algorithm has been computed for each layer. At that point, an optimizer will update all parameters in the network. Finally, the gradient with respect to the inputs is computed and returned.&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Dropout</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/dropout/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://srenevey.github.io/neuro/docs/layers/dropout/</guid>
-      <description>
-        
-        
-        &lt;p&gt;TBD&lt;/p&gt;
 
       </description>
     </item>
@@ -384,7 +342,7 @@ Number of classes:  10
 &lt;pre&gt;&lt;code&gt;Layer 		 Parameters
 ------------------------
 Conv2D 		 320
-Conv2D 		 640
+Conv2D 		 18496
 MaxPooling2D 	 0
 Dropout 	 0
 Dense 		 1605760
@@ -392,31 +350,31 @@ Dropout 	 0
 Dense 		 1290
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The model is then trained using a batch-size of 128 for 10 epochs. The loss and accuracy are printed at each epoch.&lt;/p&gt;
+&lt;p&gt;The model is then trained using a batch size of 128 for 10 epochs. The loss and accuracy are printed at each epoch.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Fit the model
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nn&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;fit&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;128&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;Some&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;Some&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;vec&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;Metrics&lt;/span&gt;::&lt;span style=&#34;color:#000&#34;&gt;Accuracy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]));&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;pre&gt;&lt;code&gt;Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
-[00:03:57] [##################################################] epoch: 1/10, train_loss: 0.19209713, train_metrics: [0.94103867], valid_loss: 0.19077446, valid_metrics: [0.94213045]
-[00:03:56] [##################################################] epoch: 2/10, train_loss: 0.11535329, train_metrics: [0.96535945], valid_loss: 0.122557975, valid_metrics: [0.9631459]
-[00:03:56] [##################################################] epoch: 3/10, train_loss: 0.09507526, train_metrics: [0.9722807], valid_loss: 0.10259698, valid_metrics: [0.97081596]
-[00:03:56] [##################################################] epoch: 4/10, train_loss: 0.07016009, train_metrics: [0.9787153], valid_loss: 0.07617864, valid_metrics: [0.97668123]
-[00:03:56] [##################################################] epoch: 5/10, train_loss: 0.07955978, train_metrics: [0.9751767], valid_loss: 0.086998425, valid_metrics: [0.9746628]
-[00:03:56] [##################################################] epoch: 6/10, train_loss: 0.04952572, train_metrics: [0.98462623], valid_loss: 0.06116682, valid_metrics: [0.981288]
-[00:03:56] [##################################################] epoch: 7/10, train_loss: 0.059433404, train_metrics: [0.98374027], valid_loss: 0.07112425, valid_metrics: [0.9789609]
-[00:03:56] [##################################################] epoch: 8/10, train_loss: 0.042370114, train_metrics: [0.9869748], valid_loss: 0.055109616, valid_metrics: [0.98449373]
-[00:03:56] [##################################################] epoch: 9/10, train_loss: 0.054824598, train_metrics: [0.9840312], valid_loss: 0.072369486, valid_metrics: [0.9773461]
-[00:03:56] [##################################################] epoch: 10/10, train_loss: 0.037083544, train_metrics: [0.9886462], valid_loss: 0.058777384, valid_metrics: [0.9813355]
+[00:03:39] [##################################################] epoch: 1/10, train_loss: 0.14974162, train_metrics: [0.95543385], valid_loss: 0.13641146, valid_metrics: [0.9574943]
+[00:03:37] [##################################################] epoch: 2/10, train_loss: 0.1080238, train_metrics: [0.9670441], valid_loss: 0.10321208, valid_metrics: [0.9709822]
+[00:03:37] [##################################################] epoch: 3/10, train_loss: 0.1022085, train_metrics: [0.9686363], valid_loss: 0.10104223, valid_metrics: [0.96950984]
+[00:03:38] [##################################################] epoch: 4/10, train_loss: 0.06277778, train_metrics: [0.98117226], valid_loss: 0.061833367, valid_metrics: [0.9813592]
+[00:03:38] [##################################################] epoch: 5/10, train_loss: 0.073444195, train_metrics: [0.9781361], valid_loss: 0.0757145, valid_metrics: [0.9767525]
+[00:03:38] [##################################################] epoch: 6/10, train_loss: 0.0445705, train_metrics: [0.9861152], valid_loss: 0.04884209, valid_metrics: [0.9848262]
+[00:03:38] [##################################################] epoch: 7/10, train_loss: 0.04536602, train_metrics: [0.98598564], valid_loss: 0.052444007, valid_metrics: [0.9848262]
+[00:03:38] [##################################################] epoch: 8/10, train_loss: 0.038486093, train_metrics: [0.9880564], valid_loss: 0.046293262, valid_metrics: [0.9865121]
+[00:03:37] [##################################################] epoch: 9/10, train_loss: 0.04065438, train_metrics: [0.9876518], valid_loss: 0.05229905, valid_metrics: [0.98249906]
+[00:03:38] [##################################################] epoch: 10/10, train_loss: 0.028990515, train_metrics: [0.9911508], valid_loss: 0.03809632, valid_metrics: [0.98834056]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;We see from this output that an accuracy of 98.13% on the validation set is achieved after 10 epochs. Once the model has been trained, we can evaluate it on the test set:&lt;/p&gt;
+&lt;p&gt;We see from this output that an accuracy of 98.83% on the validation set is achieved after 10 epochs. Once the model has been trained, we can evaluate it on the test set:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Evaluate the trained model on the test set
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nn&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;evaluate&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;Some&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;vec&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;Metrics&lt;/span&gt;::&lt;span style=&#34;color:#000&#34;&gt;Accuracy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]));&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre&gt;&lt;code&gt;Evaluation of the test set: loss: 0.049072135, metrics: [0.98516613]
+&lt;pre&gt;&lt;code&gt;Evaluation of the test set: loss: 0.04318123, metrics: [0.9857595]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The accuracy that this model achieves on the test test is 98.52% which represent a 1.71% increase compared with the feedforward neural network. Finally, we return &lt;code&gt;Ok&lt;/code&gt; if everything went fine.&lt;/p&gt;
+&lt;p&gt;The accuracy that this model achieves on the test test is 98.58% which represent a 1.77% increase compared with the feedforward neural network. Finally, we return &lt;code&gt;Ok&lt;/code&gt; to gracefully exit the program.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;Ok&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(())&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -445,20 +403,6 @@ Dense 		 1290
 &lt;p&gt;&lt;img class=&#34;center&#34; src=&#34;https://srenevey.github.io/neuro/neuro/images/graphs/dlinear_activation.svg&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This activation function is used for instance in the last layer of a regression network.&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: MaxPooling2D</title>
-      <link>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</guid>
-      <description>
-        
-        
-        &lt;p&gt;TBD&lt;/p&gt;
 
       </description>
     </item>

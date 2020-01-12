@@ -23,23 +23,11 @@
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/neuro/docs/layers/batchnorm/</loc>
-  </url>
-  
-  <url>
     <loc>https://srenevey.github.io/neuro/examples/binary_classification/</loc>
   </url>
   
   <url>
-    <loc>https://srenevey.github.io/neuro/docs/layers/conv2d/</loc>
-  </url>
-  
-  <url>
     <loc>https://srenevey.github.io/neuro/docs/layers/dense/</loc>
-  </url>
-  
-  <url>
-    <loc>https://srenevey.github.io/neuro/docs/layers/dropout/</loc>
   </url>
   
   <url>
@@ -60,10 +48,6 @@
   
   <url>
     <loc>https://srenevey.github.io/neuro/docs/losses/</loc>
-  </url>
-  
-  <url>
-    <loc>https://srenevey.github.io/neuro/docs/layers/maxpooling2d/</loc>
   </url>
   
   <url>

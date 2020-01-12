@@ -32,7 +32,7 @@
 
 
 
-<meta itemprop="wordCount" content="744">
+<meta itemprop="wordCount" content="746">
 
 
 
@@ -327,7 +327,7 @@ Number of classes:  10
 <pre><code>Layer 		 Parameters
 ------------------------
 Conv2D 		 320
-Conv2D 		 640
+Conv2D 		 18496
 MaxPooling2D 	 0
 Dropout 	 0
 Dense 		 1605760
@@ -335,31 +335,31 @@ Dropout 	 0
 Dense 		 1290
 </code></pre>
 
-<p>The model is then trained using a batch-size of 128 for 10 epochs. The loss and accuracy are printed at each epoch.</p>
+<p>The model is then trained using a batch size of 128 for 10 epochs. The loss and accuracy are printed at each epoch.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Fit the model
 </span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">fit</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">128</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">10</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">),</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
 <pre><code>Running on AMD_Radeon_Pro_555X_Compute_Engine using OpenCL.
-[00:03:57] [##################################################] epoch: 1/10, train_loss: 0.19209713, train_metrics: [0.94103867], valid_loss: 0.19077446, valid_metrics: [0.94213045]
-[00:03:56] [##################################################] epoch: 2/10, train_loss: 0.11535329, train_metrics: [0.96535945], valid_loss: 0.122557975, valid_metrics: [0.9631459]
-[00:03:56] [##################################################] epoch: 3/10, train_loss: 0.09507526, train_metrics: [0.9722807], valid_loss: 0.10259698, valid_metrics: [0.97081596]
-[00:03:56] [##################################################] epoch: 4/10, train_loss: 0.07016009, train_metrics: [0.9787153], valid_loss: 0.07617864, valid_metrics: [0.97668123]
-[00:03:56] [##################################################] epoch: 5/10, train_loss: 0.07955978, train_metrics: [0.9751767], valid_loss: 0.086998425, valid_metrics: [0.9746628]
-[00:03:56] [##################################################] epoch: 6/10, train_loss: 0.04952572, train_metrics: [0.98462623], valid_loss: 0.06116682, valid_metrics: [0.981288]
-[00:03:56] [##################################################] epoch: 7/10, train_loss: 0.059433404, train_metrics: [0.98374027], valid_loss: 0.07112425, valid_metrics: [0.9789609]
-[00:03:56] [##################################################] epoch: 8/10, train_loss: 0.042370114, train_metrics: [0.9869748], valid_loss: 0.055109616, valid_metrics: [0.98449373]
-[00:03:56] [##################################################] epoch: 9/10, train_loss: 0.054824598, train_metrics: [0.9840312], valid_loss: 0.072369486, valid_metrics: [0.9773461]
-[00:03:56] [##################################################] epoch: 10/10, train_loss: 0.037083544, train_metrics: [0.9886462], valid_loss: 0.058777384, valid_metrics: [0.9813355]
+[00:03:39] [##################################################] epoch: 1/10, train_loss: 0.14974162, train_metrics: [0.95543385], valid_loss: 0.13641146, valid_metrics: [0.9574943]
+[00:03:37] [##################################################] epoch: 2/10, train_loss: 0.1080238, train_metrics: [0.9670441], valid_loss: 0.10321208, valid_metrics: [0.9709822]
+[00:03:37] [##################################################] epoch: 3/10, train_loss: 0.1022085, train_metrics: [0.9686363], valid_loss: 0.10104223, valid_metrics: [0.96950984]
+[00:03:38] [##################################################] epoch: 4/10, train_loss: 0.06277778, train_metrics: [0.98117226], valid_loss: 0.061833367, valid_metrics: [0.9813592]
+[00:03:38] [##################################################] epoch: 5/10, train_loss: 0.073444195, train_metrics: [0.9781361], valid_loss: 0.0757145, valid_metrics: [0.9767525]
+[00:03:38] [##################################################] epoch: 6/10, train_loss: 0.0445705, train_metrics: [0.9861152], valid_loss: 0.04884209, valid_metrics: [0.9848262]
+[00:03:38] [##################################################] epoch: 7/10, train_loss: 0.04536602, train_metrics: [0.98598564], valid_loss: 0.052444007, valid_metrics: [0.9848262]
+[00:03:38] [##################################################] epoch: 8/10, train_loss: 0.038486093, train_metrics: [0.9880564], valid_loss: 0.046293262, valid_metrics: [0.9865121]
+[00:03:37] [##################################################] epoch: 9/10, train_loss: 0.04065438, train_metrics: [0.9876518], valid_loss: 0.05229905, valid_metrics: [0.98249906]
+[00:03:38] [##################################################] epoch: 10/10, train_loss: 0.028990515, train_metrics: [0.9911508], valid_loss: 0.03809632, valid_metrics: [0.98834056]
 </code></pre>
 
-<p>We see from this output that an accuracy of 98.13% on the validation set is achieved after 10 epochs. Once the model has been trained, we can evaluate it on the test set:</p>
+<p>We see from this output that an accuracy of 98.83% on the validation set is achieved after 10 epochs. Once the model has been trained, we can evaluate it on the test set:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#8f5902;font-style:italic">// Evaluate the trained model on the test set
 </span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000">nn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">evaluate</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87">Some</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">vec</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">Metrics</span>::<span style="color:#000">Accuracy</span><span style="color:#000;font-weight:bold">]));</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
-<pre><code>Evaluation of the test set: loss: 0.049072135, metrics: [0.98516613]
+<pre><code>Evaluation of the test set: loss: 0.04318123, metrics: [0.9857595]
 </code></pre>
 
-<p>The accuracy that this model achieves on the test test is 98.52% which represent a 1.71% increase compared with the feedforward neural network. Finally, we return <code>Ok</code> if everything went fine.</p>
+<p>The accuracy that this model achieves on the test test is 98.58% which represent a 1.77% increase compared with the feedforward neural network. Finally, we return <code>Ok</code> to gracefully exit the program.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#204a87">Ok</span><span style="color:#000;font-weight:bold">(())</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#000;font-weight:bold">}</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div>
@@ -405,7 +405,7 @@ Dense 		 1290
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2019 Sylvain Renevey All Rights Reserved</small>
+        <small class="text-white">&copy; 2020 Sylvain Renevey All Rights Reserved</small>
         
 	
 		
