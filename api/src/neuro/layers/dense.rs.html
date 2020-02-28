@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/layers/dense.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dense.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../neuro/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/layers/dense.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dense.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../neuro/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -228,29 +228,108 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Dense layer</span>
+<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryInto</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">activations</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">errors</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">layers</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">initializers</span>::<span class="ident">Initializer</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">initializers</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">regularizers</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
-
-<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">BigEndian</span>, <span class="ident">WriteBytesExt</span>};
-
 
 <span class="doccomment">/// Defines a dense (or fully connected) layer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This layer can be used as a conventional dense layer in feedforward neural networks or as a fully connected</span>
-<span class="doccomment">/// layer in convolutional neural networks. If the inputs of the layer are not one-dimensional, they are</span>
-<span class="doccomment">/// reshaped before being used to compute the activations.</span>
-<span class="doccomment">///</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dense</span>
 {
     <span class="ident">units</span>: <span class="ident">u64</span>,
@@ -259,7 +338,8 @@
     <span class="ident">dweights</span>: <span class="ident">Tensor</span>,
     <span class="ident">biases</span>: <span class="ident">Tensor</span>,
     <span class="ident">dbiases</span>: <span class="ident">Tensor</span>,
-    <span class="ident">input_shape</span>: <span class="ident">Dim4</span>,
+    <span class="ident">input_shape</span>: <span class="ident">Dim</span>,
+    <span class="ident">output_shape</span>: <span class="ident">Dim</span>,
     <span class="ident">linear_activation</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
     <span class="ident">previous_input</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
     <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>,
@@ -268,16 +348,14 @@
 }
 
 
+
 <span class="kw">impl</span> <span class="ident">Dense</span>
 {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Dense&quot;</span>;
+
     <span class="doccomment">/// Creates a dense layer with given number of units and activation function.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// By default, the weights are initialized with a HeUniform initializer and the biases with a Zeros initializer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `units`: number of units in the layer</span>
-    <span class="doccomment">/// * `activation`: activation function of the layer</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">units</span>: <span class="ident">u64</span>, <span class="ident">activation</span>: <span class="ident">Activation</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Dense</span><span class="op">&gt;</span> {
         <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">Dense</span> {
             <span class="ident">units</span>,
@@ -286,23 +364,17 @@
             <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
-            <span class="ident">input_shape</span>: <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">input_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">units</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
             <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
             <span class="ident">previous_input</span>: <span class="prelude-val">None</span>,
-            <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">HeUniform</span>,
+            <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">HeNormal</span>,
             <span class="ident">biases_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">Zeros</span>,
             <span class="ident">regularizer</span>: <span class="prelude-val">None</span>,
         })
     }
 
     <span class="doccomment">/// Creates a dense layer with the given parameters.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `units`: number of units in the layer</span>
-    <span class="doccomment">/// * `activation`: activation function of the layer</span>
-    <span class="doccomment">/// * `weights_initializer`: initializer used to initialize the weights of the layer</span>
-    <span class="doccomment">/// * `biases_initializer`: initializer used to initialize the biases of the layer</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">units</span>: <span class="ident">u64</span>,
                       <span class="ident">activation</span>: <span class="ident">Activation</span>,
                       <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>,
@@ -315,7 +387,8 @@
             <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
             <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
-            <span class="ident">input_shape</span>: <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">input_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">units</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
             <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
             <span class="ident">previous_input</span>: <span class="prelude-val">None</span>,
             <span class="ident">weights_initializer</span>,
@@ -323,32 +396,62 @@
             <span class="ident">regularizer</span>: <span class="prelude-val">None</span>,
         })
     }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_hdf5_group</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">hdf5</span>::<span class="ident">silence_errors</span>();
+        <span class="kw">let</span> <span class="ident">units</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;units&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the number of units.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">activation</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;activation&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the activation.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;weights&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the weights.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">biases</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;biases&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the biases.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;input_shape&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the input shape.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;output_shape&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the output shape.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">regularizer</span> <span class="op">=</span> <span class="ident">Regularizer</span>::<span class="ident">from_hdf5_group</span>(<span class="ident">group</span>);
+        <span class="kw">let</span> <span class="ident">weights_initializer</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;weights_initializer&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Initializer</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the weights initializer.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">biases_initializer</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;biases_initializer&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Initializer</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the biases initializer.&quot;</span>);
+
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="self">Self</span> {
+            <span class="ident">units</span>: <span class="ident">units</span>[<span class="number">0</span>],
+            <span class="ident">activation</span>: <span class="ident">activation</span>[<span class="number">0</span>].<span class="ident">try_into</span>().<span class="ident">expect</span>(<span class="string">&quot;Could not create activation variant.&quot;</span>),
+            <span class="ident">weights</span>: <span class="ident">Tensor</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>[<span class="number">0</span>]),
+            <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
+            <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">biases</span>[<span class="number">0</span>]),
+            <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
+            <span class="ident">input_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>(<span class="ident">input_shape</span>[<span class="number">0</span>])),
+            <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>(<span class="ident">output_shape</span>[<span class="number">0</span>])),
+            <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
+            <span class="ident">previous_input</span>: <span class="prelude-val">None</span>,
+            <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">weights_initializer</span>[<span class="number">0</span>]),
+            <span class="ident">biases_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">biases_initializer</span>[<span class="number">0</span>]),
+            <span class="ident">regularizer</span>,
+        })
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Layer</span> <span class="kw">for</span> <span class="ident">Dense</span>
 {
-    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input_shape</span>: <span class="ident">Dim4</span>) {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">Self</span>::<span class="ident">NAME</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input_shape</span>: <span class="ident">Dim</span>) {
         <span class="kw">let</span> <span class="ident">fan_in</span> <span class="op">=</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">0</span>] <span class="op">*</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">1</span>] <span class="op">*</span> <span class="ident">input_shape</span>.<span class="ident">get</span>()[<span class="number">2</span>];
         <span class="kw">let</span> <span class="ident">fan_out</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">units</span>;
-        <span class="self">self</span>.<span class="ident">weights</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">weights_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">fan_out</span>, <span class="ident">fan_in</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
-        <span class="self">self</span>.<span class="ident">biases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">biases_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">fan_out</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
+        <span class="self">self</span>.<span class="ident">weights</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">weights_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">fan_out</span>, <span class="ident">fan_in</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
+        <span class="self">self</span>.<span class="ident">biases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">biases_initializer</span>.<span class="ident">new_tensor</span>(<span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">fan_out</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">fan_in</span>, <span class="ident">fan_out</span>);
         <span class="self">self</span>.<span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">input_shape</span>;
     }
 
     <span class="kw">fn</span> <span class="ident">compute_activation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="kw">let</span> <span class="ident">flat_input</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">flatten</span>();
-        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">flat_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
         <span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="ident">linear_activation</span>)
     }
 
-
     <span class="kw">fn</span> <span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-        <span class="kw">let</span> <span class="ident">flat_input</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">flatten</span>();
-        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">flat_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">linear_activation</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="ident">input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>, <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">nonlinear_activation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="ident">linear_activation</span>);
 
         <span class="comment">// Save input and linear activation for efficient backprop</span>
-        <span class="self">self</span>.<span class="ident">previous_input</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">flat_input</span>);
+        <span class="self">self</span>.<span class="ident">previous_input</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">input</span>.<span class="ident">clone</span>());
         <span class="self">self</span>.<span class="ident">linear_activation</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">linear_activation</span>);
 
         <span class="comment">// Return the non linear activation</span>
@@ -356,26 +459,27 @@
     }
 
 
-    <span class="kw">fn</span> <span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">da</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
+    <span class="kw">fn</span> <span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">linear_activation</span> {
             <span class="prelude-val">Some</span>(<span class="ident">linear_activation</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">dz</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="ident">da</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">grad</span>(<span class="ident">linear_activation</span>), <span class="bool-val">true</span>);
+                <span class="kw">let</span> <span class="ident">linear_activation_grad</span> <span class="op">=</span> <span class="ident">mul</span>(<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">activation</span>.<span class="ident">grad</span>(<span class="ident">linear_activation</span>), <span class="bool-val">true</span>);
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">previous_input</span> {
                     <span class="prelude-val">Some</span>(<span class="ident">previous_input</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">dz</span>, <span class="ident">previous_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>).<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
+                        <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">=</span> <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="ident">linear_activation_grad</span>, <span class="ident">previous_input</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>).<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">regularizer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">regularizer</span> { <span class="self">self</span>.<span class="ident">dweights</span> <span class="op">+</span><span class="op">=</span> <span class="ident">regularizer</span>.<span class="ident">grad</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>) }
-                        <span class="self">self</span>.<span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">dz</span>.<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
+                        <span class="self">self</span>.<span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">linear_activation_grad</span>.<span class="ident">reduce</span>(<span class="ident">Reduction</span>::<span class="ident">MeanBatches</span>);
                     },
                     <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The previous activations have not been computed!&quot;</span>),
                 }
-                <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">dz</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>).<span class="ident">reshape</span>(<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">2</span>], <span class="ident">da</span>.<span class="ident">batch_size</span>()]))
+                <span class="comment">//matmul(&amp;self.weights, &amp;linear_activation_grad, MatProp::TRANS, MatProp::NONE).reshape(Dim4::new(&amp;[self.input_shape[0], self.input_shape[1], self.input_shape[2], input.batch_size()]))</span>
+                <span class="ident">matmul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>, <span class="kw-2">&amp;</span><span class="ident">linear_activation_grad</span>, <span class="ident">MatProp</span>::<span class="ident">TRANS</span>, <span class="ident">MatProp</span>::<span class="ident">NONE</span>)
             },
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The linear activations z have not been computed!&quot;</span>),
         }
     }
 
     <span class="kw">fn</span> <span class="ident">output_shape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Dim4</span> {
-        <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">units</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])
+        <span class="self">self</span>.<span class="ident">output_shape</span>
     }
 
 
@@ -389,61 +493,36 @@
     }
 
 
-    <span class="comment">// Currently not used!</span>
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">/*
-        writer.write(b&quot;dense\n&quot;)?;
-        writer.write(&amp;self.units.to_be_bytes())?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write(&amp;self.activation.id().to_be_bytes())?;
-        writer.write(b&quot;\n&quot;)?;
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>, <span class="ident">layer_number</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">group_name</span> <span class="op">=</span> <span class="ident">layer_number</span>.<span class="ident">to_string</span>() <span class="op">+</span> <span class="kw-2">&amp;</span><span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;_&quot;</span>) <span class="op">+</span> <span class="self">Self</span>::<span class="ident">NAME</span>;
+        <span class="kw">let</span> <span class="ident">dense</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">create_group</span>(<span class="kw-2">&amp;</span><span class="ident">group_name</span>)<span class="question-mark">?</span>;
 
-        // Weights dimensions
-        let dims: [[u8; 8]; 4] = [self.weights.dims().get()[0].to_be_bytes(), self.weights.dims().get()[1].to_be_bytes(), self.weights.dims().get()[2].to_be_bytes(), self.weights.dims().get()[3].to_be_bytes()];
-        let flat: Vec&lt;u8&gt; = dims.concat();
-        writer.write(flat.as_slice())?;
-        writer.write(b&quot;\n&quot;)?;
+        <span class="kw">let</span> <span class="ident">units</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;units&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">units</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">units</span>])<span class="question-mark">?</span>;
 
-        // Weights
-        let num_weights = (self.weights.dims().get()[0] * self.weights.dims().get()[1] * self.weights.dims().get()[2]) as usize;
-        let mut buf: Vec&lt;f64&gt; = vec![0.; num_weights];
-        self.weights.host(buf.as_mut_slice());
-        for weight in buf.iter() {
-            writer.write_f64::&lt;BigEndian&gt;(*weight)?;
-        }
-        writer.write(b&quot;\n&quot;)?;
+        <span class="kw">let</span> <span class="ident">activation</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">Activation</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;activation&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">activation</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">activation</span>])<span class="question-mark">?</span>;
 
-        // Biases dimensions
-        writer.write(&amp;self.biases.dims().get()[0].to_be_bytes())?;
-        writer.write(&amp;self.biases.dims().get()[1].to_be_bytes())?;
-        writer.write(&amp;self.biases.dims().get()[2].to_be_bytes())?;
-        writer.write(&amp;self.biases.dims().get()[3].to_be_bytes())?;
-        writer.write(b&quot;\n&quot;)?;
+        <span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;weights&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">weights</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">H5Tensor</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">weights</span>)])<span class="question-mark">?</span>;
 
-        // Biases
-        let num_biases = (self.biases.dims().get()[0] * self.biases.dims().get()[1] * self.biases.dims().get()[2]) as usize;
-        let mut buf: Vec&lt;f64&gt; = vec![0.; num_biases];
-        self.biases.host(buf.as_mut_slice());
-        for bias in buf.iter() {
-            writer.write_f64::&lt;BigEndian&gt;(*bias)?;
-        }
-        writer.write(b&quot;\n&quot;)?;
+        <span class="kw">let</span> <span class="ident">biases</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;biases&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">biases</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">H5Tensor</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">biases</span>)])<span class="question-mark">?</span>;
 
-        // Input dimensions
-        let dims: [[u8; 8]; 4] = [self.input_shape.get()[0].to_be_bytes(), self.input_shape.get()[1].to_be_bytes(), self.input_shape.get()[2].to_be_bytes(), self.input_shape.get()[3].to_be_bytes()];
-        let flat: Vec&lt;u8&gt; = dims.concat();
-        writer.write(flat.as_slice())?;
-        writer.write(b&quot;\n&quot;)?;
+        <span class="kw">let</span> <span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;input_shape&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">input_shape</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()])<span class="question-mark">?</span>;
 
-        // Weights and biases initializers
-        writer.write(&amp;self.weights_initializer.id().to_be_bytes())?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write(&amp;self.biases_initializer.id().to_be_bytes())?;
-        writer.write(b&quot;\n&quot;)?;
-*/</span>
+        <span class="kw">let</span> <span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;output_shape&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">output_shape</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">weights_initializer</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">H5Initializer</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;weights_initializer&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">weights_initializer</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">weights_initializer</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">biases_initializer</span> <span class="op">=</span> <span class="ident">dense</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">H5Initializer</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;biases_initializer&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">biases_initializer</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">biases_initializer</span>)<span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(())
     }
-
 
     <span class="kw">fn</span> <span class="ident">set_regularizer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">regularizer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regularizer</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">regularizer</span> <span class="op">=</span> <span class="ident">regularizer</span>;
@@ -456,7 +535,102 @@
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Dense</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Dense \t\t {}&quot;</span>, <span class="self">self</span>.<span class="ident">weights</span>.<span class="ident">elements</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">biases</span>.<span class="ident">elements</span>())
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{} \t\t {} \t\t [{}, {}, {}]&quot;</span>, <span class="self">Self</span>::<span class="ident">NAME</span>, <span class="self">self</span>.<span class="ident">weights</span>.<span class="ident">elements</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">biases</span>.<span class="ident">elements</span>(), <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">2</span>])
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">layers</span>::{<span class="ident">Dense</span>, <span class="ident">Layer</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">activations</span>::<span class="ident">Activation</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">initializers</span>::<span class="ident">Initializer</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">assert_approx_eq</span>;
+    <span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
+
+    <span class="kw">fn</span> <span class="ident">create_test_layer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Dense</span> {
+        <span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> [<span class="number">1.</span>, <span class="op">-</span><span class="number">2.</span>, <span class="number">5.</span>, <span class="number">3.</span>, <span class="op">-</span><span class="number">7.</span>, <span class="number">0.</span>];
+        <span class="kw">let</span> <span class="ident">biases</span> <span class="op">=</span> [<span class="number">2.</span>, <span class="op">-</span><span class="number">1.</span>];
+        <span class="ident">Dense</span> {
+            <span class="ident">units</span>: <span class="number">2</span>,
+            <span class="ident">activation</span>: <span class="ident">Activation</span>::<span class="ident">Linear</span>,
+            <span class="ident">weights</span>: <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>, <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>])),
+            <span class="ident">dweights</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
+            <span class="ident">biases</span>: <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">biases</span>, <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])),
+            <span class="ident">dbiases</span>: <span class="ident">Tensor</span>::<span class="ident">new_empty_tensor</span>(),
+            <span class="ident">input_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
+            <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]),
+            <span class="ident">linear_activation</span>: <span class="prelude-val">None</span>,
+            <span class="ident">previous_input</span>: <span class="prelude-val">None</span>,
+            <span class="ident">weights_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">HeUniform</span>,
+            <span class="ident">biases_initializer</span>: <span class="ident">Initializer</span>::<span class="ident">Zeros</span>,
+            <span class="ident">regularizer</span>: <span class="prelude-val">None</span>,
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_dense_forward</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">layer</span> <span class="op">=</span> <span class="ident">create_test_layer</span>();
+
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="op">-</span><span class="number">2.</span>, <span class="number">1.</span>, <span class="number">4.</span>, <span class="number">3.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">2.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+        <span class="kw">let</span> <span class="ident">layer_output</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">4</span>] <span class="op">=</span> [<span class="number">0.</span>; <span class="number">4</span>];
+        <span class="ident">layer_output</span>.<span class="ident">host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>);
+        <span class="kw">let</span> <span class="ident">expected_output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">4</span>] <span class="op">=</span> [<span class="op">-</span><span class="number">23.</span>, <span class="number">6.</span>, <span class="op">-</span><span class="number">14.</span>, <span class="op">-</span><span class="number">10.</span>];
+
+        <span class="macro">assert_approx_eq</span><span class="macro">!</span>(<span class="ident">output</span>, <span class="ident">expected_output</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_dense_input_gradient</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">layer</span> <span class="op">=</span> <span class="ident">create_test_layer</span>();
+
+        <span class="kw">let</span> <span class="ident">input_forward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="op">-</span><span class="number">2.</span>, <span class="number">1.</span>, <span class="number">4.</span>, <span class="number">3.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">2.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_forward</span>);
+
+        <span class="kw">let</span> <span class="ident">input_backward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1.</span>, <span class="op">-</span><span class="number">2.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">3.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+
+        <span class="kw">let</span> <span class="ident">layer_output</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_backward</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="number">0.</span>; <span class="number">6</span>];
+        <span class="ident">layer_output</span>.<span class="ident">host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>);
+        <span class="kw">let</span> <span class="ident">expected_output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="number">5.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="op">-</span><span class="number">7.</span>, <span class="op">-</span><span class="number">7.</span>, <span class="number">4.</span>, <span class="number">7.</span>];
+
+        <span class="macro">assert_approx_eq</span><span class="macro">!</span>(<span class="ident">output</span>, <span class="ident">expected_output</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_dense_weights_gradient</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">layer</span> <span class="op">=</span> <span class="ident">create_test_layer</span>();
+
+        <span class="kw">let</span> <span class="ident">input_forward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="op">-</span><span class="number">2.</span>, <span class="number">1.</span>, <span class="number">4.</span>, <span class="number">3.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">2.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_forward</span>);
+
+        <span class="kw">let</span> <span class="ident">input_backward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1.</span>, <span class="op">-</span><span class="number">2.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">3.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_backward</span>);
+        <span class="kw">let</span> <span class="ident">dweights</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">dweights</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="number">0.</span>; <span class="number">6</span>];
+        <span class="ident">dweights</span>.<span class="ident">host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>);
+        <span class="kw">let</span> <span class="ident">expected_output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="op">-</span><span class="number">2.5</span>, <span class="number">6.5</span>, <span class="number">1.</span>, <span class="op">-</span><span class="number">2.5</span>, <span class="number">1.</span>, <span class="op">-</span><span class="number">1.</span>];
+
+        <span class="macro">assert_approx_eq</span><span class="macro">!</span>(<span class="ident">output</span>, <span class="ident">expected_output</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_dense_biases_gradient</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">layer</span> <span class="op">=</span> <span class="ident">create_test_layer</span>();
+        <span class="kw">let</span> <span class="ident">input_forward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="op">-</span><span class="number">2.</span>, <span class="number">1.</span>, <span class="number">4.</span>, <span class="number">3.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">2.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_activation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_forward</span>);
+
+        <span class="kw">let</span> <span class="ident">input_backward</span> <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1.</span>, <span class="op">-</span><span class="number">2.</span>, <span class="op">-</span><span class="number">1.</span>, <span class="number">3.</span>], <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>]));
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_dactivation_mut</span>(<span class="kw-2">&amp;</span><span class="ident">input_backward</span>);
+        <span class="kw">let</span> <span class="ident">dbiases</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">dbiases</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">2</span>] <span class="op">=</span> [<span class="number">0.</span>; <span class="number">2</span>];
+        <span class="ident">dbiases</span>.<span class="ident">host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>);
+        <span class="kw">let</span> <span class="ident">expected_output</span>: [<span class="ident">PrimitiveType</span>; <span class="number">2</span>] <span class="op">=</span> [<span class="number">0.</span>, <span class="number">0.5</span>];
+
+        <span class="macro">assert_approx_eq</span><span class="macro">!</span>(<span class="ident">output</span>, <span class="ident">expected_output</span>);
     }
 }</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "neuro";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "neuro";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

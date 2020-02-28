@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/optimizers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>optimizers.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../neuro/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/optimizers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>optimizers.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../neuro/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -423,122 +423,166 @@
 <span id="423">423</span>
 <span id="424">424</span>
 <span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Optimizers used to train the neural network.</span>
+<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">errors</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">io</span>::<span class="ident">save_vec_tensor</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">layers</span>::<span class="ident">Layer</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">BufWriter</span>, <span class="ident">Write</span>};
-
-<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">BigEndian</span>, <span class="ident">WriteBytesExt</span>};
 
 <span class="doccomment">/// Defines the trait that needs to be implemented by any optimizer working with neuro.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Optimizer</span>
 {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>;
     <span class="kw">fn</span> <span class="ident">update_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Layer</span>, <span class="ident">layer_idx</span>: <span class="ident">usize</span>);
     <span class="kw">fn</span> <span class="ident">update_time_step</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {}
-    <span class="kw">fn</span> <span class="ident">initialize_opt_params</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim4</span>, <span class="ident">Dim4</span>)<span class="op">&gt;</span>);
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
-    <span class="comment">/*
-    fn write_vec_array(vec: &amp;Vec&lt;Tensor&gt;, writer: &amp;mut BufWriter&lt;fs::File&gt;) -&gt; io::Result&lt;()&gt; {
-        for tensor in vec.iter() {
-            let dims: [[u8; 8]; 4] = [tensor.dims().get()[0].to_be_bytes(), tensor.dims().get()[1].to_be_bytes(), tensor.dims().get()[2].to_be_bytes(), tensor.dims().get()[3].to_be_bytes()];
-            let flat: Vec&lt;u8&gt; = dims.concat();
-            writer.write(flat.as_slice())?;
-            writer.write(b&quot;\n&quot;)?;
-
-            let num_params = (tensor.dims().get()[0] * tensor.dims().get()[1] * tensor.dims().get()[2]) as usize;
-            let mut buf: Vec&lt;f64&gt; = vec![0.; num_params];
-            tensor.host(buf.as_mut_slice());
-            for value in buf.iter() {
-                writer.write_f64::&lt;BigEndian&gt;(*value)?;
-            }
-            writer.write(b&quot;\n&quot;)?;
-
-        }
-        Ok(())
-    }
-    */</span>
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim</span>, <span class="ident">Dim</span>)<span class="op">&gt;</span>);
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">File</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 }
+
 
 <span class="doccomment">/// Stochastic Gradient Descent</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SGD</span> {
     <span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">momentum</span>: <span class="ident">PrimitiveType</span>,
-    <span class="ident">vdw</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">vdb</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
+    <span class="ident">first_moment_est</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>; <span class="number">2</span>],
 }
 
 <span class="kw">impl</span> <span class="ident">SGD</span> {
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;SGD&quot;</span>;
+
     <span class="doccomment">/// Creates a Stochastic Gradient Descent optimizer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SGD</span> {
         <span class="ident">SGD</span> {
             <span class="ident">learning_rate</span>,
             <span class="ident">momentum</span>: <span class="number">0.0</span>,
-            <span class="ident">vdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">vdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
     }
 
     <span class="doccomment">/// Creates a Stochastic Gradient Descent optimizer with momentum estimation.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
-    <span class="doccomment">/// * `momentum`: momentum coefficient</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>, <span class="ident">momentum</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SGD</span> {
         <span class="ident">SGD</span> {
             <span class="ident">learning_rate</span>,
             <span class="ident">momentum</span>,
-            <span class="ident">vdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">vdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_hdf5_group</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">SGD</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;learning_rate&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the learning rate.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">momentum</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;momentum&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the momentum.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_1.&quot;</span>);
+
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">SGD</span> {
+            <span class="ident">learning_rate</span>: <span class="ident">learning_rate</span>[<span class="number">0</span>],
+            <span class="ident">momentum</span>: <span class="ident">momentum</span>[<span class="number">0</span>],
+            <span class="ident">first_moment_est</span>: [<span class="ident">first_moment_est_0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">first_moment_est_1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+        })
     }
 }
 
+
 <span class="kw">impl</span> <span class="ident">Optimizer</span> <span class="kw">for</span> <span class="ident">SGD</span>
 {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">Self</span>::<span class="ident">NAME</span>
+    }
+
     <span class="kw">fn</span> <span class="ident">update_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
                          <span class="ident">layer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Layer</span>,
                          <span class="ident">layer_idx</span>: <span class="ident">usize</span>
     ) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">param</span>, <span class="ident">dparam</span>)) <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">parameters_mut</span>() {
-            <span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">momentum</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="number">0</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">momentum</span>);
-            <span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">momentum</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="number">1</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">momentum</span>);
-
-            <span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-            <span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">0</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">1</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">param</span>.<span class="ident">len</span>() {
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">momentum</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="ident">i</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">momentum</span>);
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
+                <span class="kw-2">*</span><span class="ident">param</span>[<span class="ident">i</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+            }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">initialize_opt_params</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim4</span>, <span class="ident">Dim4</span>)<span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim</span>, <span class="ident">Dim</span>)<span class="op">&gt;</span>) {
         <span class="kw">for</span> <span class="ident">dim</span> <span class="kw">in</span> <span class="ident">layers_dims</span> {
-            <span class="self">self</span>.<span class="ident">vdw</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
-            <span class="self">self</span>.<span class="ident">vdb</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">/*
-        writer.write_u64::&lt;BigEndian&gt;(0)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.learning_rate)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.momentum)?;
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">File</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
 
-        Self::write_vec_array(&amp;self.vdw, writer)?;
-        Self::write_vec_array(&amp;self.vdb, writer)?;
-        */</span>
+        <span class="kw">let</span> <span class="ident">optimizer</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">create_group</span>(<span class="string">&quot;optimizer&quot;</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">opt_type</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;type&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">opt_type</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span>::<span class="ident">from_str</span>(<span class="self">Self</span>::<span class="ident">NAME</span>).<span class="ident">unwrap</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;learning_rate&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">learning_rate</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">learning_rate</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">momentum</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;momentum&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">momentum</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">momentum</span>])<span class="question-mark">?</span>;
+
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>], <span class="string">&quot;first_moment_est_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>], <span class="string">&quot;first_moment_est_1&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -552,20 +596,18 @@
     <span class="ident">beta2</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">time_step</span>: <span class="ident">i32</span>,
-    <span class="ident">vdw</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">vdb</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">sdw</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">sdb</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
+    <span class="ident">first_moment_est</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>; <span class="number">2</span>],
+    <span class="ident">second_moment_est</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>; <span class="number">2</span>],
 }
 
 <span class="kw">impl</span> <span class="ident">Adam</span> {
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Adam&quot;</span>;
+
     <span class="doccomment">/// Creates an Adam optimizer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The exponential decay rates for the first and second moment estimates are set to 0.9 and 0.999 respectively.</span>
     <span class="doccomment">/// The epsilon value used for numerical stability is 1e-8.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Adam</span> {
         <span class="ident">Adam</span> {
@@ -574,20 +616,18 @@
             <span class="ident">beta2</span>: <span class="number">0.999</span>,
             <span class="ident">eps</span>: <span class="number">1e-8</span>,
             <span class="ident">time_step</span>: <span class="number">0</span>,
-            <span class="ident">vdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">vdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
+            <span class="ident">second_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
     }
 
     <span class="doccomment">/// Creates an Adam optimizer with the given parameters.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
-    <span class="doccomment">/// * `beta1`: exponential decay rate for the first moment estimate</span>
-    <span class="doccomment">/// * `beta2`: exponential decay rate for the second moment estimate</span>
-    <span class="doccomment">/// * `eps`: small constant used for numerical stability</span>
+    <span class="doccomment">/// * `learning_rate` - learning rate used to update the parameters of the layers.</span>
+    <span class="doccomment">/// * `beta1` - exponential decay rate for the first moment estimate.</span>
+    <span class="doccomment">/// * `beta2` - exponential decay rate for the second moment estimate.</span>
+    <span class="doccomment">/// * `eps` - small constant used for numerical stability.</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>,
                       <span class="ident">beta1</span>: <span class="ident">PrimitiveType</span>,
@@ -600,43 +640,61 @@
             <span class="ident">beta2</span>,
             <span class="ident">eps</span>,
             <span class="ident">time_step</span>: <span class="number">0</span>,
-            <span class="ident">vdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">vdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
+            <span class="ident">second_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_hdf5_group</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Adam</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;learning_rate&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the learning rate.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">beta1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;beta1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve beta1.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">beta2</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;beta2&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve beta2.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;eps&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the epsilon value.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">time_step</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;time_step&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the time step.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_1.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">second_moment_est_0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;second_moment_est_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve second_moment_est_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">second_moment_est_1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;second_moment_est_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve second_moment_est_1.&quot;</span>);
+
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">Adam</span> {
+            <span class="ident">learning_rate</span>: <span class="ident">learning_rate</span>[<span class="number">0</span>],
+            <span class="ident">beta1</span>: <span class="ident">beta1</span>[<span class="number">0</span>],
+            <span class="ident">beta2</span>: <span class="ident">beta2</span>[<span class="number">0</span>],
+            <span class="ident">eps</span>: <span class="ident">eps</span>[<span class="number">0</span>],
+            <span class="ident">time_step</span>: <span class="ident">time_step</span>[<span class="number">0</span>],
+            <span class="ident">first_moment_est</span>: [<span class="ident">first_moment_est_0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">first_moment_est_1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+            <span class="ident">second_moment_est</span>: [<span class="ident">second_moment_est_0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">second_moment_est_1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+        })
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Optimizer</span> <span class="kw">for</span> <span class="ident">Adam</span>
 {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">Self</span>::<span class="ident">NAME</span>
+    }
+
     <span class="kw">fn</span> <span class="ident">update_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
                          <span class="ident">layer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Layer</span>,
                          <span class="ident">layer_idx</span>: <span class="ident">usize</span>
     ) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">param</span>, <span class="ident">dparam</span>)) <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">parameters_mut</span>() {
-            <span class="comment">// Update biased first moment estimate</span>
-            <span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta1</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="number">0</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>);
-            <span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta1</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="number">1</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>);
 
-            <span class="comment">// Update biased second moment estimate</span>
-            <span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta2</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="number">0</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>);
-            <span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta2</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="number">1</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>);
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">param</span>.<span class="ident">len</span>() {
+                <span class="comment">// Update the biased first and second moment estimates</span>
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta1</span> <span class="op">+</span> <span class="ident">dparam</span>[<span class="ident">i</span>] <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>);
+                <span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">beta2</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="ident">i</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="ident">i</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>);
 
-            <span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-            <span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-            <span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-            <span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
+                <span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
 
-            <span class="comment">// Correct both estimates</span>
-            <span class="kw">let</span> <span class="ident">vdw_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdw</span>[<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
-            <span class="kw">let</span> <span class="ident">vdb_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vdb</span>[<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
-            <span class="kw">let</span> <span class="ident">sdw_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
-            <span class="kw">let</span> <span class="ident">sdb_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
+                <span class="comment">// Correct both estimates</span>
+                <span class="kw">let</span> <span class="ident">first_moment_est_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta1</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
+                <span class="kw">let</span> <span class="ident">second_moment_est_corr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">/</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">beta2</span>.<span class="ident">powi</span>(<span class="self">self</span>.<span class="ident">time_step</span>));
 
-            <span class="comment">// Update the layer&#39;s parameters</span>
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">0</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">vdw_corr</span> <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">sdw_corr</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">1</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">vdb_corr</span> <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">sdb_corr</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+                <span class="comment">// Update the parameter</span>
+                <span class="kw-2">*</span><span class="ident">param</span>[<span class="ident">i</span>] <span class="op">-</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">first_moment_est_corr</span> <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="ident">second_moment_est_corr</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+            }
         }
     }
 
@@ -644,35 +702,43 @@
         <span class="self">self</span>.<span class="ident">time_step</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
     }
 
-    <span class="kw">fn</span> <span class="ident">initialize_opt_params</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim4</span>, <span class="ident">Dim4</span>)<span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim</span>, <span class="ident">Dim</span>)<span class="op">&gt;</span>) {
+
         <span class="kw">for</span> <span class="ident">dim</span> <span class="kw">in</span> <span class="ident">layers_dims</span> {
-            <span class="self">self</span>.<span class="ident">vdw</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
-            <span class="self">self</span>.<span class="ident">vdb</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
-            <span class="self">self</span>.<span class="ident">sdw</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
-            <span class="self">self</span>.<span class="ident">sdb</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
+            <span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
+            <span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="number">1</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">/*
-        writer.write_u64::&lt;BigEndian&gt;(1)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.learning_rate)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.beta1)?;
-        writer.write(b&quot;\n&quot;);
-        writer.write_f64::&lt;BigEndian&gt;(self.beta2)?;
-        writer.write(b&quot;\n&quot;);
-        writer.write_f64::&lt;BigEndian&gt;(self.eps)?;
-        writer.write(b&quot;\n&quot;);
-        writer.write_u64::&lt;BigEndian&gt;(self.iteration)?;
-        writer.write(b&quot;\n&quot;);
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">File</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
 
-        Self::write_vec_array(&amp;self.vdw, writer)?;
-        Self::write_vec_array(&amp;self.vdb, writer)?;
-        Self::write_vec_array(&amp;self.sdw, writer)?;
-        Self::write_vec_array(&amp;self.sdb, writer)?;
-*/</span>
+        <span class="kw">let</span> <span class="ident">optimizer</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">create_group</span>(<span class="string">&quot;optimizer&quot;</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">opt_type</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;type&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">opt_type</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span>::<span class="ident">from_str</span>(<span class="self">Self</span>::<span class="ident">NAME</span>).<span class="ident">unwrap</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;learning_rate&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">learning_rate</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">learning_rate</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">beta1</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;beta1&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">beta1</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">beta1</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">beta2</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;beta2&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">beta2</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">beta2</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;eps&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">eps</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">eps</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">time_step</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;time_step&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">time_step</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">time_step</span>])<span class="question-mark">?</span>;
+
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>], <span class="string">&quot;first_moment_est_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>], <span class="string">&quot;first_moment_est_1&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="number">0</span>], <span class="string">&quot;second_moment_est_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">second_moment_est</span>[<span class="number">1</span>], <span class="string">&quot;second_moment_est_1&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -683,37 +749,28 @@
     <span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">decay_rate</span>: <span class="ident">PrimitiveType</span>,
     <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>,
-    <span class="ident">sdw</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
-    <span class="ident">sdb</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>,
+    <span class="ident">first_moment_est</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span>; <span class="number">2</span>],
 }
 
 <span class="kw">impl</span> <span class="ident">RMSProp</span> {
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;RMSProp&quot;</span>;
 
     <span class="doccomment">/// Creates an RMSProp optimizer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The exponential decay rate for the first moment estimate is set to 0.9 and the epsilon value used for</span>
     <span class="doccomment">/// numerical stability to 1e-8.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RMSProp</span> {
         <span class="ident">RMSProp</span> {
             <span class="ident">learning_rate</span>,
             <span class="ident">decay_rate</span>: <span class="number">0.9</span>,
             <span class="ident">eps</span>: <span class="number">1e-8</span>,
-            <span class="ident">sdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
     }
 
     <span class="doccomment">/// Creates an RMSProp optimizer with the given parameters.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `learning_rate`: learning rate used to update the parameters of the layers</span>
-    <span class="doccomment">/// * `decay_rate`: exponential decay rate of the moving average</span>
-    <span class="doccomment">/// * `eps`: small constant used for numerical stability</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">learning_rate</span>: <span class="ident">PrimitiveType</span>,
                       <span class="ident">decay_rate</span>: <span class="ident">PrimitiveType</span>,
                       <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>
@@ -722,51 +779,68 @@
             <span class="ident">learning_rate</span>,
             <span class="ident">decay_rate</span>,
             <span class="ident">eps</span>,
-            <span class="ident">sdw</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">sdb</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">first_moment_est</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_hdf5_group</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">RMSProp</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;learning_rate&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the learning rate.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">decay_rate</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;decay_rate&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the decay rate.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;eps&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the epsilon value.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">first_moment_est_1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;first_moment_est_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve first_moment_est_1.&quot;</span>);
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">RMSProp</span> {
+            <span class="ident">learning_rate</span>: <span class="ident">learning_rate</span>[<span class="number">0</span>],
+            <span class="ident">decay_rate</span>: <span class="ident">decay_rate</span>[<span class="number">0</span>],
+            <span class="ident">eps</span>: <span class="ident">eps</span>[<span class="number">0</span>],
+            <span class="ident">first_moment_est</span>: [<span class="ident">first_moment_est_0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">first_moment_est_1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+        })
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Optimizer</span> <span class="kw">for</span> <span class="ident">RMSProp</span>
 {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">Self</span>::<span class="ident">NAME</span>
+    }
+
     <span class="kw">fn</span> <span class="ident">update_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
                          <span class="ident">layer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Layer</span>,
                          <span class="ident">layer_idx</span>: <span class="ident">usize</span>
     ) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">param</span>, <span class="ident">dparam</span>)) <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">parameters_mut</span>() {
-            <span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">decay_rate</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="number">0</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">decay_rate</span>);
-            <span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">decay_rate</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="number">1</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">decay_rate</span>);
-
-            <span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-            <span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
-
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">0</span>] <span class="op">-</span><span class="op">=</span> <span class="ident">dparam</span>[<span class="number">0</span>] <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdw</span>[<span class="ident">layer_idx</span>]) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
-            <span class="kw-2">*</span><span class="ident">param</span>[<span class="number">1</span>] <span class="op">-</span><span class="op">=</span> <span class="ident">dparam</span>[<span class="number">1</span>] <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sdb</span>[<span class="ident">layer_idx</span>]) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">param</span>.<span class="ident">len</span>() {
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>] <span class="op">*</span> <span class="self">self</span>.<span class="ident">decay_rate</span> <span class="op">+</span> <span class="kw-2">&amp;</span>(<span class="ident">dparam</span>[<span class="ident">i</span>] <span class="op">*</span> <span class="ident">dparam</span>[<span class="ident">i</span>]) <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">decay_rate</span>);
+                <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>].<span class="ident">eval</span>();
+                <span class="kw-2">*</span><span class="ident">param</span>[<span class="ident">i</span>] <span class="op">-</span><span class="op">=</span> <span class="ident">dparam</span>[<span class="ident">i</span>] <span class="op">/</span> (<span class="kw-2">&amp;</span><span class="ident">sqrt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="ident">i</span>][<span class="ident">layer_idx</span>]) <span class="op">+</span> <span class="self">self</span>.<span class="ident">eps</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">learning_rate</span>;
+            }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">initialize_opt_params</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim4</span>, <span class="ident">Dim4</span>)<span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim</span>, <span class="ident">Dim</span>)<span class="op">&gt;</span>) {
         <span class="kw">for</span> <span class="ident">dim</span> <span class="kw">in</span> <span class="ident">layers_dims</span> {
-            <span class="self">self</span>.<span class="ident">sdw</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
-            <span class="self">self</span>.<span class="ident">sdb</span>.<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
+            <span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">1</span>));
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">/*
-        writer.write_u64::&lt;BigEndian&gt;(2)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.learning_rate)?;
-        writer.write(b&quot;\n&quot;)?;
-        writer.write_f64::&lt;BigEndian&gt;(self.beta2)?;
-        writer.write(b&quot;\n&quot;);
-        writer.write_f64::&lt;BigEndian&gt;(self.eps)?;
-        writer.write(b&quot;\n&quot;);
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">File</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">optimizer</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">create_group</span>(<span class="string">&quot;optimizer&quot;</span>)<span class="question-mark">?</span>;
 
-        Self::write_vec_array(&amp;self.sdw, writer);
-        Self::write_vec_array(&amp;self.sdb, writer);
-        */</span>
+        <span class="kw">let</span> <span class="ident">opt_type</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;type&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">opt_type</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span>::<span class="ident">from_str</span>(<span class="self">Self</span>::<span class="ident">NAME</span>).<span class="ident">unwrap</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">learning_rate</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;learning_rate&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">learning_rate</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">learning_rate</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">decay_rate</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;decay_rate&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">decay_rate</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">decay_rate</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;eps&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">eps</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">eps</span>])<span class="question-mark">?</span>;
+
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">0</span>], <span class="string">&quot;first_moment_est_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">first_moment_est</span>[<span class="number">1</span>], <span class="string">&quot;first_moment_est_1&quot;</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -782,6 +856,8 @@
 
 <span class="kw">impl</span> <span class="ident">AdaDelta</span> {
 
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;AdaDelta&quot;</span>;
+
     <span class="doccomment">/// Creates an AdaDelta optimizer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The exponential decay rate is set to 0.95 and the epsilon value used for numerical stability to 1e-6.</span>
@@ -795,12 +871,7 @@
         }
     }
 
-    <span class="doccomment">/// Creates an AdaDelta optimizer with the given parameters.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `decay_rate`: exponential decay rate used for the gradient and update accumulations</span>
-    <span class="doccomment">/// * `eps`: small constant used for numerical stability</span>
-    <span class="doccomment">///</span>
+    <span class="doccomment">/// Creates an AdaDelta optimizer with the parameters.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_param</span>(<span class="ident">decay_rate</span>: <span class="ident">PrimitiveType</span>, <span class="ident">eps</span>: <span class="ident">PrimitiveType</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AdaDelta</span> {
         <span class="ident">AdaDelta</span> {
             <span class="ident">decay_rate</span>,
@@ -809,11 +880,30 @@
             <span class="ident">updates_acc</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
         }
     }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_hdf5_group</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">Group</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AdaDelta</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">decay_rate</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;decay_rate&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the decay rate.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;eps&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the epsilon value.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">gradacc0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;grad_acc_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve grad_acc_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">gradacc1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;grad_acc_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve grad_acc_1.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">updatesacc0</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;updates_acc_0&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve updates_acc_0.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">updatesacc1</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">dataset</span>(<span class="string">&quot;updates_acc_1&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">H5Tensor</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve updates_acc_1.&quot;</span>);
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">AdaDelta</span> {
+            <span class="ident">decay_rate</span>: <span class="ident">decay_rate</span>[<span class="number">0</span>],
+            <span class="ident">eps</span>: <span class="ident">eps</span>[<span class="number">0</span>],
+            <span class="ident">grad_acc</span>: [<span class="ident">gradacc0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">gradacc1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+            <span class="ident">updates_acc</span>: [<span class="ident">updatesacc0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="ident">updatesacc1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">Tensor</span>::<span class="ident">from</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Tensor</span><span class="op">&gt;</span><span class="op">&gt;</span>()],
+        })
+    }
 }
 
 
 <span class="kw">impl</span> <span class="ident">Optimizer</span> <span class="kw">for</span> <span class="ident">AdaDelta</span>
 {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">Self</span>::<span class="ident">NAME</span>
+    }
+
     <span class="kw">fn</span> <span class="ident">update_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
                          <span class="ident">layer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Layer</span>,
                          <span class="ident">layer_idx</span>: <span class="ident">usize</span>
@@ -836,7 +926,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">initialize_opt_params</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim4</span>, <span class="ident">Dim4</span>)<span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">initialize_parameters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layers_dims</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Dim</span>, <span class="ident">Dim</span>)<span class="op">&gt;</span>) {
         <span class="kw">for</span> <span class="ident">dim</span> <span class="kw">in</span> <span class="ident">layers_dims</span> {
             <span class="self">self</span>.<span class="ident">grad_acc</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
             <span class="self">self</span>.<span class="ident">updates_acc</span>[<span class="number">0</span>].<span class="ident">push</span>(<span class="ident">Tensor</span>::<span class="ident">zeros</span>(<span class="ident">dim</span>.<span class="number">0</span>));
@@ -845,8 +935,24 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">File</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">hdf5</span>::<span class="ident">File</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">optimizer</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">create_group</span>(<span class="string">&quot;optimizer&quot;</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">opt_type</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;type&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">opt_type</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span>::<span class="ident">from_str</span>(<span class="self">Self</span>::<span class="ident">NAME</span>).<span class="ident">unwrap</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">decay_rate</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;decay_rate&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">decay_rate</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">decay_rate</span>])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">eps</span> <span class="op">=</span> <span class="ident">optimizer</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">PrimitiveType</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;eps&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">eps</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">eps</span>])<span class="question-mark">?</span>;
+
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">grad_acc</span>[<span class="number">0</span>], <span class="string">&quot;grad_acc_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">grad_acc</span>[<span class="number">1</span>], <span class="string">&quot;grad_acc_1&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">updates_acc</span>[<span class="number">0</span>], <span class="string">&quot;updates_acc_0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">save_vec_tensor</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">updates_acc</span>[<span class="number">1</span>], <span class="string">&quot;updates_acc_1&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(())
     }
 }</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "neuro";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "neuro";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/models.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>models.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../neuro/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/models.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>models.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../neuro/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -509,75 +509,16 @@
 <span id="509">509</span>
 <span id="510">510</span>
 <span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Base module to create neural networks.</span>
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">data</span>::{<span class="ident">DataSet</span>, <span class="ident">BatchIterator</span>, <span class="ident">Scaling</span>};
+<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">indicatif</span>::{<span class="ident">ProgressBar</span>, <span class="ident">ProgressStyle</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">data</span>::{<span class="ident">DataSet</span>, <span class="ident">BatchIterator</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">errors</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">io</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">layers</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">losses</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">metrics</span>::<span class="kw-2">*</span>;
@@ -585,85 +526,65 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">regularizers</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">tensor</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">BufWriter</span>, <span class="ident">BufReader</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
-
-<span class="kw">use</span> <span class="ident">arrayfire</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">indicatif</span>::{<span class="ident">ProgressBar</span>, <span class="ident">ProgressStyle</span>};
-
 <span class="kw">enum</span> <span class="ident">Mode</span> {
     <span class="ident">Test</span>,
     <span class="ident">Train</span>,
     <span class="ident">Valid</span>,
 }
 
+
 <span class="doccomment">/// Structure representing a neural network.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Network</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataSet</span>, <span class="ident">O</span>: <span class="ident">Optimizer</span>, <span class="ident">L</span>: <span class="ident">Loss</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Network</span>
 {
-    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">D</span>,
     <span class="ident">layers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Layer</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">loss_function</span>: <span class="ident">L</span>,
-    <span class="ident">optimizer</span>: <span class="ident">O</span>,
+    <span class="ident">loss_function</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Loss</span><span class="op">&gt;</span>,
+    <span class="ident">optimizer</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Optimizer</span><span class="op">&gt;</span>,
     <span class="ident">regularizer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regularizer</span><span class="op">&gt;</span>,
-    <span class="ident">input_shape</span>: <span class="ident">Dim4</span>,
-    <span class="ident">output_shape</span>: <span class="ident">Dim4</span>,
+    <span class="ident">input_shape</span>: <span class="ident">Dim</span>,
+    <span class="ident">output_shape</span>: <span class="ident">Dim</span>,
     <span class="ident">classes</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Network</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataSet</span>, <span class="ident">O</span>: <span class="ident">Optimizer</span>, <span class="ident">L</span>: <span class="ident">Loss</span>
+<span class="kw">impl</span> <span class="ident">Network</span>
 {
     <span class="doccomment">/// Creates an empty neural network.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `data`: dataset used to train the neural network</span>
-    <span class="doccomment">/// * `loss_function`: loss function minimized in the optimization process</span>
-    <span class="doccomment">/// * `optimizer`: algorithm used to optimize the parameters of the network</span>
-    <span class="doccomment">/// * `regularizer`: (optional) method used to regularize the model</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">D</span>,
+    <span class="doccomment">/// The input shape must be in the form [height, width, channel, 1]. Mini-batches are created along the fourth dimension.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Loss</span>, <span class="ident">O</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Optimizer</span><span class="op">&gt;</span>(<span class="ident">input_shape</span>: <span class="ident">Dim</span>,
                <span class="ident">loss_function</span>: <span class="ident">L</span>,
                <span class="ident">optimizer</span>: <span class="ident">O</span>,
                <span class="ident">regularizer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regularizer</span><span class="op">&gt;</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Network</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-        <span class="ident">Network</span> {
-            <span class="ident">data</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Network</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+
+        <span class="prelude-val">Ok</span>(<span class="ident">Network</span> {
             <span class="ident">layers</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">loss_function</span>,
-            <span class="ident">optimizer</span>,
+            <span class="ident">loss_function</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">loss_function</span>),
+            <span class="ident">optimizer</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">optimizer</span>),
             <span class="ident">regularizer</span>,
-            <span class="ident">input_shape</span>: <span class="ident">data</span>.<span class="ident">input_shape</span>(),
-            <span class="ident">output_shape</span>: <span class="ident">data</span>.<span class="ident">output_shape</span>(),
-            <span class="ident">classes</span>: <span class="ident">data</span>.<span class="ident">classes</span>(),
-        }
+            <span class="ident">input_shape</span>,
+            <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">classes</span>: <span class="prelude-val">None</span>,
+        })
     }
 
     <span class="doccomment">/// Adds a layer to the network.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `layer`: layer to be added</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">layer</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Layer</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">input_shape</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">last</span>() {
             <span class="prelude-val">Some</span>(<span class="ident">layer</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layer</span>.<span class="ident">output_shape</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">input_shape</span>(),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">input_shape</span>,
         };
         <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">layer</span>);
-        <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="ident">initialize_parameters</span>(<span class="ident">input_shape</span>);
-        <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="ident">set_regularizer</span>(<span class="self">self</span>.<span class="ident">regularizer</span>);
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">layer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">last_mut</span>() {
+            <span class="ident">layer</span>.<span class="ident">initialize_parameters</span>(<span class="ident">input_shape</span>);
+            <span class="ident">layer</span>.<span class="ident">set_regularizer</span>(<span class="self">self</span>.<span class="ident">regularizer</span>);
+
+            <span class="self">self</span>.<span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">output_shape</span>();
+        }
     }
 
 
     <span class="doccomment">/// Computes the output of the network for a given input.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `input`: array containing the samples to be evaluated</span>
-    <span class="doccomment">///</span>
     <span class="kw">fn</span> <span class="ident">forward</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
         <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(
             <span class="ident">input</span>.<span class="ident">copy</span>(),
@@ -675,10 +596,6 @@
     <span class="doccomment">/// Computes a forward pass of the network.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The intermediate linear activations computed during the forward pass are stored in each layer for efficient back propagation.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `input`: array containing the samples fed into the model</span>
-    <span class="doccomment">///</span>
     <span class="kw">fn</span> <span class="ident">forward_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Tensor</span>) {
         <span class="kw">for</span> <span class="ident">layer</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">iter_mut</span>() {
             <span class="kw-2">*</span><span class="ident">input</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">compute_activation_mut</span>(<span class="ident">input</span>);
@@ -688,9 +605,9 @@
     <span class="doccomment">/// Computes a backward pass of the network.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `y_pred`: output of the network</span>
-    <span class="doccomment">/// * `y_true`: true labels</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// * `y_pred` - The output of the network.</span>
+    <span class="doccomment">/// * `y_true` - The true labels.</span>
     <span class="kw">fn</span> <span class="ident">backward</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
                 <span class="ident">y_pred</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>,
                 <span class="ident">y_true</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>
@@ -710,14 +627,10 @@
 
     <span class="doccomment">/// Fits the neural network with the training data.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// The training data are shuffled at the beginning of each epoch, before batches are created.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `batch_size`: size of the mini-batches used for training</span>
-    <span class="doccomment">/// * `epochs`: number of epochs to train for</span>
-    <span class="doccomment">/// * `print_loss`: number of epochs between two computations and printing of the validation loss</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+    <span class="doccomment">/// The training data are shuffled at the beginning of each epoch, before batches are created. The progress is printed</span>
+    <span class="doccomment">/// at every `print_loss` epoch.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fit</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DataSet</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+               <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
                <span class="ident">batch_size</span>: <span class="ident">u64</span>,
                <span class="ident">epochs</span>: <span class="ident">u64</span>,
                <span class="ident">print_loss</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
@@ -729,11 +642,14 @@
 
         <span class="self">self</span>.<span class="ident">initialize_optimizer</span>();
 
+        <span class="comment">// If it&#39;s a classification problem, store the classes.</span>
+        <span class="self">self</span>.<span class="ident">classes</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">classes</span>();
+
         <span class="comment">// Initialize progress bar</span>
         <span class="kw">let</span> <span class="ident">num_bins</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">print_loss</span> {
             <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">num_batches_train</span> <span class="op">=</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">p</span> <span class="op">*</span> (<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">num_train_samples</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">batch_size</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
-                <span class="kw">let</span> <span class="ident">num_batches_valid</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">num_valid_samples</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">batch_size</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                <span class="kw">let</span> <span class="ident">num_batches_train</span> <span class="op">=</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">p</span> <span class="op">*</span> (<span class="ident">data</span>.<span class="ident">num_train_samples</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">batch_size</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                <span class="kw">let</span> <span class="ident">num_batches_valid</span> <span class="op">=</span> (<span class="ident">data</span>.<span class="ident">num_valid_samples</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">batch_size</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
                 <span class="ident">num_batches_train</span> <span class="op">+</span> <span class="ident">num_batches_valid</span>
             },
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">epochs</span>
@@ -745,8 +661,9 @@
         <span class="ident">progress_bar</span>.<span class="ident">set_style</span>(<span class="ident">sty</span>.<span class="ident">clone</span>());
 
 
+        <span class="comment">// Train</span>
         <span class="kw">for</span> <span class="ident">epoch</span> <span class="kw">in</span> <span class="number">1</span>..<span class="op">=</span><span class="ident">epochs</span> {
-            <span class="kw">let</span> (<span class="ident">x_train_shuffled</span>, <span class="ident">y_train_shuffled</span>) <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">shuffle</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">x_train</span>(), <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_train</span>());
+            <span class="kw">let</span> (<span class="ident">x_train_shuffled</span>, <span class="ident">y_train_shuffled</span>) <span class="op">=</span> <span class="ident">Tensor</span>::<span class="ident">shuffle</span>(<span class="ident">data</span>.<span class="ident">x_train</span>(), <span class="ident">data</span>.<span class="ident">y_train</span>());
             <span class="kw">let</span> <span class="ident">batches</span> <span class="op">=</span> <span class="ident">BatchIterator</span>::<span class="ident">new</span>((<span class="kw-2">&amp;</span><span class="ident">x_train_shuffled</span>, <span class="kw-2">&amp;</span><span class="ident">y_train_shuffled</span>), <span class="ident">batch_size</span>);
 
             <span class="comment">// Reset progress bar</span>
@@ -775,15 +692,19 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">print_iter</span>) <span class="op">=</span> <span class="ident">print_loss</span> {
                 <span class="kw">if</span> <span class="ident">epoch</span> <span class="op">%</span> <span class="ident">print_iter</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
 
-                    <span class="comment">// Compute the loss and metrics on the training set</span>
-                    <span class="kw">let</span> (<span class="ident">train_loss</span>, <span class="ident">train_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="ident">batch_size</span>, <span class="ident">Mode</span>::<span class="ident">Train</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">progress_bar</span>));
-                    <span class="kw">let</span> <span class="ident">train_metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">train_pred</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_train</span>(), <span class="ident">batch_size</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
+                    <span class="comment">// Compute the loss and metrics evaluated on the training set</span>
+                    <span class="kw">let</span> (<span class="ident">train_loss</span>, <span class="ident">train_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="ident">data</span>, <span class="ident">batch_size</span>, <span class="ident">Mode</span>::<span class="ident">Train</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">progress_bar</span>));
+                    <span class="kw">let</span> <span class="ident">train_metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">train_pred</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">y_train</span>(), <span class="ident">batch_size</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
 
-                    <span class="comment">// Compute the loss and metrics on the validation set</span>
-                    <span class="kw">let</span> (<span class="ident">valid_loss</span>, <span class="ident">valid_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="ident">batch_size</span>, <span class="ident">Mode</span>::<span class="ident">Valid</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">progress_bar</span>));
-                    <span class="kw">let</span> <span class="ident">valid_metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">valid_pred</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_valid</span>(), <span class="ident">batch_size</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
+                    <span class="comment">// Compute the loss and metrics evaluated on the validation set</span>
+                    <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">num_valid_samples</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+                        <span class="kw">let</span> (<span class="ident">valid_loss</span>, <span class="ident">valid_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="ident">data</span>, <span class="ident">batch_size</span>, <span class="ident">Mode</span>::<span class="ident">Valid</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">progress_bar</span>));
+                        <span class="kw">let</span> <span class="ident">valid_metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">valid_pred</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">y_valid</span>().<span class="ident">unwrap</span>(), <span class="ident">batch_size</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
+                        <span class="ident">progress_bar</span>.<span class="ident">finish_with_message</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;epoch: {}/{}, train_loss: {}, train_metrics: {:?}, valid_loss: {}, valid_metrics: {:?}&quot;</span>, <span class="ident">epoch</span>, <span class="ident">epochs</span>, <span class="ident">train_loss</span>, <span class="ident">train_metrics_values</span>, <span class="ident">valid_loss</span>, <span class="ident">valid_metrics_values</span>));
 
-                    <span class="ident">progress_bar</span>.<span class="ident">finish_with_message</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;epoch: {}/{}, train_loss: {}, train_metrics: {:?}, valid_loss: {}, valid_metrics: {:?}&quot;</span>, <span class="ident">epoch</span>, <span class="ident">epochs</span>, <span class="ident">train_loss</span>, <span class="ident">train_metrics_values</span>, <span class="ident">valid_loss</span>, <span class="ident">valid_metrics_values</span>));
+                    } <span class="kw">else</span> {
+                        <span class="ident">progress_bar</span>.<span class="ident">finish_with_message</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;epoch: {}/{}, train_loss: {}, train_metrics: {:?}&quot;</span>, <span class="ident">epoch</span>, <span class="ident">epochs</span>, <span class="ident">train_loss</span>, <span class="ident">train_metrics_values</span>));
+                    }
                 }
             }
         }
@@ -796,53 +717,27 @@
         <span class="kw">for</span> <span class="ident">layer</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">iter</span>() {
             <span class="kw">match</span> <span class="ident">layer</span>.<span class="ident">parameters</span>() {
                 <span class="prelude-val">Some</span>(<span class="ident">param</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dims</span>.<span class="ident">push</span>((<span class="ident">param</span>[<span class="number">0</span>].<span class="ident">dims</span>(), <span class="ident">param</span>[<span class="number">1</span>].<span class="ident">dims</span>())),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dims</span>.<span class="ident">push</span>((<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]), <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])))
+                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dims</span>.<span class="ident">push</span>((<span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), <span class="ident">Dim4</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])))
             }
-
         }
-        <span class="self">self</span>.<span class="ident">optimizer</span>.<span class="ident">initialize_opt_params</span>(<span class="ident">dims</span>);
+        <span class="self">self</span>.<span class="ident">optimizer</span>.<span class="ident">initialize_parameters</span>(<span class="ident">dims</span>);
     }
 
-
-    <span class="comment">/*
-    /// Computes the loss for the predicted output.
-    ///
-    /// # Arguments
-    /// * `y_pred`: predicted output of the model
-    /// * `y_true`: true labels
-    ///
-    fn compute_loss(&amp;self,
-                    y_pred: &amp;Tensor,
-                    y_true: &amp;Tensor
-    ) -&gt; PrimitiveType {
-        let regularization = match &amp;self.regularizer {
-            Some(regularizer) =&gt; {
-                let mut weights: Vec&lt;&amp;Tensor&gt; = Vec::new();
-                for layer in self.layers.iter() {
-                    match layer.parameters() {
-                        Some(params) =&gt; weights.push(params[0]),
-                        None =&gt; {}
-                    }
-                }
-                regularizer.eval(weights)
-            },
-            None =&gt; 0.0,
-        };
-        self.loss_function.eval(y_pred, y_true) + regularization
-    }
-    */</span>
 
     <span class="doccomment">/// Computes the loss and the predicted output.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `batch_size`: size of the mini-batches used to compute the loss</span>
-    <span class="doccomment">/// * `mode`: specifies if the loss is computed on the training, validation, or test set</span>
-    <span class="doccomment">/// * `bar`: (optional) reference to a progress bar used to show training progress</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">/// * `data` - The dataset containing the training, validation, and optionally test data.</span>
+    <span class="doccomment">/// * `batch_size` - The size of the mini-batches used to compute the loss.</span>
+    <span class="doccomment">/// * `mode` - Flag specifying whether the loss is computed on the training, validation, or test set.</span>
+    <span class="doccomment">/// * `bar` - The reference to a progress bar used to show the training progress.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Return value</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Tuple containing the loss and the predicted output.</span>
-    <span class="doccomment">///</span>
-    <span class="kw">fn</span> <span class="ident">compute_loss</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+    <span class="kw">fn</span> <span class="ident">compute_loss</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DataSet</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
                     <span class="ident">batch_size</span>: <span class="ident">u64</span>,
                     <span class="ident">mode</span>: <span class="ident">Mode</span>,
                     <span class="ident">progress_bar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ProgressBar</span><span class="op">&gt;</span>
@@ -852,9 +747,9 @@
 
         <span class="comment">// Create batch iterator</span>
         <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">mode</span> {
-            <span class="ident">Mode</span>::<span class="ident">Train</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">x_train</span>(), <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_train</span>()),
-            <span class="ident">Mode</span>::<span class="ident">Valid</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">x_valid</span>(), <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_valid</span>()),
-            <span class="ident">Mode</span>::<span class="ident">Test</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">x_test</span>().<span class="ident">expect</span>(<span class="string">&quot;No test samples have been provided.&quot;</span>), <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_test</span>().<span class="ident">expect</span>(<span class="string">&quot;No test labels have been provided.&quot;</span>)),
+            <span class="ident">Mode</span>::<span class="ident">Train</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">data</span>.<span class="ident">x_train</span>(), <span class="ident">data</span>.<span class="ident">y_train</span>()),
+            <span class="ident">Mode</span>::<span class="ident">Valid</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">data</span>.<span class="ident">x_valid</span>().<span class="ident">unwrap</span>(), <span class="ident">data</span>.<span class="ident">y_valid</span>().<span class="ident">unwrap</span>()),
+            <span class="ident">Mode</span>::<span class="ident">Test</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">data</span>.<span class="ident">x_test</span>().<span class="ident">expect</span>(<span class="string">&quot;No test samples have been provided.&quot;</span>), <span class="ident">data</span>.<span class="ident">y_test</span>().<span class="ident">expect</span>(<span class="string">&quot;No test labels have been provided.&quot;</span>)),
         };
         <span class="kw">let</span> <span class="ident">batches</span> <span class="op">=</span> <span class="ident">BatchIterator</span>::<span class="ident">new</span>((<span class="ident">x</span>, <span class="ident">y</span>), <span class="ident">batch_size</span>);
         <span class="kw">let</span> <span class="ident">num_batches</span> <span class="op">=</span> <span class="ident">batches</span>.<span class="ident">num_batches</span>() <span class="kw">as</span> <span class="ident">PrimitiveType</span>;
@@ -886,104 +781,36 @@
     }
 
 
-    <span class="comment">/*
-    /// Computes the loss on the training set.
-    ///
-    /// # Arguments
-    /// * `batch_size`: size of the mini-batches used to propagate the training data
-    ///
-    fn compute_train_loss(&amp;self, batch_size: u64, bar: &amp;ProgressBar) -&gt; PrimitiveType {
-        let mut loss = 0.;
-
-        // Create batch iterator
-        let batches = BatchIterator::new((self.data.x_train(), self.data.y_train()), batch_size);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&amp;mini_batch_x);
-            loss += self.compute_loss(&amp;y_pred_batch, &amp;mini_batch_y);
-            bar.inc(1);
-        }
-        loss / num_batches
-    }
-
-
-    /// Evaluates the model with the validation data.
-    ///
-    /// # Returns
-    /// Returns the loss computed on the validation set and the predictions in a tuple.
-    ///
-    fn validate(&amp;self, batch_size: u64, bar: &amp;ProgressBar) -&gt; (PrimitiveType, Tensor) {
-        let mut loss = 0.;
-        let mut y_pred = Array::new_empty(self.output_shape);
-
-        // Create batch iterator
-        let batches = BatchIterator::new((self.data.x_valid(), self.data.y_valid()), batch_size);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        let mut count = 0;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&amp;mini_batch_x);
-            loss += self.compute_loss(&amp;y_pred_batch, &amp;mini_batch_y);
-
-            if count == 0 {
-                y_pred = y_pred_batch;
-            } else {
-                y_pred = join(3, &amp;y_pred, &amp;y_pred_batch);
-            }
-            count += 1;
-            bar.inc(1);
-        }
-        (loss / num_batches, y_pred)
-    }
-    */</span>
-
     <span class="doccomment">/// Evaluates the model on the test set.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `metrics`: vector containing the metrics that will be evaluated</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">metrics</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Metrics</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> (<span class="ident">loss</span>, <span class="ident">y_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="number">128</span>, <span class="ident">Mode</span>::<span class="ident">Test</span>, <span class="prelude-val">None</span>);
-        <span class="kw">let</span> <span class="ident">y_test</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_test</span>().<span class="ident">expect</span>(<span class="string">&quot;No test labels have been provided.&quot;</span>);
-        <span class="comment">/*
-        let mut loss = 0.;
-        let mut y_pred = Array::new_empty(self.output_shape);
-
-        let x_test = self.data.x_test().expect(&quot;No test samples have been provided.&quot;);
-        let y_test = self.data.y_test().expect(&quot;No test labels have been provided.&quot;);
-
-        // Create batch iterator
-        let batches = BatchIterator::new((x_test, y_test), 128);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        let mut count = 0;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&amp;mini_batch_x);
-            loss += self.compute_loss(&amp;y_pred_batch, &amp;mini_batch_y);
-
-            if count == 0 {
-                y_pred = y_pred_batch;
-            } else {
-                y_pred = join(3, &amp;y_pred, &amp;y_pred_batch);
-            }
-            count += 1;
-        }
-        loss /= num_batches;
-        */</span>
-        <span class="kw">let</span> <span class="ident">metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">y_pred</span>, <span class="ident">y_test</span>, <span class="number">128</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
+    <span class="doccomment">/// * `data` - The dataset containing the test data.</span>
+    <span class="doccomment">/// * `metrics` - A vector containing the metrics that will be evaluated.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DataSet</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                                <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
+                                <span class="ident">metrics</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Metrics</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    ) {
+        <span class="comment">// TODO: find a way to automatically compute a batch size that fits in the available GPU/CPU memory</span>
+        <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="number">128</span>;
+        <span class="kw">let</span> (<span class="ident">loss</span>, <span class="ident">y_pred</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_loss</span>(<span class="ident">data</span>, <span class="ident">batch_size</span>, <span class="ident">Mode</span>::<span class="ident">Test</span>, <span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">y_test</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">y_test</span>().<span class="ident">expect</span>(<span class="string">&quot;The dataset does not contain any test data.&quot;</span>);
+        <span class="kw">let</span> <span class="ident">metrics_values</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="ident">y_pred</span>, <span class="ident">y_test</span>, <span class="ident">batch_size</span>, <span class="kw-2">&amp;</span><span class="ident">metrics</span>);
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Evaluation of the test set: loss: {}, metrics: {:?}&quot;</span>, <span class="ident">loss</span>, <span class="ident">metrics_values</span>);
     }
-
 
 
     <span class="doccomment">/// Evaluates the metrics.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `y_pred`: labels predicted by the model</span>
-    <span class="doccomment">/// * `y_true`: true labels</span>
-    <span class="doccomment">/// * `batch_size`: y_pred and y_true are split in chunks of batch_size to reduce the memory footprint</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">/// * `y_pred` - The labels predicted by the model.</span>
+    <span class="doccomment">/// * `y_true` - The true labels.</span>
+    <span class="doccomment">/// * `batch_size` - y_pred and y_true are split in chunks of batch_size to reduce the memory footprint</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Return value</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Vector containing the values for each metric.</span>
-    <span class="doccomment">///</span>
     <span class="kw">fn</span> <span class="ident">compute_metrics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
                        <span class="ident">y_pred</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>,
                        <span class="ident">y_true</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>,
@@ -1028,56 +855,28 @@
     }
 
 
-
     <span class="doccomment">/// Computes the output of the network for the given input.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `input`: tensor of inputs. Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.</span>
+    <span class="doccomment">/// Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">/// # Return value</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Tensor of the predicted output</span>
-    <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">predict</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tensor</span> {
-
-        <span class="comment">// Normalize the input if the network has been trained on normalized samples</span>
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">x_train_stats</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">stats</span>) <span class="op">=</span><span class="op">&gt;</span> {},
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {}
-        }
-
-        <span class="comment">// Compute the output of the network</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y_pred</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">forward</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
-
-        <span class="comment">// Unscale the output values</span>
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">y_train_stats</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">stats</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">match</span> <span class="ident">stats</span>.<span class="number">0</span> {
-                    <span class="ident">Scaling</span>::<span class="ident">Normalized</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">y_min</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">stats</span>.<span class="number">1</span>;
-                        <span class="kw">let</span> <span class="ident">y_max</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">stats</span>.<span class="number">2</span>;
-                        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">y_max</span> <span class="op">-</span> <span class="ident">y_min</span>;
-                        <span class="ident">y_pred</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">range</span>, <span class="kw-2">&amp;</span><span class="ident">y_pred</span>, <span class="bool-val">true</span>), <span class="ident">y_max</span>, <span class="bool-val">true</span>);
-                    },
-                    <span class="ident">Scaling</span>::<span class="ident">Standarized</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">mean</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">stats</span>.<span class="number">1</span>;
-                        <span class="kw">let</span> <span class="ident">std</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">stats</span>.<span class="number">2</span>;
-                        <span class="ident">y_pred</span> <span class="op">=</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">mul</span>(<span class="ident">std</span>, <span class="kw-2">&amp;</span><span class="ident">y_pred</span>, <span class="bool-val">true</span>), <span class="ident">mean</span>, <span class="bool-val">true</span>);
-                    }
-                }
-            },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {},
-        }
-        <span class="ident">y_pred</span>
+        <span class="self">self</span>.<span class="ident">forward</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>)
     }
 
     <span class="doccomment">/// Predicts the class for the input.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `input`: tensor of inputs. Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.</span>
+    <span class="doccomment">/// Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">/// # Return value</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Vector of tuples containing the predicted class and the probability for each sample.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panic</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics if the model doesn&#39;t contain a classes dictionary.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">predict_class</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Tensor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">PrimitiveType</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">batch_size</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">dims</span>().<span class="ident">get</span>()[<span class="number">3</span>] <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">predictions</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">PrimitiveType</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">batch_size</span>);
@@ -1106,51 +905,120 @@
                     }
                 }
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The network is not aware of any classes.&quot;</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The network does not contain any classes dictionary.&quot;</span>),
         }
         <span class="ident">predictions</span>
     }
 
 
-    <span class="doccomment">/// Saves the model.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">/// * `filename`: name of the file where the model is saved</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">hdf5</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">hdf5</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">filename</span>, <span class="string">&quot;w&quot;</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Saves the model in HDF5 format.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">hdf5</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">filename</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">neuro_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>);
+        <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;neuro_version&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">version</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span>::<span class="ident">from_str</span>(<span class="ident">neuro_version</span>).<span class="ident">unwrap</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">loss</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;loss&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">loss</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">loss_function</span>.<span class="ident">id</span>()])<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">regularizer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">regularizer</span> { <span class="ident">regularizer</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>; };
+        <span class="self">self</span>.<span class="ident">optimizer</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;input_shape&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">input_shape</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">input_shape</span>.<span class="ident">get</span>()])<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">new_dataset</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>().<span class="ident">create</span>(<span class="string">&quot;output_shape&quot;</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="ident">output_shape</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">output_shape</span>.<span class="ident">get</span>()])<span class="question-mark">?</span>;
 
 
-        <span class="comment">/*
-        let f = fs::File::create(filename)?;
-        {
-            let mut writer = BufWriter::new(f);
-            writer.write(&amp;self.loss_function.id().to_be_bytes())?;
-            writer.write(b&quot;\n&quot;)?;
-            self.optimizer.save(&amp;mut writer)?;
-
-            // Save layers
-            for layer in self.layers.iter() {
-                layer.save(&amp;mut writer)?;
-            }
+        <span class="kw">let</span> <span class="ident">layers_group</span> <span class="op">=</span> <span class="ident">create_group</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>, <span class="string">&quot;layers&quot;</span>);
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">layer</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">layer</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">layers_group</span>, <span class="ident">i</span>)<span class="question-mark">?</span>;
         }
-        */</span>
+
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Model saved in: {}&quot;</span>, <span class="ident">filename</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="doccomment">/// Loads a model from a HDF5 file.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load</span>(<span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Network</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">hdf5</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">filename</span>);
+        <span class="kw">match</span> <span class="ident">file</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">file</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">hdf5</span>::<span class="ident">silence_errors</span>();
+
+                <span class="comment">// Shapes</span>
+                <span class="kw">let</span> <span class="ident">input_shape</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">dataset</span>(<span class="string">&quot;input_shape&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">shape</span><span class="op">|</span> <span class="ident">shape</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;No input shape in the file&quot;</span>);
+                <span class="kw">let</span> <span class="ident">output_shape</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">dataset</span>(<span class="string">&quot;output_shape&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">shape</span><span class="op">|</span> <span class="ident">shape</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span>[<span class="ident">u64</span>; <span class="number">4</span>]<span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the output shape&quot;</span>);
+
+                <span class="comment">// Layers</span>
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">layers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Layer</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+                <span class="kw">let</span> <span class="ident">layers_group</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">group</span>(<span class="string">&quot;layers&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the layers.&quot;</span>);
+                <span class="kw">let</span> <span class="ident">layers_name</span> <span class="op">=</span> <span class="ident">list_subgroups</span>(<span class="kw-2">&amp;</span><span class="ident">layers_group</span>);
+                <span class="kw">for</span> <span class="ident">layer</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">layers_name</span> {
+                    <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">layers_group</span>.<span class="ident">group</span>(<span class="ident">layer</span>).<span class="ident">unwrap</span>();
+                    <span class="kw">let</span> <span class="ident">layer_type</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">layer</span>.<span class="ident">split</span>(<span class="string">&#39;_&#39;</span>).<span class="ident">collect</span>();
+
+                    <span class="kw">match</span> <span class="ident">layer_type</span>[<span class="number">1</span>] {
+                        <span class="ident">BatchNorm</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">BatchNorm</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="ident">Conv2D</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">Conv2D</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="ident">Dense</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span>  <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">Dense</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="ident">Dropout</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">Dropout</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="ident">Flatten</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">Flatten</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="ident">MaxPool2D</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">layers</span>.<span class="ident">push</span>(<span class="ident">MaxPool2D</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>)),
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Unknown layer.&quot;</span>),
+                    }
+                }
+
+                <span class="comment">// Optimizer</span>
+                <span class="kw">let</span> <span class="ident">optimizer_group</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">group</span>(<span class="string">&quot;optimizer&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the optimizer.&quot;</span>);
+                <span class="kw">let</span> <span class="ident">opt_type</span> <span class="op">=</span> <span class="ident">optimizer_group</span>.<span class="ident">dataset</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ds</span><span class="op">|</span> <span class="ident">ds</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">hdf5</span>::<span class="ident">types</span>::<span class="ident">VarLenUnicode</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not retrieve the optimizer type.&quot;</span>);
+                <span class="kw">let</span> <span class="ident">optimizer</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Optimizer</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">opt_type</span>[<span class="number">0</span>].<span class="ident">as_str</span>() {
+                    <span class="ident">Adam</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Adam</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer_group</span>),
+                    <span class="ident">AdaDelta</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AdaDelta</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer_group</span>),
+                    <span class="ident">RMSProp</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RMSProp</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer_group</span>),
+                    <span class="ident">SGD</span>::<span class="ident">NAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SGD</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">optimizer_group</span>),
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Unknown optimizer.&quot;</span>),
+                };
+
+                <span class="kw">let</span> <span class="ident">loss_function_id</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">dataset</span>(<span class="string">&quot;loss&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">loss</span><span class="op">|</span> <span class="ident">loss</span>.<span class="ident">read_raw</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>()).<span class="ident">expect</span>(<span class="string">&quot;No loss function in the file&quot;</span>);
+                <span class="kw">let</span> <span class="ident">loss_function</span> <span class="op">=</span> <span class="ident">loss_from_id</span>(<span class="ident">loss_function_id</span>[<span class="number">0</span>]);
+
+                <span class="kw">let</span> <span class="ident">regularizer</span> <span class="op">=</span> <span class="ident">Regularizer</span>::<span class="ident">from_hdf5_group</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>);
+
+                <span class="prelude-val">Ok</span>(<span class="ident">Network</span> {
+                    <span class="ident">layers</span>,
+                    <span class="ident">loss_function</span>,
+                    <span class="ident">optimizer</span>,
+                    <span class="ident">regularizer</span>,
+                    <span class="ident">input_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">input_shape</span>[<span class="number">0</span>]),
+                    <span class="ident">output_shape</span>: <span class="ident">Dim</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">output_shape</span>[<span class="number">0</span>]),
+                    <span class="ident">classes</span>: <span class="prelude-val">None</span>
+                })
+            },
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)),
+        }
+    }
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Network</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>, <span class="ident">O</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataSet</span>, <span class="ident">O</span>: <span class="ident">Optimizer</span>, <span class="ident">L</span>: <span class="ident">Loss</span>
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Network</span>
 {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Layer \t\t Parameters&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;------------------------&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;=====&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Model&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;=====&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Input shape: [{}, {}, {}]&quot;</span>, <span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="ident">input_shape</span>[<span class="number">2</span>])<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Output shape: [{}, {}, {}]&quot;</span>, <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="ident">output_shape</span>[<span class="number">2</span>])<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Optimizer: {}&quot;</span>, <span class="self">self</span>.<span class="ident">optimizer</span>.<span class="ident">name</span>())<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">regularizer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">regularizer</span> { <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Regularizer: {}&quot;</span>, <span class="ident">regularizer</span>)<span class="question-mark">?</span>; }
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;\nLayer \t\t Parameters \t Output shape&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;---------------------------------------------&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">for</span> <span class="ident">layer</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">layers</span>.<span class="ident">iter</span>() {
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">layer</span>);
+            <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">layer</span>)<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 }</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "neuro";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "neuro";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

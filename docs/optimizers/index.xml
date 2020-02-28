@@ -26,9 +26,9 @@
 
 &lt;p&gt;This optimizer has first been introduced by Zeiler [1] in order to address two issues that arise in the fomulation of the Adagrad optimizer. In the Adagrad optimizer, the update rule is&lt;/p&gt;
 
-&lt;p&gt;$$x_{t+1} = x_t + \Delta x_t = x_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$&lt;/p&gt;
+&lt;p&gt;$$\theta_{t+1} = \theta_t + \Delta \theta_t = \theta_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$&lt;/p&gt;
 
-&lt;p&gt;where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. We see from this equation that if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes. This can be addressed by selecting a large $\eta$ but thus makes the method dependent on the choice of the learning rate. Also, since the gradient keeps accumulating in the denominator, the learning rate will continually decrease and eventually become zero, hence stopping the training. Adadelta was designed to address these two properties of Adagrad.&lt;/p&gt;
+&lt;p&gt;where $\theta_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. As can be seen from this equation, if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes. This can be addressed by selecting a large $\eta$ but thus makes the method dependent on the choice of the learning rate. Also, since the gradient keeps accumulating in the denominator, the learning rate will continually decrease and eventually become zero, hence stopping the training. Adadelta was designed to address these two limitations of Adagrad.&lt;/p&gt;
 
 &lt;p&gt;The Adadelta optimizer keeps track of only recent past gradients by accumulating them using an exponentially decaying average:&lt;/p&gt;
 
@@ -38,15 +38,15 @@
 
 &lt;p&gt;$$RMS[g]_{t} = \sqrt{E[g^2]_t + \epsilon}$$&lt;/p&gt;
 
-&lt;p&gt;where $\epsilon$ is a small constant added for numerical stability. The derivation of an expression for the numerator is based on the observation that the units of $x_t$ and $\Delta x_t$ should match and based on considerations on second order methods, the author proposes the following expression:&lt;/p&gt;
+&lt;p&gt;where $\epsilon$ is a small constant added for numerical stability. The derivation of an expression for the numerator is based on the observation that the units of $\theta_t$ and $\Delta \theta_t$ should match and based on considerations on second order methods, the author proposes the following expression:&lt;/p&gt;
 
-&lt;p&gt;$$E[\Delta x^2]_{t} = \rho E[\Delta x^2]_{t-1} + (1-\rho)\Delta x_t^2$$&lt;/p&gt;
+&lt;p&gt;$$E[\Delta \theta^2]_{t} = \rho E[\Delta \theta^2]_{t-1} + (1-\rho)\Delta \theta_t^2$$&lt;/p&gt;
 
-&lt;p&gt;$$RMS[\Delta x]_t = \sqrt{E[\Delta x^2]_t + \epsilon}$$&lt;/p&gt;
+&lt;p&gt;$$RMS[\Delta \theta]_t = \sqrt{E[\Delta \theta^2]_t + \epsilon}$$&lt;/p&gt;
 
 &lt;p&gt;Hence, the update term in the Adadelta method is&lt;/p&gt;
 
-&lt;p&gt;$$\Delta x_t = - \frac{RMS[g]_t}{RMS[\Delta x]_t}g_t$$&lt;/p&gt;
+&lt;p&gt;$$\Delta \theta_t = - \frac{RMS[g]_t}{RMS[\Delta \theta]_t}g_t$$&lt;/p&gt;
 
 &lt;p&gt;In neuro, the default values for $\rho$ and $\epsilon$ are&lt;/p&gt;
 

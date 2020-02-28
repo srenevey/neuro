@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["NeuroError",""]]});
+initSidebarItems({"enum":[["Error",""]]});

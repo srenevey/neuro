@@ -1,30 +1,34 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `neuro` crate."><meta name="keywords" content="rust, rustlang, rust-lang, neuro"><title>neuro - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../neuro/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate neuro</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all neuro's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'neuro', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/neuro/lib.rs.html#1-67' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>neuro</a></span></h1><div class='docblock'><h1 id="neuro" class="section-header"><a href="#neuro">Neuro</a></h1>
-<p>Neuro is a deep learning library that runs on the GPU. The architecture of the library is inspired by Keras and works by stacking layers.
-Currently supported layers are:</p>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `neuro` crate."><meta name="keywords" content="rust, rustlang, rust-lang, neuro"><title>neuro - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../neuro/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate neuro</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all neuro's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'neuro', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/neuro/lib.rs.html#1-72' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>neuro</a></span></h1><div class='docblock'><h1 id="neuro" class="section-header"><a href="#neuro">Neuro</a></h1>
+<p>Neuro is a deep learning library that runs on the GPU. The library is designed to be very modular and allow users
+to easily add custom activation functions, loss functions, layers, and optimizers.
+The library presently supports:</p>
 <ul>
-<li>BatchNorm</li>
-<li>Conv2D</li>
-<li>Dense</li>
-<li>Dropout</li>
-<li>MaxPooling2D</li>
+<li>Layers: BatchNorm, Conv2D, Dense, Dropout, Flatten, MaxPool2D.</li>
+<li>Optimizers: Adadelta, Adam, RMSprop, SGD.</li>
+<li>Activations: LeakyReLU, Linear, ReLU, Sigmoid, Softmax, Tanh.</li>
+<li>Loss functions: BinaryCrossEntropy, CrossEntropy, MeanAbsoluteError, MeanSquaredError, SoftmaxCrossEntropy.</li>
 </ul>
-<p>allowing the creation of feedforward and convolutional neural networks.</p>
-<h3 id="note" class="section-header"><a href="#note">Note</a></h3>
-<p>The crate is under heavy development and several features have not yet been implemented. Among them
-is the ability to save a trained network.</p>
-<h2 id="installation" class="section-header"><a href="#installation">Installation</a></h2>
+<p>Additionaly, many initialization schemes are available. The current implementation allows the creation
+of feedforward and convolutional neural networks. It is planned to add recurrent neural networks in the future.</p>
+<h1 id="installation" class="section-header"><a href="#installation">Installation</a></h1>
 <p>The crate is powered by ArrayFire to perform all operations on the GPU. The first step is therefore to
-<a href="https://crates.io/crates/arrayfire">install ArrayFire</a>. Once the library is installed, clone this repository
-and start using neuro by importing it in your project:</p>
-
-<div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">neuro</span>::<span class="kw-2">*</span>;</pre></div>
-<p>When building your project, make sure that the path to the ArrayFire library is in the path environment
+<a href="https://crates.io/crates/arrayfire">install this library</a>.
+When building a project, the path to the ArrayFire library must be in the path environment
 variables. For instance for a typical install (on Unix):</p>
+<pre><code class="language-bash">export DYLD_LIBRARY_PATH=/opt/arrayfire/lib
+</code></pre>
+<p>The models trained with neuro can be saved in the Hierarchical Data Format (HDF5). In order to do so, HDF5 1.8.4 or
+newer must be installed. Installation files can be found on the <a href="https://www.hdfgroup.org/downloads/hdf5">HDF Group website</a>.
+macOS users can install it with homebrew:</p>
+<pre><code class="language-bash">brew install hdf5
+</code></pre>
+<p>To start using the library, add the following line to the project's Cargo.toml file:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="ident">export</span> <span class="ident">DYLD_LIBRARY_PATH</span><span class="op">=</span><span class="op">/</span><span class="ident">opt</span><span class="op">/</span><span class="ident">arrayfire</span><span class="op">/</span><span class="ident">lib</span></pre></div>
-<p>In order to quickly get started, check out the <a href="https://srenevey.github.io/neuro/examples">examples</a>.</p>
+[<span class="ident">dependencies</span>]
+<span class="ident">neuro</span> <span class="op">=</span> <span class="string">&quot;0.1.0&quot;</span></pre></div>
+<p>It is highly recommended to build the project in release mode for considerable speedup (e.g. <code>cargo run my_project --release</code>).
+In order to quickly get started, check out the <a href="https://srenevey.github.io/neuro/examples">examples</a>.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use self::tensor::<a class="type" href="../neuro/tensor/type.Tensor.html" title="type neuro::tensor::Tensor">Tensor</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table><tr class='module-item'><td><a class="mod" href="activations/index.html" title='neuro::activations mod'>activations</a></td><td class='docblock-short'><p>Activation functions.</p>
@@ -40,4 +44,4 @@ variables. For instance for a typical install (on Unix):</p>
 </td></tr><tr class='module-item'><td><a class="mod" href="tensor/index.html" title='neuro::tensor mod'>tensor</a></td><td class='docblock-short'><p>Wrapper around ArrayFire's array with additional helper methods.</p>
 </td></tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table><tr class='module-item'><td><a class="macro" href="macro.assert_approx_eq.html" title='neuro::assert_approx_eq macro'>assert_approx_eq</a></td><td class='docblock-short'><p>Asserts if two expressions are approximately equal.</p>
-</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "neuro";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "neuro";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

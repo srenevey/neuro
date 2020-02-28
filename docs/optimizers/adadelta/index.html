@@ -22,19 +22,19 @@
 
 <title>Adadelta | neuro</title><meta property="og:title" content="Adadelta" />
 <meta property="og:description" content="This optimizer has first been introduced by Zeiler [1] in order to address two issues that arise in the fomulation of the Adagrad optimizer. In the Adagrad optimizer, the update rule is
-$$x_{t&#43;1} = x_t &#43; \Delta x_t = x_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
-where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. We see from this equation that if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes." />
+$$\theta_{t&#43;1} = \theta_t &#43; \Delta \theta_t = \theta_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
+where $\theta_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. As can be seen from this equation, if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://srenevey.github.io/neuro/docs/optimizers/adadelta/" />
 <meta property="og:site_name" content="neuro" />
 <meta itemprop="name" content="Adadelta">
 <meta itemprop="description" content="This optimizer has first been introduced by Zeiler [1] in order to address two issues that arise in the fomulation of the Adagrad optimizer. In the Adagrad optimizer, the update rule is
-$$x_{t&#43;1} = x_t &#43; \Delta x_t = x_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
-where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. We see from this equation that if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes.">
+$$\theta_{t&#43;1} = \theta_t &#43; \Delta \theta_t = \theta_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
+where $\theta_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. As can be seen from this equation, if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes.">
 
 
 
-<meta itemprop="wordCount" content="351">
+<meta itemprop="wordCount" content="352">
 
 
 
@@ -42,8 +42,8 @@ where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ th
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Adadelta"/>
 <meta name="twitter:description" content="This optimizer has first been introduced by Zeiler [1] in order to address two issues that arise in the fomulation of the Adagrad optimizer. In the Adagrad optimizer, the update rule is
-$$x_{t&#43;1} = x_t &#43; \Delta x_t = x_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
-where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. We see from this equation that if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes."/>
+$$\theta_{t&#43;1} = \theta_t &#43; \Delta \theta_t = \theta_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$
+where $\theta_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. As can be seen from this equation, if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes."/>
 
 
 
@@ -458,9 +458,9 @@ where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ th
 
 <p>This optimizer has first been introduced by Zeiler [1] in order to address two issues that arise in the fomulation of the Adagrad optimizer. In the Adagrad optimizer, the update rule is</p>
 
-<p>$$x_{t+1} = x_t + \Delta x_t = x_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$</p>
+<p>$$\theta_{t+1} = \theta_t + \Delta \theta_t = \theta_t -\frac{\eta}{\sqrt{\sum_{\tau=1}^t g_t^2}}g_t$$</p>
 
-<p>where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. We see from this equation that if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes. This can be addressed by selecting a large $\eta$ but thus makes the method dependent on the choice of the learning rate. Also, since the gradient keeps accumulating in the denominator, the learning rate will continually decrease and eventually become zero, hence stopping the training. Adadelta was designed to address these two properties of Adagrad.</p>
+<p>where $\theta_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ the gradient. As can be seen from this equation, if the value of the gradient is large at the beginning of the simulation, the learning rate (the term in front of $g_t$) will be small for the entire training since the denominator will remain large no matter how small the gradient becomes. This can be addressed by selecting a large $\eta$ but thus makes the method dependent on the choice of the learning rate. Also, since the gradient keeps accumulating in the denominator, the learning rate will continually decrease and eventually become zero, hence stopping the training. Adadelta was designed to address these two limitations of Adagrad.</p>
 
 <p>The Adadelta optimizer keeps track of only recent past gradients by accumulating them using an exponentially decaying average:</p>
 
@@ -470,15 +470,15 @@ where $x_t$ is the parameter at step $t$, $\eta$ the learning rate, and $g_t$ th
 
 <p>$$RMS[g]_{t} = \sqrt{E[g^2]_t + \epsilon}$$</p>
 
-<p>where $\epsilon$ is a small constant added for numerical stability. The derivation of an expression for the numerator is based on the observation that the units of $x_t$ and $\Delta x_t$ should match and based on considerations on second order methods, the author proposes the following expression:</p>
+<p>where $\epsilon$ is a small constant added for numerical stability. The derivation of an expression for the numerator is based on the observation that the units of $\theta_t$ and $\Delta \theta_t$ should match and based on considerations on second order methods, the author proposes the following expression:</p>
 
-<p>$$E[\Delta x^2]_{t} = \rho E[\Delta x^2]_{t-1} + (1-\rho)\Delta x_t^2$$</p>
+<p>$$E[\Delta \theta^2]_{t} = \rho E[\Delta \theta^2]_{t-1} + (1-\rho)\Delta \theta_t^2$$</p>
 
-<p>$$RMS[\Delta x]_t = \sqrt{E[\Delta x^2]_t + \epsilon}$$</p>
+<p>$$RMS[\Delta \theta]_t = \sqrt{E[\Delta \theta^2]_t + \epsilon}$$</p>
 
 <p>Hence, the update term in the Adadelta method is</p>
 
-<p>$$\Delta x_t = - \frac{RMS[g]_t}{RMS[\Delta x]_t}g_t$$</p>
+<p>$$\Delta \theta_t = - \frac{RMS[g]_t}{RMS[\Delta \theta]_t}g_t$$</p>
 
 <p>In neuro, the default values for $\rho$ and $\epsilon$ are</p>
 
