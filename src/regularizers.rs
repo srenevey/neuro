@@ -1,7 +1,9 @@
 //! Regularization methods.
-use crate::tensor::*;
-
 use arrayfire::*;
+use std::str::FromStr;
+use std::fmt;
+
+use crate::tensor::*;
 
 /// Defines the regularization methods.
 #[derive(Debug, Copy, Clone)]
@@ -13,9 +15,28 @@ pub enum Regularizer {
     ///
     /// # Example
     /// ```
+    /// # use neuro::regularizers::Regularizer;
     /// let regularizer = Regularizer::L2(0.01);
     /// ```
     L2(PrimitiveType),
+}
+
+
+#[derive(hdf5::H5Type, Clone, Debug)]
+#[repr(C)]
+pub(crate) struct H5Regularizer {
+    name: hdf5::types::VarLenUnicode,
+    lambda: PrimitiveType,
+}
+
+impl From<&H5Regularizer> for Regularizer {
+    fn from(h5_reg: &H5Regularizer) -> Self {
+        match h5_reg.name.as_str() {
+            "L1" => Regularizer::L1(h5_reg.lambda),
+            "L2" => Regularizer::L2(h5_reg.lambda),
+            _ => panic!("Unrecognized regularizer"),
+        }
+    }
 }
 
 impl Regularizer
@@ -51,6 +72,36 @@ impl Regularizer
             Regularizer::L2(lambda) => {
                 mul(&(*lambda / batch_size), weights, true)
             },
+        }
+    }
+
+    pub(crate) fn save(self, group: &hdf5::Group) -> hdf5::Result<()> {
+        match &self {
+            Regularizer::L1(lambda) => {
+                let regularizer = group.new_dataset::<H5Regularizer>().create("regularizer", 1)?;
+                regularizer.write(&[H5Regularizer { name: hdf5::types::VarLenUnicode::from_str("L1").unwrap() , lambda: *lambda }])?;
+            },
+            Regularizer::L2(lambda) => {
+                let regularizer = group.new_dataset::<H5Regularizer>().create("regularizer", 1)?;
+                regularizer.write(&[H5Regularizer { name: hdf5::types::VarLenUnicode::from_str("L2").unwrap() , lambda: *lambda }])?;
+            }
+        }
+        Ok(())
+    }
+
+    pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Option<Regularizer> {
+        if let Ok(reg) = group.dataset("regularizer") {
+            let h5_regularizer = reg.read_raw::<H5Regularizer>().unwrap();
+            Some(Regularizer::from(&h5_regularizer[0]))
+        } else { None }
+    }
+}
+
+impl fmt::Display for Regularizer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Regularizer::L1(_) => write!(f, "L1"),
+            Regularizer::L2(_) => write!(f, "L2"),
         }
     }
 }

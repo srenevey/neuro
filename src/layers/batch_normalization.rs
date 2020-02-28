@@ -1,13 +1,14 @@
 //! Batch normalization layer
-use super::*;
-use crate::tensor::*;
-
+use arrayfire::*;
 use std::fmt;
 
-use arrayfire::*;
+use crate::errors::Error;
+use crate::io::{write_scalar, read_scalar};
+use crate::tensor::*;
+use super::Layer;
 
 /// Defines a batch normalization layer.
-pub struct BatchNormalization {
+pub struct BatchNorm {
     follow_conv2d: bool,
     mb_mean: Tensor,
     mb_variance: Tensor,
@@ -20,19 +21,20 @@ pub struct BatchNormalization {
     dbeta: Tensor,
     momentum: PrimitiveType,
     eps: PrimitiveType,
-    output_shape: Dim4,
+    output_shape: Dim,
 }
 
-impl BatchNormalization {
+impl BatchNorm {
+
+    pub(crate) const NAME: &'static str = "BatchNorm";
 
     /// Creates a batch normalization layer.
     ///
     /// By default, the momentum used by the running averages is set to 0.99 and the epsilon value
     /// used for numerical stability to 1e-5.
-    ///
-    pub fn new(follow_conv2d: bool) -> Box<BatchNormalization> {
-        Box::new(BatchNormalization {
-            follow_conv2d,
+    pub fn new() -> Box<BatchNorm> {
+        Box::new(BatchNorm {
+            follow_conv2d: false,
             mb_mean: Tensor::new_empty_tensor(),
             mb_variance: Tensor::new_empty_tensor(),
             mean: Tensor::new_empty_tensor(),
@@ -44,19 +46,19 @@ impl BatchNormalization {
             dbeta: Tensor::new_empty_tensor(),
             momentum: 0.99,
             eps: 1e-5,
-            output_shape: Dim4::new(&[1, 1, 1, 1]),
+            output_shape: Dim::new(&[1, 1, 1, 1]),
         })
     }
 
-    /// Creates a batch normalization layers with the given parameters.
+    /// Creates a batch normalization layers with the given momentum.
     ///
     /// # Arguments
-    /// * `momentum`: momentum used by the running averages to compute the mean and standard deviation of the data set
-    /// * `eps`: small constant used for numerical stability
     ///
-    pub fn with_param(follow_conv2d: bool, momentum: PrimitiveType, eps: PrimitiveType) -> Box<BatchNormalization> {
-        Box::new(BatchNormalization {
-            follow_conv2d,
+    /// * `momentum` - The momentum used by the running averages to compute the mean and standard deviation of the data set.
+    /// * `eps` - A small constant used for numerical stability.
+    pub fn with_param(momentum: PrimitiveType, eps: PrimitiveType) -> Box<BatchNorm> {
+        Box::new(BatchNorm {
+            follow_conv2d: false,
             mb_mean: Tensor::new_empty_tensor(),
             mb_variance: Tensor::new_empty_tensor(),
             mean: Tensor::new_empty_tensor(),
@@ -68,21 +70,60 @@ impl BatchNormalization {
             dbeta: Tensor::new_empty_tensor(),
             momentum,
             eps,
-            output_shape: Dim4::new(&[1, 1, 1, 1]),
+            output_shape: Dim::new(&[1, 1, 1, 1]),
         })
     }
 
+    /// Returns the current estimate of the dataset mean.
     pub fn mean(&self) -> Tensor {
         self.mean.copy()
     }
 
+    /// Returns the current estimate of the dataset variance.
     pub fn variance(&self) -> Tensor {
         self.variance.copy()
     }
+
+    /// Creates a BatchNorm layer from an HDF5 group.
+    pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<Self> {
+        let _ = hdf5::silence_errors();
+        let follow_conv2d = group.dataset("follow_conv2d").and_then(|ds| Ok(read_scalar::<bool>(&ds))).expect("Could not retrieve follow_conv2d.");
+        let mb_mean = group.dataset("mb_mean").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the mini-batch mean.");
+        let mb_variance = group.dataset("mb_variance").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the mini-batch variance.");
+        let mean = group.dataset("mean").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the mean.");
+        let variance = group.dataset("variance").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the variance.");
+        let gamma = group.dataset("gamma").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the gamma values.");
+        let beta = group.dataset("beta").and_then(|ds| ds.read_raw::<H5Tensor>()).expect("Could not retrieve the beta values.");
+        let momentum = group.dataset("momentum").and_then(|ds| Ok(read_scalar::<PrimitiveType>(&ds))).expect("Could not retrieve the momentum.");
+        let eps = group.dataset("eps").and_then(|ds| Ok(read_scalar::<PrimitiveType>(&ds))).expect("Could not retrieve the epsilon value.");
+        let output_shape = group.dataset("output_shape").and_then(|ds| ds.read_raw::<[u64; 4]>()).expect("Could not retrieve the output shape.");
+
+        Box::new(BatchNorm {
+            follow_conv2d,
+            mb_mean: Tensor::from(&mb_mean[0]),
+            mb_variance: Tensor::from(&mb_variance[0]),
+            mean: Tensor::from(&mean[0]),
+            variance: Tensor::from(&variance[0]),
+            normalized_input: Tensor::new_empty_tensor(),
+            gamma: Tensor::from(&gamma[0]),
+            dgamma: Tensor::new_empty_tensor(),
+            beta: Tensor::from(&beta[0]),
+            dbeta: Tensor::new_empty_tensor(),
+            momentum,
+            eps,
+            output_shape: Dim::new(&output_shape[0]),
+        })
+    }
 }
 
-impl Layer for BatchNormalization {
+impl Layer for BatchNorm {
+    fn name(&self) -> &str {
+        Self::NAME
+    }
+
     fn initialize_parameters(&mut self, input_shape: Dim4) {
+        // If the previous layer has channels, the batch normalization is done along the channels
+        if input_shape[2] != 0 { self.follow_conv2d = true; }
         if self.follow_conv2d {
             let num_channels = input_shape.get()[2];
             self.gamma = Tensor::ones(Dim4::new(&[1, 1, num_channels, 1]));
@@ -105,12 +146,15 @@ impl Layer for BatchNormalization {
     fn compute_activation_mut(&mut self, input: &Tensor) -> Tensor {
         // Compute mini-batch mean and variance
         if self.follow_conv2d {
-            let mut flat = reorder(&input, Dim4::new(&[0, 1, 3, 2]));
+            //let mut flat = reorder(&input, Dim4::new(&[0, 1, 3, 2]));
+            let mut flat = reorder_v2(&input, 0, 1, Some(vec![3, 2]));
             flat = moddims(&flat, Dim4::new(&[flat.elements() as u64 / flat.dims().get()[3], flat.dims().get()[3], 1, 1]));
             let mean = mean(&flat, 0);
             let var = var(&flat, false, 0);
-            self.mb_mean = reorder(&mean, Dim4::new(&[0, 2, 1, 3]));
-            self.mb_variance = reorder(&var, Dim4::new(&[0, 2, 1, 3]));
+            //self.mb_mean = reorder(&mean, Dim4::new(&[0, 2, 1, 3]));
+            self.mb_mean = reorder_v2(&mean, 0, 2, Some(vec![1, 3]));
+            //self.mb_variance = reorder(&var, Dim4::new(&[0, 2, 1, 3]));
+            self.mb_variance = reorder_v2(&var, 0, 2, Some(vec![1, 3]));
         } else {
             self.mb_mean = input.reduce(Reduction::MeanBatches);
             self.mb_variance = var(input, false, 3);
@@ -177,14 +221,52 @@ impl Layer for BatchNormalization {
     }
 
 
-    fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
+
+    fn save(&self, group: &hdf5::Group, layer_number: usize) -> Result<(), Error> {
+        let group_name = layer_number.to_string() + &String::from("_") + Self::NAME;
+        let batch_norm = group.create_group(&group_name)?;
+
+        let follow_conv2d = batch_norm.new_dataset::<bool>().create("follow_conv2d", 1)?;
+        write_scalar(&follow_conv2d, &self.follow_conv2d);
+        //follow_conv2d.write(&[self.follow_conv2d])?;
+
+        let mb_mean = batch_norm.new_dataset::<H5Tensor>().create("mb_mean", 1)?;
+        mb_mean.write(&[H5Tensor::from(&self.mb_mean)])?;
+
+        let mb_variance = batch_norm.new_dataset::<H5Tensor>().create("mb_variance", 1)?;
+        mb_variance.write(&[H5Tensor::from(&self.mb_variance)])?;
+
+        let mean = batch_norm.new_dataset::<H5Tensor>().create("mean", 1)?;
+        mean.write(&[H5Tensor::from(&self.mean)])?;
+
+        let variance = batch_norm.new_dataset::<H5Tensor>().create("variance", 1)?;
+        variance.write(&[H5Tensor::from(&self.variance)])?;
+
+        let gamma = batch_norm.new_dataset::<H5Tensor>().create("gamma", 1)?;
+        gamma.write(&[H5Tensor::from(&self.gamma)])?;
+
+        let beta = batch_norm.new_dataset::<H5Tensor>().create("beta", 1)?;
+        beta.write(&[H5Tensor::from(&self.beta)])?;
+
+        let momentum = batch_norm.new_dataset::<PrimitiveType>().create("momentum", 1)?;
+        write_scalar(&momentum, &self.momentum);
+        //momentum.write(&[self.momentum])?;
+
+        let eps = batch_norm.new_dataset::<PrimitiveType>().create("eps", 1)?;
+        write_scalar(&eps, &self.eps);
+        //eps.write(&[self.eps])?;
+
+        let output_shape = batch_norm.new_dataset::<[u64; 4]>().create("output_shape", 1)?;
+        output_shape.write(&[*self.output_shape.get()])?;
+
         Ok(())
     }
 
+
 }
 
-impl fmt::Display for BatchNormalization {
+impl fmt::Display for BatchNorm {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "BatchNorm \t {}", self.gamma.elements() + self.beta.elements())
+        write!(f, "{} \t {}", Self::NAME, self.gamma.elements() + self.beta.elements())
     }
 }

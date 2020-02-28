@@ -1,22 +1,41 @@
 //! Activation functions.
 use arrayfire::*;
+use std::convert::TryFrom;
+
 use crate::tensor::*;
 use crate::tensor::PrimitiveType;
 
 /// Enumeration of the activation functions.
 ///
-#[derive(Debug)]
+#[derive(hdf5::H5Type, Clone, Copy, Debug)]
+#[repr(u8)]
 pub enum Activation {
-    LeakyReLU,
-    Linear,
-    ReLU,
-    Sigmoid,
-    Softmax,
-    Tanh,
+    LeakyReLU = 0,
+    Linear = 1,
+    ReLU = 2,
+    Sigmoid = 3,
+    Softmax = 4,
+    Tanh = 5,
+}
+
+impl TryFrom<u8> for Activation {
+    type Error = ();
+
+    fn try_from(v: u8) -> Result<Self, Self::Error> {
+        match v {
+            x if x == Activation::LeakyReLU as u8 => Ok(Activation::LeakyReLU),
+            x if x == Activation::Linear as u8 => Ok(Activation::Linear),
+            x if x == Activation::ReLU as u8 => Ok(Activation::ReLU),
+            x if x == Activation::Sigmoid as u8 => Ok(Activation::Sigmoid),
+            x if x == Activation::Softmax as u8 => Ok(Activation::Softmax),
+            x if x == Activation::Tanh as u8 => Ok(Activation::Tanh),
+            _ => Err(()),
+        }
+    }
 }
 
 impl Activation {
-    pub fn eval(&self, z: &Tensor) -> Tensor {
+    pub fn eval(self, z: &Tensor) -> Tensor {
         match self {
             Activation::Sigmoid => sigmoid(z),
             Activation::Softmax => {
@@ -35,7 +54,7 @@ impl Activation {
         }
     }
 
-    pub(crate) fn grad(&self, z: &Tensor) -> Tensor {
+    pub(crate) fn grad(self, z: &Tensor) -> Tensor {
         match self {
             Activation::Sigmoid => sigmoid(z) * (Tensor::ones(z.dims()) - sigmoid(z)),
             Activation::Softmax => Tensor::ones(z.dims()),
@@ -50,17 +69,6 @@ impl Activation {
                 selectr(&Tensor::ones(z.dims()), &cond, 0.01)
             },
             Activation::Linear => Tensor::ones(z.dims()),
-        }
-    }
-
-    pub(crate) fn id(&self) -> u64 {
-        match self {
-            Activation::Sigmoid     => 0,
-            Activation::Softmax     => 1,
-            Activation::Tanh        => 2,
-            Activation::ReLU        => 3,
-            Activation::LeakyReLU   => 4,
-            Activation::Linear      => 5,
         }
     }
 }

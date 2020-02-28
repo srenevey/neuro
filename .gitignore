@@ -5,3 +5,7 @@ Cargo.lock
 .DS_Store
 .idea/
 /site
+*.h5
+examples/test_*
+examples/binary_classification.rs
+public

@@ -1,37 +1,38 @@
 //! Dropout layer
-use crate::layers::Layer;
-use crate::tensor::*;
-
-use std::fmt;
-use std::fs;
-use std::io;
-use std::io::BufWriter;
-
 use arrayfire::*;
 use rand::prelude::*;
+use std::fmt;
 
+use crate::errors::Error;
+use crate::io::{write_scalar, read_scalar};
+use crate::layers::Layer;
+use crate::tensor::*;
 
 /// Defines a dropout layer.
 pub struct Dropout {
     drop_rate: f64,
-    output_shape: Dim4,
+    output_shape: Dim,
     grad: Tensor,
     random_engine: RandomEngine,
     scaling_factor: PrimitiveType
 }
 
 impl Dropout {
+
+    pub(crate) const NAME: &'static str = "Dropout";
+
     /// Creates a dropout layer.
     ///
     /// # Arguments
-    /// * `rate`: probability that a unit will be dropped. Must be between 0 and 1.
+    ///
+    /// * `drop_rate` - The probability that a unit will be dropped.
     ///
     /// # Panics
-    /// The method panics if `rate` is smaller than 0 or greater than 1.
     ///
-    pub fn new(rate: f64) -> Box<Dropout> {
+    /// The method panics if `rate` is smaller than 0 or greater than 1.
+    pub fn new(drop_rate: f64) -> Box<Dropout> {
 
-        if rate < 0. || rate > 1. {
+        if drop_rate < 0. || drop_rate > 1. {
             panic!("The drop rate is invalid.");
         }
 
@@ -39,10 +40,10 @@ impl Dropout {
         let seed: u64 = rng.gen();
         let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, Some(seed));
 
-        let scaling_factor = 1. / (1. - rate) as PrimitiveType;
+        let scaling_factor = 1. / (1. - drop_rate) as PrimitiveType;
 
         Box::new(Dropout {
-            drop_rate: rate,
+            drop_rate,
             output_shape: Dim4::new(&[0, 0, 0, 0]),
             grad: Tensor::new_empty_tensor(),
             random_engine,
@@ -56,9 +57,33 @@ impl Dropout {
         let cond = gt(&random_values, &self.drop_rate, true);
         cond.cast()
     }
+
+    pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<Self> {
+        let _ = hdf5::silence_errors();
+        let drop_rate = group.dataset("drop_rate").and_then(|ds| Ok(read_scalar::<f64>(&ds))).expect("Could not retrieve the drop rate.");
+        let output_shape = group.dataset("output_shape").and_then(|value| value.read_raw::<[u64; 4]>()).expect("Could not retrieve the output shape.");
+
+        let mut rng = rand::thread_rng();
+        let seed: u64 = rng.gen();
+        let random_engine = RandomEngine::new(RandomEngineType::PHILOX_4X32_10, Some(seed));
+
+        let scaling_factor = 1. / (1. - drop_rate) as PrimitiveType;
+
+        Box::new(Self {
+            drop_rate,
+            output_shape: Dim::new(&(output_shape[0])),
+            grad: Tensor::new_empty_tensor(),
+            random_engine,
+            scaling_factor,
+        })
+    }
 }
 
 impl Layer for Dropout {
+    fn name(&self) -> &str {
+        Self::NAME
+    }
+
     fn initialize_parameters(&mut self, input_shape: Dim4) {
         self.output_shape = input_shape;
     }
@@ -84,13 +109,23 @@ impl Layer for Dropout {
         self.output_shape
     }
 
-    fn save(&self, writer: &mut BufWriter<fs::File>) -> io::Result<()> {
+
+    fn save(&self, group: &hdf5::Group, layer_number: usize) -> Result<(), Error> {
+        let group_name = layer_number.to_string() + &String::from("_") + Self::NAME;
+        let dropout = group.create_group(&group_name)?;
+
+        let drop_rate = dropout.new_dataset::<f64>().create("drop_rate", 1)?;
+        write_scalar(&drop_rate, &self.drop_rate);
+
+        let output_shape = dropout.new_dataset::<[u64; 4]>().create("output_shape", 1)?;
+        output_shape.write(&[*self.output_shape.get()])?;
+
         Ok(())
     }
 }
 
 impl fmt::Display for Dropout {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Dropout \t 0")
+        write!(f, "{} \t 0  \t\t [{}, {}, {}]", Self::NAME, self.output_shape[0], self.output_shape[1], self.output_shape[2])
     }
 }

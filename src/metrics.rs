@@ -1,19 +1,21 @@
 //! Metrics used to assess the performance of the neural network.
 use arrayfire::*;
+
 use crate::tensor::*;
 
 /// Declaration of the metrics.
 ///
 /// Only the accuracy is currently implemented.
-///
 #[derive(Debug)]
 pub enum Metrics {
     Accuracy,
+    /*
     FScore,
     LogLoss,
     MeanAbsoluteError,
     MeanSquaredError,
     RSquared,
+    */
 }
 
 impl Metrics {
@@ -39,11 +41,13 @@ impl Metrics {
 
                 accuracy.0 as PrimitiveType / batch_size as PrimitiveType
             },
+            /*
             Metrics::FScore => { unimplemented!() },
             Metrics::LogLoss => { unimplemented!() },
             Metrics::MeanAbsoluteError => { unimplemented!() },
             Metrics::MeanSquaredError => { unimplemented!() },
             Metrics::RSquared => { unimplemented!() }
+            */
         }
     }
 }

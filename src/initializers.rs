@@ -1,5 +1,7 @@
 //! Parameters initialization methods.
 use arrayfire::*;
+use std::str::FromStr;
+
 use crate::tensor::*;
 
 /// Used to generate the initial values for the parameters of the model.
@@ -21,8 +23,8 @@ pub enum Initializer {
     LecunUniform,
     /// Normal distribution with mean 0 and standard deviation 0.01.
     Normal,
-    /// Normal distribution with mean 0 and given standard deviation.
-    NormalScaled(PrimitiveType),
+    /// Normal distribution with given mean and standard deviation.
+    NormalScaled(PrimitiveType, PrimitiveType),
     /// Ones.
     Ones,
     /// Uniform distribution within -0.01 and 0.01.
@@ -33,18 +35,46 @@ pub enum Initializer {
     Zeros,
 }
 
+#[derive(hdf5::H5Type, Clone, Debug)]
+#[repr(C)]
+pub(crate) struct H5Initializer {
+    name: hdf5::types::VarLenUnicode,
+    values: hdf5::types::VarLenArray<PrimitiveType>,
+}
+
+impl From<&H5Initializer> for Initializer {
+    fn from(h5_init: &H5Initializer) -> Self {
+        match h5_init.name.as_str() {
+            "Constant" => Initializer::Constant(h5_init.values[0]),
+            "GlorotNormal" => Initializer::GlorotNormal,
+            "GlorotUniform" => Initializer::GlorotUniform,
+            "HeNormal" => Initializer::HeNormal,
+            "HeUniform" => Initializer::HeUniform,
+            "LecunNormal" => Initializer::LecunNormal,
+            "LecunUniform" => Initializer::LecunUniform,
+            "Normal" => Initializer::Normal,
+            "NormalScaled" => Initializer::NormalScaled(h5_init.values[0], h5_init.values[1]),
+            "Ones" => Initializer::Ones,
+            "Uniform" => Initializer::Uniform,
+            "UniformBounded" => Initializer::UniformBounded(h5_init.values[0], h5_init.values[1]),
+            "Zeros" => Initializer::Zeros,
+            _ => panic!("Unrecognized initializer"),
+        }
+    }
+}
+
 
 impl Initializer {
 
     /// Creates a tensor with random values generated from the distribution specified by the initializer.
     ///
     /// # Arguments
-    /// * `dims`: dimensions of the tensor created
-    /// * `fan_in`: number of input units
-    /// * `fan_out`: number of output units
     ///
+    /// * `dims` - The dimensions of the tensor created.
+    /// * `fan_in` - The number of input units.
+    /// * `fan_out` - The number of output units.
     pub(crate) fn new_tensor(self,
-                             dims: Dim4,
+                             dims: Dim,
                              fan_in: u64,
                              fan_out: u64
     ) -> Tensor {
@@ -74,8 +104,8 @@ impl Initializer {
                 let limit = (3. / fan_in as PrimitiveType).sqrt();
                 Tensor::scaled_uniform(-limit, limit, dims)
             },
-            Initializer::Normal => Tensor::scaled_normal(0 as PrimitiveType, 0.1, dims),
-            Initializer::NormalScaled(standard_deviation) => Tensor::scaled_normal(0 as PrimitiveType, standard_deviation, dims),
+            Initializer::Normal => Tensor::scaled_normal(0 as PrimitiveType, 0.01, dims),
+            Initializer::NormalScaled(mean, standard_deviation) => Tensor::scaled_normal(mean, standard_deviation, dims),
             Initializer::Ones => Tensor::ones(dims),
             Initializer::Uniform => Tensor::scaled_uniform(-0.01, 0.01, dims),
             Initializer::UniformBounded(lb, ub) => Tensor::scaled_uniform(lb, ub, dims),
@@ -83,22 +113,22 @@ impl Initializer {
         }
     }
 
-
-    pub(crate) fn id(&self) -> u64 {
+    pub(crate) fn save(&self, dataset: &hdf5::Dataset) -> hdf5::Result<()> {
         match self {
-            Initializer::Constant(_) => 0,
-            Initializer::GlorotNormal => 1,
-            Initializer::GlorotUniform => 2,
-            Initializer::HeNormal => 3,
-            Initializer::HeUniform => 4,
-            Initializer::LecunNormal => 5,
-            Initializer::LecunUniform => 6,
-            Initializer::Normal => 7,
-            Initializer::NormalScaled(_) => 8,
-            Initializer::Ones => 9,
-            Initializer::Uniform => 10,
-            Initializer::UniformBounded(_,_) => 11,
-            Initializer::Zeros => 12,
+            Initializer::Constant(val) => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("Constant").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[*val]) }])?,
+            Initializer::GlorotNormal => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("GlorotNormal").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::GlorotUniform => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("GlorotUniform").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::HeNormal => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("HeNormal").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::HeUniform => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("HeUniform").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::LecunNormal => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("LecunNormal").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::LecunUniform => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("LecunUniform").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::Normal => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("Normal").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::NormalScaled(mean, std) => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("NormalScaled").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[*mean, *std]) }])?,
+            Initializer::Ones => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("Ones").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::Uniform => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("Uniform").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
+            Initializer::UniformBounded(v1, v2) => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("UniformBounded").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[*v1, *v2]) }])?,
+            Initializer::Zeros => dataset.write(&[H5Initializer { name: hdf5::types::VarLenUnicode::from_str("Zeros").unwrap(), values: hdf5::types::VarLenArray::from_slice(&[0.]) }])?,
         }
+        Ok(())
     }
 }

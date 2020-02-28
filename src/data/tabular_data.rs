@@ -1,25 +1,23 @@
 //! Helper methods to work with tabular data sets.
-use super::{DataSet, DataSetError, Scaling, IO};
-use crate::errors::*;
-use crate::tensor::*;
-use crate::tensor::PrimitiveType;
-
+use arrayfire::*;
+use csv;
 use std::fmt;
 use std::path::Path;
 
-use arrayfire::*;
-use csv;
+use super::{DataSet, DataSetError, Scaling, IO};
+use crate::errors::*;
+use crate::tensor::*;
 
 /// Structure representing tabular data.
 pub struct TabularDataSet {
-    input_shape: Dim4,
-    output_shape: Dim4,
+    input_shape: Dim,
+    output_shape: Dim,
     num_train_samples: u64,
     num_valid_samples: u64,
     x_train: Tensor,
     y_train: Tensor,
-    x_valid: Tensor,
-    y_valid: Tensor,
+    x_valid: Option<Tensor>,
+    y_valid: Option<Tensor>,
     x_test: Option<Tensor>,
     y_test: Option<Tensor>,
     x_train_stats: Option<(Scaling, Tensor, Tensor)>,
@@ -28,21 +26,21 @@ pub struct TabularDataSet {
 
 impl TabularDataSet {
 
-    /// Create a TabularDataSet from a set of csv files.
+    /// Creates a TabularDataSet from a set of csv files.
     ///
     /// The data are shuffled before being split into training and validation sets.
     ///
     /// # Arguments
-    /// * `inputs`: path to the csv file containing the input features
-    /// * `outputs`: path to the csv file containing the output labels
-    /// * `valid_frac`: fraction of the data used for validation. Must be between 0 and 1.
-    /// * `header`: indicates if the files have a header
     ///
+    /// * `inputs` - The path to the csv file containing the input features.
+    /// * `outputs` - The path to the csv file containing the output labels.
+    /// * `valid_frac` - The fraction of the data used for validation.
+    /// * `header` - Flag indicating whether the files have a header.
     pub fn from_csv(inputs: &Path,
                     outputs: &Path,
                     valid_frac: f64,
                     header: bool
-    ) -> Result<TabularDataSet, NeuroError> {
+    ) -> Result<TabularDataSet, Error> {
         let (in_shape, num_in_samples, in_values) = TabularDataSet::load_data_from_path(&inputs, header)?;
         let (out_shape, num_out_samples, out_values) = TabularDataSet::load_data_from_path(&outputs, header)?;
 
@@ -74,8 +72,8 @@ impl TabularDataSet {
                 output_shape: Dim4::new(&[out_shape, 1, 1, 1]),
                 x_train,
                 y_train,
-                x_valid,
-                y_valid,
+                x_valid: Some(x_valid),
+                y_valid: Some(y_valid),
                 x_test: None,
                 y_test: None,
                 x_train_stats: None,
@@ -87,24 +85,18 @@ impl TabularDataSet {
     /// Creates a TabularDataSet from Tensors.
     ///
     /// The samples must be stacked along the fourth dimension.
-    ///
-    /// # Arguments
-    /// * `x_train`: tensor containing the training samples
-    /// * `y_train`: tensor containing the training labels
-    /// * `x_valid`: tensor containing the validation samples
-    /// * `y_valid`: tensor containing the validation labels
-    /// * `x_test`: option containing a tensor with the test samples or None
-    /// * `y_test`: option containing a tensor with the test labels or None
-    ///
     pub fn from_tensor(x_train: Tensor,
                        y_train: Tensor,
-                       x_valid: Tensor,
-                       y_valid: Tensor,
+                       x_valid: Option<Tensor>,
+                       y_valid: Option<Tensor>,
                        x_test: Option<Tensor>,
                        y_test: Option<Tensor>
-    ) -> Result<TabularDataSet, NeuroError> {
+    ) -> Result<TabularDataSet, Error> {
         let num_train_samples = x_train.dims()[3];
-        let num_valid_samples = x_valid.dims()[3];
+        let num_valid_samples = match &x_valid {
+            Some(x) => x.dims().get()[3],
+            None => 0,
+        };
         let num_features = x_train.dims()[0];
         let num_outputs = y_train.dims()[0];
         Ok(TabularDataSet {
@@ -125,12 +117,9 @@ impl TabularDataSet {
 
     /// Loads the content of a csv file into a vector of floats.
     ///
-    /// # Arguments
-    /// * `path`: path to the csv file
+    /// # Return value
     ///
-    /// # Returns
     /// Returns a tuple containing the number of features, the number of samples, and a vector containing the values.
-    ///
     fn load_data_from_path(path: &Path, header: bool) -> Result<(u64, u64, Vec<PrimitiveType>), DataSetError> {
         //let reader = csv::Reader::from_path(path);
         let reader = csv::ReaderBuilder::new().has_headers(header).from_path(path);
@@ -158,38 +147,29 @@ impl TabularDataSet {
     /// Normalizes the features of the training, validation, and test (if any) sets.
     ///
     /// The minimum and maximum values of the training features are computed and used to normalize the training,
-    /// validation, and test (if any) sets. After normalization, the distribution of the features in the training
+    /// validation, and test sets. After normalization, the distribution of the features in the training
     /// sets is a uniform distribution within 0 and 1 (assuming that the features originally come from a uniform
     /// distribution).
-    ///
-    /// This method should be used if the features come from a uniform distribution.
-    ///
     pub fn normalize_input(&mut self) {
         self.x_train_stats = Some(self.normalize(IO::Input));
     }
 
-    /// Standarizes the features of the training, validation, and test (if any) sets.
+    /// Standardizes the features of the training, validation, and test (if any) sets.
     ///
-    /// The mean and standard deviation of the training features are computed and used to standarized the training,
-    /// validation, and test (if any) sets. After standardization, the distribution of the features in the training set
+    /// The mean and standard deviation of the training features are computed and used to standardize the training,
+    /// validation, and test sets. After standardization, the distribution of the features in the training set
     /// is a normal distribution with a mean of 0 and standard deviation 1 (assuming that the features originally come
     /// from a Gaussian distribution).
-    ///
-    /// This method should be used if the features come from a Gaussian distribution.
-    ///
-    pub fn standarize_input(&mut self) {
+    pub fn standardize_input(&mut self) {
         self.x_train_stats = Some(self.standarize(IO::Input));
     }
 
     /// Normalizes the labels of the training, validation, and test (if any) sets.
     ///
     /// The minimum and maximum values of the training labels are computed and used to normalize the training,
-    /// validation, and test (if any) sets. After normalization, the distribution of the labels in the training
+    /// validation, and test sets. After normalization, the distribution of the labels in the training
     /// sets is a uniform distribution within 0 and 1 (assuming that the labels originally come from a uniform
     /// distribution).
-    ///
-    /// This method should be used if the labels come from a uniform distribution.
-    ///
     pub fn normalize_output(&mut self) {
 
         self.y_train_stats = Some(self.normalize(IO::Output));
@@ -215,16 +195,13 @@ impl TabularDataSet {
     }
 
 
-    /// Standarizes the labels of the training, validation, and test (if any) sets.
+    /// Standardizes the labels of the training, validation, and test (if any) sets.
     ///
-    /// The mean and standard deviation of the training labels are computed and used to standarized the training,
-    /// validation, and test (if any) sets. After standardization, the distribution of the labels in the training set
+    /// The mean and standard deviation of the training labels are computed and used to standardize the training,
+    /// validation, and test sets. After standardization, the distribution of the labels in the training set
     /// is a normal distribution with a mean of 0 and standard deviation 1 (assuming that the labels originally come
     /// from a Gaussian distribution).
-    ///
-    /// This method should be used if the labels come from a Gaussian distribution.
-    ///
-    pub fn standarize_output(&mut self) {
+    pub fn standardize_output(&mut self) {
 
         self.y_train_stats = Some(self.standarize(IO::Output));
 
@@ -249,34 +226,38 @@ impl TabularDataSet {
     }
 
     /// Selects the input or output values.
-    ///
-    /// # Arguments
-    /// * `io`: IO variant indicating if the inputs or outputs are selected
-    ///
-    fn select_io(&mut self, io: IO) -> (&mut Tensor, &mut Tensor, Option<&mut Tensor>) {
+    fn select_io(&mut self, io: IO) -> (&mut Tensor, Option<&mut Tensor>, Option<&mut Tensor>) {
         match io {
             IO::Input => {
                 let test_values = match &mut self.x_test {
                     Some(values) => Some(values),
                     None => None,
                 };
-                (&mut self.x_train, &mut self.x_valid, test_values)
+                let valid_values = match &mut self.x_valid {
+                    Some(values) => Some(values),
+                    None => None,
+                };
+                (&mut self.x_train, valid_values, test_values)
             },
             IO::Output => {
                 let test_values = match &mut self.y_test {
                     Some(values) => Some(values),
                     None => None,
                 };
-                (&mut self.y_train, &mut self.y_valid, test_values)
+                let valid_values = match &mut self.y_valid {
+                    Some(values) => Some(values),
+                    None => None,
+                };
+                (&mut self.y_train, valid_values, test_values)
             }
         }
     }
 
-    /// Standarizes the inputs or outputs.
+    /// Standardizes the inputs or outputs.
     ///
     /// # Arguments
-    /// * `io`: IO variant indicating if the inputs or outputs are standarized
     ///
+    /// * `io` - The IO variant indicating if the inputs or outputs are standardized.
     fn standarize(&mut self, io: IO) -> (Scaling, Tensor, Tensor) {
         let (train_values, valid_values, test_values) = self.select_io(io);
 
@@ -285,7 +266,9 @@ impl TabularDataSet {
 
         // Standarize the training, validation, and test sets.
         *train_values = div(&sub(train_values, &mean_value, true), &standard_deviation, true);
-        *valid_values = div(&sub(valid_values, &mean_value, true), &standard_deviation, true);
+        if let Some(valid_values) = valid_values {
+            *valid_values = div(&sub(valid_values, &mean_value, true), &standard_deviation, true);
+        }
 
         if let Some(test_values) = test_values {
             *test_values = div(&sub(test_values, &mean_value, true), &standard_deviation, true);
@@ -298,8 +281,8 @@ impl TabularDataSet {
     /// Normalizes the inputs or outputs.
     ///
     /// # Arguments
-    /// * `io`: IO variant indicating if the inputs or outputs are normalized
     ///
+    /// * `io` - The IO variant indicating if the inputs or outputs are normalized.
     fn normalize(&mut self, io: IO) -> (Scaling, Tensor, Tensor) {
         let (train_values, valid_values, test_values) = self.select_io(io);
 
@@ -308,7 +291,9 @@ impl TabularDataSet {
 
         // Normalize y_train, y_valid, and y_test
         *train_values = div(&sub(train_values, &max_values, true), &sub(&max_values, &min_values, true), true);
-        *valid_values = div(&sub(valid_values, &max_values, true), &sub(&max_values, &min_values, true), true);
+        if let Some(valid_values) = valid_values {
+            *valid_values = div(&sub(valid_values, &max_values, true), &sub(&max_values, &min_values, true), true);
+        }
         if let Some(test_values) = test_values {
             *test_values = div(&sub(test_values, &max_values, true), &sub(&max_values, &min_values, true), true);
         }
@@ -335,12 +320,18 @@ impl DataSet for TabularDataSet {
         &self.y_train
     }
 
-    fn x_valid(&self) -> &Tensor {
-        &self.x_valid
+    fn x_valid(&self) -> Option<&Tensor> {
+        match &self.x_valid {
+            Some(x) => Some(x),
+            None => None
+        }
     }
 
-    fn y_valid(&self) -> &Tensor {
-        &self.y_valid
+    fn y_valid(&self) -> Option<&Tensor> {
+        match &self.y_valid {
+            Some(y) => Some(y),
+            None => None
+        }
     }
 
     fn x_test(&self) -> Option<&Tensor> {
@@ -368,10 +359,13 @@ impl DataSet for TabularDataSet {
 
 impl fmt::Display for TabularDataSet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "Input shape: \t [{} {} {}]", self.input_shape.get()[0], self.input_shape.get()[1], self.input_shape.get()[2],)?;
-        writeln!(f, "Output shape: \t [{} {} {}]", self.output_shape.get()[0], self.output_shape.get()[1], self.output_shape.get()[2])?;
-        writeln!(f, "Number of training samples: \t {}", self.num_train_samples)?;
-        writeln!(f, "Number of validation samples: \t {}", self.num_valid_samples)?;
+        writeln!(f, "=======")?;
+        writeln!(f, "Dataset")?;
+        writeln!(f, "=======")?;
+        writeln!(f, "Input shape: [{} {} {}]", self.input_shape.get()[0], self.input_shape.get()[1], self.input_shape.get()[2],)?;
+        writeln!(f, "Output shape: [{} {} {}]", self.output_shape.get()[0], self.output_shape.get()[1], self.output_shape.get()[2])?;
+        writeln!(f, "Number of training samples: {}", self.num_train_samples)?;
+        writeln!(f, "Number of validation samples: {}", self.num_valid_samples)?;
 
         match &self.y_train_stats {
             Some((scaling, c1, c2)) => {
@@ -380,17 +374,18 @@ impl fmt::Display for TabularDataSet {
                         writeln!(f, "The output data have been normalized with:")?;
                         af_print!("y_min:", c1);
                         af_print!("y_max:", c2);
-                        write!(f, "")
+                        write!(f, "")?;
                     },
                     Scaling::Standarized => {
                         writeln!(f, "The output data have been standarized with:")?;
                         af_print!("mean:", c1);
                         af_print!("std:", c2);
-                        write!(f, "")
+                        write!(f, "")?;
                     }
                 }
             },
-            None => write!(f, ""),
+            None => write!(f, "")?,
         }
+        Ok(())
     }
 }

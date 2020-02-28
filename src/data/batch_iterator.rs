@@ -1,5 +1,6 @@
-use crate::tensor::*;
 use arrayfire::*;
+
+use crate::tensor::*;
 
 pub struct BatchIterator<'a> {
     data: (&'a Tensor, &'a Tensor),
@@ -14,8 +15,8 @@ impl<'a> BatchIterator<'a> {
     /// Creates a batch iterator of given size for the two Tensors.
     ///
     /// # Arguments
-    /// * `data`: tuple of reference on the Tensors
-    /// * `batch_size`: size of the mini-batches
+    /// * `data` - tuple of reference to the Tensors.
+    /// * `batch_size` - size of the mini-batches
     ///
     pub fn new(data: (&'a Tensor, &'a Tensor), batch_size: u64) -> BatchIterator<'a> {
         // Check that both tensors have the same number of samples

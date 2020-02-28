@@ -2,7 +2,7 @@
 name = "neuro"
 version = "0.1.0"
 authors = ["Sylvain Renevey <syl.renevey@gmail.com>"]
-description = "Neuro is a deep learning library that runs on the GPU."
+description = "A deep learning library that runs on the GPU."
 edition = "2018"
 
 documentation = "https://srenevey.github.io/neuro/api"
@@ -10,17 +10,17 @@ homepage = "https://srenevey.github.io/neuro/"
 repository = "https://github.com/srenevey/neuro"
 readme = "README.md"
 
-keywords = ["deep learning", "machine learning", "neural network"]
+keywords = ["deep-learning", "machine-learning", "neural-networks", "cnn"]
 categories = ["science"]
 
 license = "BSD-3-Clause"
 
 [dependencies]
-arrayfire = "3.6.2"
+arrayfire = "3.6.3"
 csv = "1.1.1"
 rand = "0.7.0"
 image = "0.22.2"
 walkdir = "2.2.9"
-byteorder = "1.3.2"
 indicatif = "0.13.0"
-hdf5 = "0.5.2"
+hdf5 = { git = "https://github.com/aldanor/hdf5-rust" }
+hdf5-sys = { git = "https://github.com/aldanor/hdf5-rust" }

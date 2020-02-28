@@ -1,9 +1,10 @@
 // This example reproduces the network described in Zeiler, M.D., Adadelta: An Adaptive Learning Rate Method, arXiv:1212.5701v1, 2012.
+// An accuracy of about 97.4% is achieved on the test set.
 
 use neuro::activations::Activation;
-use neuro::data::ImageDataSet;
+use neuro::data::ImageDataSetBuilder;
 use neuro::errors::*;
-use neuro::layers::Dense;
+use neuro::layers::{Dense, Flatten};
 use neuro::losses;
 use neuro::metrics::Metrics;
 use neuro::models::Network;
@@ -11,30 +12,37 @@ use neuro::optimizers::AdaDelta;
 use neuro::tensor::*;
 
 use std::path::Path;
+use neuro::initializers::Initializer;
 
-fn main() -> Result<(), NeuroError> {
+fn main() -> Result<(), Error> {
 
     // Create the dataset
     let path = Path::new("datasets/MNIST");
-    let data = ImageDataSet::from_path(&path, (28, 28), 0.1)?;
+    let data = ImageDataSetBuilder::from_dir(&path, (28, 28))
+        .valid_split(0.1)
+        .one_hot_encode()
+        .scale(1./255.)
+        .build()?;
     println!("{}", data);
 
     // Create the neural network
-    let mut nn = Network::new(&data, losses::SoftmaxCrossEntropy, AdaDelta::new(), None);
+    let mut nn = Network::new(Dim::new(&[28, 28, 1, 1]), losses::SoftmaxCrossEntropy, AdaDelta::new(), None)?;
+    nn.add(Flatten::new());
     nn.add(Dense::new(500, Activation::Tanh));
     nn.add(Dense::new(300, Activation::Tanh));
     nn.add(Dense::new(10, Activation::Softmax));
     println!("{}", nn);
 
+
     // Fit the network
-    nn.fit(100, 6, Some(1), Some(vec![Metrics::Accuracy]));
+    nn.fit(&data, 100, 6, Some(1), Some(vec![Metrics::Accuracy]));
 
     // Evaluate the trained model on the test set
-    nn.evaluate(Some(vec![Metrics::Accuracy]));
+    nn.evaluate(&data, Some(vec![Metrics::Accuracy]));
 
 
     // Predict the output of some images from the test set
-    let input = data.load_img_vec(&vec![
+    let input = data.load_image_vec(&vec![
         Path::new("datasets/MNIST/test/1/5.png"),
         Path::new("datasets/MNIST/test/3/2008.png"),
         Path::new("datasets/MNIST/test/5/59.png"),

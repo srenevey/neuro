@@ -1,5 +1,12 @@
 //! Base module to create neural networks.
-use crate::data::{DataSet, BatchIterator, Scaling};
+use arrayfire::*;
+use indicatif::{ProgressBar, ProgressStyle};
+use std::fmt;
+use std::str::FromStr;
+
+use crate::data::{DataSet, BatchIterator};
+use crate::errors::Error;
+use crate::io::*;
 use crate::layers::*;
 use crate::losses::*;
 use crate::metrics::*;
@@ -7,85 +14,65 @@ use crate::optimizers::*;
 use crate::regularizers::*;
 use crate::tensor::*;
 
-use std::fmt;
-use std::fs;
-use std::io;
-use std::io::{BufWriter, BufReader, Read, Write};
-use std::path::Path;
-
-use arrayfire::*;
-use indicatif::{ProgressBar, ProgressStyle};
-
 enum Mode {
     Test,
     Train,
     Valid,
 }
 
+
 /// Structure representing a neural network.
-pub struct Network<'a, D, O, L>
-where D: DataSet, O: Optimizer, L: Loss
+pub struct Network
 {
-    data: &'a D,
     layers: Vec<Box<dyn Layer>>,
-    loss_function: L,
-    optimizer: O,
+    loss_function: Box<dyn Loss>,
+    optimizer: Box<dyn Optimizer>,
     regularizer: Option<Regularizer>,
-    input_shape: Dim4,
-    output_shape: Dim4,
+    input_shape: Dim,
+    output_shape: Dim,
     classes: Option<Vec<String>>,
 }
 
-
-impl<'a, D, O, L> Network<'a, D, O, L>
-where D: DataSet, O: Optimizer, L: Loss
+impl Network
 {
     /// Creates an empty neural network.
     ///
-    /// # Arguments
-    /// * `data`: dataset used to train the neural network
-    /// * `loss_function`: loss function minimized in the optimization process
-    /// * `optimizer`: algorithm used to optimize the parameters of the network
-    /// * `regularizer`: (optional) method used to regularize the model
-    ///
-    pub fn new(data: &'a D,
+    /// The input shape must be in the form [height, width, channel, 1]. Mini-batches are created along the fourth dimension.
+    pub fn new<L: 'static + Loss, O: 'static + Optimizer>(input_shape: Dim,
                loss_function: L,
                optimizer: O,
                regularizer: Option<Regularizer>
-    ) -> Network<D, O, L> {
-        Network {
-            data,
+    ) -> Result<Network, Error> {
+
+        Ok(Network {
             layers: Vec::new(),
-            loss_function,
-            optimizer,
+            loss_function: Box::new(loss_function),
+            optimizer: Box::new(optimizer),
             regularizer,
-            input_shape: data.input_shape(),
-            output_shape: data.output_shape(),
-            classes: data.classes(),
-        }
+            input_shape,
+            output_shape: Dim::new(&[0, 0, 0, 0]),
+            classes: None,
+        })
     }
 
     /// Adds a layer to the network.
-    ///
-    /// # Arguments
-    /// * `layer`: layer to be added
-    ///
     pub fn add(&mut self, layer: Box<dyn Layer>) {
         let input_shape = match self.layers.last() {
             Some(layer) => layer.output_shape(),
-            None => self.data.input_shape(),
+            None => self.input_shape,
         };
         self.layers.push(layer);
-        self.layers.last_mut().unwrap().initialize_parameters(input_shape);
-        self.layers.last_mut().unwrap().set_regularizer(self.regularizer);
+
+        if let Some(layer) = self.layers.last_mut() {
+            layer.initialize_parameters(input_shape);
+            layer.set_regularizer(self.regularizer);
+
+            self.output_shape = layer.output_shape();
+        }
     }
 
 
     /// Computes the output of the network for a given input.
-    ///
-    /// # Arguments
-    /// * `input`: array containing the samples to be evaluated
-    ///
     fn forward(&self, input: &Tensor) -> Tensor {
         self.layers.iter().fold(
             input.copy(),
@@ -97,10 +84,6 @@ where D: DataSet, O: Optimizer, L: Loss
     /// Computes a forward pass of the network.
     ///
     /// The intermediate linear activations computed during the forward pass are stored in each layer for efficient back propagation.
-    ///
-    /// # Arguments
-    /// * `input`: array containing the samples fed into the model
-    ///
     fn forward_mut(&mut self, input: &mut Tensor) {
         for layer in self.layers.iter_mut() {
             *input = layer.compute_activation_mut(input);
@@ -110,9 +93,9 @@ where D: DataSet, O: Optimizer, L: Loss
     /// Computes a backward pass of the network.
     ///
     /// # Arguments
-    /// * `y_pred`: output of the network
-    /// * `y_true`: true labels
     ///
+    /// * `y_pred` - The output of the network.
+    /// * `y_true` - The true labels.
     fn backward(&mut self,
                 y_pred: &Tensor,
                 y_true: &Tensor
@@ -132,14 +115,10 @@ where D: DataSet, O: Optimizer, L: Loss
 
     /// Fits the neural network with the training data.
     ///
-    /// The training data are shuffled at the beginning of each epoch, before batches are created.
-    ///
-    /// # Arguments
-    /// * `batch_size`: size of the mini-batches used for training
-    /// * `epochs`: number of epochs to train for
-    /// * `print_loss`: number of epochs between two computations and printing of the validation loss
-    ///
-    pub fn fit(&mut self,
+    /// The training data are shuffled at the beginning of each epoch, before batches are created. The progress is printed
+    /// at every `print_loss` epoch.
+    pub fn fit<T: DataSet>(&mut self,
+               data: &T,
                batch_size: u64,
                epochs: u64,
                print_loss: Option<u64>,
@@ -151,11 +130,14 @@ where D: DataSet, O: Optimizer, L: Loss
 
         self.initialize_optimizer();
 
+        // If it's a classification problem, store the classes.
+        self.classes = data.classes();
+
         // Initialize progress bar
         let num_bins = match print_loss {
             Some(p) => {
-                let num_batches_train = 2 * p * (self.data.num_train_samples() as f64 / batch_size as f64).ceil() as u64;
-                let num_batches_valid = (self.data.num_valid_samples() as f64 / batch_size as f64).ceil() as u64;
+                let num_batches_train = 2 * p * (data.num_train_samples() as f64 / batch_size as f64).ceil() as u64;
+                let num_batches_valid = (data.num_valid_samples() as f64 / batch_size as f64).ceil() as u64;
                 num_batches_train + num_batches_valid
             },
             None => epochs
@@ -167,8 +149,9 @@ where D: DataSet, O: Optimizer, L: Loss
         progress_bar.set_style(sty.clone());
 
 
+        // Train
         for epoch in 1..=epochs {
-            let (x_train_shuffled, y_train_shuffled) = Tensor::shuffle(self.data.x_train(), self.data.y_train());
+            let (x_train_shuffled, y_train_shuffled) = Tensor::shuffle(data.x_train(), data.y_train());
             let batches = BatchIterator::new((&x_train_shuffled, &y_train_shuffled), batch_size);
 
             // Reset progress bar
@@ -197,15 +180,19 @@ where D: DataSet, O: Optimizer, L: Loss
             if let Some(print_iter) = print_loss {
                 if epoch % print_iter == 0 {
 
-                    // Compute the loss and metrics on the training set
-                    let (train_loss, train_pred) = self.compute_loss(batch_size, Mode::Train, Some(&progress_bar));
-                    let train_metrics_values = self.compute_metrics(&train_pred, &self.data.y_train(), batch_size, &metrics);
+                    // Compute the loss and metrics evaluated on the training set
+                    let (train_loss, train_pred) = self.compute_loss(data, batch_size, Mode::Train, Some(&progress_bar));
+                    let train_metrics_values = self.compute_metrics(&train_pred, &data.y_train(), batch_size, &metrics);
 
-                    // Compute the loss and metrics on the validation set
-                    let (valid_loss, valid_pred) = self.compute_loss(batch_size, Mode::Valid, Some(&progress_bar));
-                    let valid_metrics_values = self.compute_metrics(&valid_pred, &self.data.y_valid(), batch_size, &metrics);
+                    // Compute the loss and metrics evaluated on the validation set
+                    if data.num_valid_samples() > 0 {
+                        let (valid_loss, valid_pred) = self.compute_loss(data, batch_size, Mode::Valid, Some(&progress_bar));
+                        let valid_metrics_values = self.compute_metrics(&valid_pred, &data.y_valid().unwrap(), batch_size, &metrics);
+                        progress_bar.finish_with_message(&format!("epoch: {}/{}, train_loss: {}, train_metrics: {:?}, valid_loss: {}, valid_metrics: {:?}", epoch, epochs, train_loss, train_metrics_values, valid_loss, valid_metrics_values));
 
-                    progress_bar.finish_with_message(&format!("epoch: {}/{}, train_loss: {}, train_metrics: {:?}, valid_loss: {}, valid_metrics: {:?}", epoch, epochs, train_loss, train_metrics_values, valid_loss, valid_metrics_values));
+                    } else {
+                        progress_bar.finish_with_message(&format!("epoch: {}/{}, train_loss: {}, train_metrics: {:?}", epoch, epochs, train_loss, train_metrics_values));
+                    }
                 }
             }
         }
@@ -218,53 +205,27 @@ where D: DataSet, O: Optimizer, L: Loss
         for layer in self.layers.iter() {
             match layer.parameters() {
                 Some(param) => dims.push((param[0].dims(), param[1].dims())),
-                None => dims.push((Dim4::new(&[0, 0, 0, 0]), Dim4::new(&[0, 0, 0, 0])))
+                None => dims.push((Dim4::new(&[1, 1, 1, 1]), Dim4::new(&[1, 1, 1, 1])))
             }
-
         }
-        self.optimizer.initialize_opt_params(dims);
+        self.optimizer.initialize_parameters(dims);
     }
 
-
-    /*
-    /// Computes the loss for the predicted output.
-    ///
-    /// # Arguments
-    /// * `y_pred`: predicted output of the model
-    /// * `y_true`: true labels
-    ///
-    fn compute_loss(&self,
-                    y_pred: &Tensor,
-                    y_true: &Tensor
-    ) -> PrimitiveType {
-        let regularization = match &self.regularizer {
-            Some(regularizer) => {
-                let mut weights: Vec<&Tensor> = Vec::new();
-                for layer in self.layers.iter() {
-                    match layer.parameters() {
-                        Some(params) => weights.push(params[0]),
-                        None => {}
-                    }
-                }
-                regularizer.eval(weights)
-            },
-            None => 0.0,
-        };
-        self.loss_function.eval(y_pred, y_true) + regularization
-    }
-    */
 
     /// Computes the loss and the predicted output.
     ///
     /// # Arguments
-    /// * `batch_size`: size of the mini-batches used to compute the loss
-    /// * `mode`: specifies if the loss is computed on the training, validation, or test set
-    /// * `bar`: (optional) reference to a progress bar used to show training progress
     ///
-    /// # Returns
+    /// * `data` - The dataset containing the training, validation, and optionally test data.
+    /// * `batch_size` - The size of the mini-batches used to compute the loss.
+    /// * `mode` - Flag specifying whether the loss is computed on the training, validation, or test set.
+    /// * `bar` - The reference to a progress bar used to show the training progress.
+    ///
+    /// # Return value
+    ///
     /// Tuple containing the loss and the predicted output.
-    ///
-    fn compute_loss(&self,
+    fn compute_loss<T: DataSet>(&self,
+                    data: &T,
                     batch_size: u64,
                     mode: Mode,
                     progress_bar: Option<&ProgressBar>
@@ -274,9 +235,9 @@ where D: DataSet, O: Optimizer, L: Loss
 
         // Create batch iterator
         let (x, y) = match mode {
-            Mode::Train => (self.data.x_train(), self.data.y_train()),
-            Mode::Valid => (self.data.x_valid(), self.data.y_valid()),
-            Mode::Test => (self.data.x_test().expect("No test samples have been provided."), self.data.y_test().expect("No test labels have been provided.")),
+            Mode::Train => (data.x_train(), data.y_train()),
+            Mode::Valid => (data.x_valid().unwrap(), data.y_valid().unwrap()),
+            Mode::Test => (data.x_test().expect("No test samples have been provided."), data.y_test().expect("No test labels have been provided.")),
         };
         let batches = BatchIterator::new((x, y), batch_size);
         let num_batches = batches.num_batches() as PrimitiveType;
@@ -308,104 +269,36 @@ where D: DataSet, O: Optimizer, L: Loss
     }
 
 
-    /*
-    /// Computes the loss on the training set.
-    ///
-    /// # Arguments
-    /// * `batch_size`: size of the mini-batches used to propagate the training data
-    ///
-    fn compute_train_loss(&self, batch_size: u64, bar: &ProgressBar) -> PrimitiveType {
-        let mut loss = 0.;
-
-        // Create batch iterator
-        let batches = BatchIterator::new((self.data.x_train(), self.data.y_train()), batch_size);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&mini_batch_x);
-            loss += self.compute_loss(&y_pred_batch, &mini_batch_y);
-            bar.inc(1);
-        }
-        loss / num_batches
-    }
-
-
-    /// Evaluates the model with the validation data.
-    ///
-    /// # Returns
-    /// Returns the loss computed on the validation set and the predictions in a tuple.
-    ///
-    fn validate(&self, batch_size: u64, bar: &ProgressBar) -> (PrimitiveType, Tensor) {
-        let mut loss = 0.;
-        let mut y_pred = Array::new_empty(self.output_shape);
-
-        // Create batch iterator
-        let batches = BatchIterator::new((self.data.x_valid(), self.data.y_valid()), batch_size);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        let mut count = 0;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&mini_batch_x);
-            loss += self.compute_loss(&y_pred_batch, &mini_batch_y);
-
-            if count == 0 {
-                y_pred = y_pred_batch;
-            } else {
-                y_pred = join(3, &y_pred, &y_pred_batch);
-            }
-            count += 1;
-            bar.inc(1);
-        }
-        (loss / num_batches, y_pred)
-    }
-    */
-
     /// Evaluates the model on the test set.
     ///
     /// # Arguments
-    /// * `metrics`: vector containing the metrics that will be evaluated
     ///
-    pub fn evaluate(&self, metrics: Option<Vec<Metrics>>) {
-        let (loss, y_pred) = self.compute_loss(128, Mode::Test, None);
-        let y_test = self.data.y_test().expect("No test labels have been provided.");
-        /*
-        let mut loss = 0.;
-        let mut y_pred = Array::new_empty(self.output_shape);
-
-        let x_test = self.data.x_test().expect("No test samples have been provided.");
-        let y_test = self.data.y_test().expect("No test labels have been provided.");
-
-        // Create batch iterator
-        let batches = BatchIterator::new((x_test, y_test), 128);
-        let num_batches = batches.num_batches() as PrimitiveType;
-        let mut count = 0;
-        for (mini_batch_x, mini_batch_y) in batches {
-            let y_pred_batch = self.forward(&mini_batch_x);
-            loss += self.compute_loss(&y_pred_batch, &mini_batch_y);
-
-            if count == 0 {
-                y_pred = y_pred_batch;
-            } else {
-                y_pred = join(3, &y_pred, &y_pred_batch);
-            }
-            count += 1;
-        }
-        loss /= num_batches;
-        */
-        let metrics_values = self.compute_metrics(&y_pred, y_test, 128, &metrics);
+    /// * `data` - The dataset containing the test data.
+    /// * `metrics` - A vector containing the metrics that will be evaluated.
+    pub fn evaluate<T: DataSet>(&self,
+                                data: &T,
+                                metrics: Option<Vec<Metrics>>
+    ) {
+        // TODO: find a way to automatically compute a batch size that fits in the available GPU/CPU memory
+        let batch_size = 128;
+        let (loss, y_pred) = self.compute_loss(data, batch_size, Mode::Test, None);
+        let y_test = data.y_test().expect("The dataset does not contain any test data.");
+        let metrics_values = self.compute_metrics(&y_pred, y_test, batch_size, &metrics);
         println!("Evaluation of the test set: loss: {}, metrics: {:?}", loss, metrics_values);
     }
-
 
 
     /// Evaluates the metrics.
     ///
     /// # Arguments
-    /// * `y_pred`: labels predicted by the model
-    /// * `y_true`: true labels
-    /// * `batch_size`: y_pred and y_true are split in chunks of batch_size to reduce the memory footprint
     ///
-    /// # Returns
+    /// * `y_pred` - The labels predicted by the model.
+    /// * `y_true` - The true labels.
+    /// * `batch_size` - y_pred and y_true are split in chunks of batch_size to reduce the memory footprint
+    ///
+    /// # Return value
+    ///
     /// Vector containing the values for each metric.
-    ///
     fn compute_metrics(&self,
                        y_pred: &Tensor,
                        y_true: &Tensor,
@@ -450,56 +343,28 @@ where D: DataSet, O: Optimizer, L: Loss
     }
 
 
-
     /// Computes the output of the network for the given input.
     ///
-    /// # Arguments
-    /// * `input`: tensor of inputs. Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.
+    /// Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.
     ///
-    /// # Returns
+    /// # Return value
+    ///
     /// Tensor of the predicted output
-    ///
     pub fn predict(&self, input: &Tensor) -> Tensor {
-
-        // Normalize the input if the network has been trained on normalized samples
-        match self.data.x_train_stats() {
-            Some(stats) => {},
-            None => {}
-        }
-
-        // Compute the output of the network
-        let mut y_pred = self.forward(&input);
-
-        // Unscale the output values
-        match self.data.y_train_stats() {
-            Some(stats) => {
-                match stats.0 {
-                    Scaling::Normalized => {
-                        let y_min = &stats.1;
-                        let y_max = &stats.2;
-                        let range = y_max - y_min;
-                        y_pred = add(&mul(&range, &y_pred, true), y_max, true);
-                    },
-                    Scaling::Standarized => {
-                        let mean = &stats.1;
-                        let std = &stats.2;
-                        y_pred = add(&mul(std, &y_pred, true), mean, true);
-                    }
-                }
-            },
-            None => {},
-        }
-        y_pred
+        self.forward(&input)
     }
 
     /// Predicts the class for the input.
     ///
-    /// # Arguments
-    /// * `input`: tensor of inputs. Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.
+    /// Multiple samples can be evaluated at once by stacking them along the fourth dimension of the tensor.
     ///
-    /// # Returns
+    /// # Return value
+    ///
     /// Vector of tuples containing the predicted class and the probability for each sample.
     ///
+    /// # Panic
+    ///
+    /// Panics if the model doesn't contain a classes dictionary.
     pub fn predict_class(&self, input: &Tensor) -> Vec<(String, PrimitiveType)> {
         let batch_size = input.dims().get()[3] as usize;
         let mut predictions: Vec<(String, PrimitiveType)> = Vec::with_capacity(batch_size);
@@ -528,49 +393,118 @@ where D: DataSet, O: Optimizer, L: Loss
                     }
                 }
             },
-            None => panic!("The network is not aware of any classes."),
+            None => panic!("The network does not contain any classes dictionary."),
         }
         predictions
     }
 
 
-    /// Saves the model.
-    ///
-    /// # Arguments
-    /// * `filename`: name of the file where the model is saved
-    ///
-    pub fn save(&self, filename: &str) -> hdf5::Result<()> {
-        let file = hdf5::File::open(filename, "w")?;
+    /// Saves the model in HDF5 format.
+    pub fn save(&self, filename: &str) -> Result<(), Error> {
+
+        let file = hdf5::File::create(filename)?;
+
+        let neuro_version: &'static str = env!("CARGO_PKG_VERSION");
+        let version = file.new_dataset::<hdf5::types::VarLenUnicode>().create("neuro_version", 1)?;
+        version.write(&[hdf5::types::VarLenUnicode::from_str(neuro_version).unwrap()])?;
+
+        let loss = file.new_dataset::<u64>().create("loss", 1)?;
+        loss.write(&[self.loss_function.id()])?;
+        if let Some(regularizer) = self.regularizer { regularizer.save(&file)?; };
+        self.optimizer.save(&file)?;
+
+        let input_shape = file.new_dataset::<[u64; 4]>().create("input_shape", 1)?;
+        input_shape.write(&[*self.input_shape.get()])?;
+
+        let output_shape = file.new_dataset::<[u64; 4]>().create("output_shape", 1)?;
+        output_shape.write(&[*self.output_shape.get()])?;
 
 
-        /*
-        let f = fs::File::create(filename)?;
-        {
-            let mut writer = BufWriter::new(f);
-            writer.write(&self.loss_function.id().to_be_bytes())?;
-            writer.write(b"\n")?;
-            self.optimizer.save(&mut writer)?;
-
-            // Save layers
-            for layer in self.layers.iter() {
-                layer.save(&mut writer)?;
-            }
+        let layers_group = create_group(&file, "layers");
+        for (i, layer) in self.layers.iter().enumerate() {
+            layer.save(&layers_group, i)?;
         }
-        */
+
+        println!("Model saved in: {}", filename);
         Ok(())
     }
 
+    /// Loads a model from a HDF5 file.
+    pub fn load(filename: &str) -> Result<Network, Error> {
+        let file = hdf5::File::open(filename);
+        match file {
+            Ok(file) => {
+                let _ = hdf5::silence_errors();
+
+                // Shapes
+                let input_shape = file.dataset("input_shape").and_then(|shape| shape.read_raw::<[u64; 4]>()).expect("No input shape in the file");
+                let output_shape = file.dataset("output_shape").and_then(|shape| shape.read_raw::<[u64; 4]>()).expect("Could not retrieve the output shape");
+
+                // Layers
+                let mut layers: Vec<Box<dyn Layer>> = Vec::new();
+                let layers_group = file.group("layers").expect("Could not retrieve the layers.");
+                let layers_name = list_subgroups(&layers_group);
+                for layer in &layers_name {
+                    let group = layers_group.group(layer).unwrap();
+                    let layer_type: Vec<&str> = layer.split('_').collect();
+
+                    match layer_type[1] {
+                        BatchNorm::NAME => layers.push(BatchNorm::from_hdf5_group(&group)),
+                        Conv2D::NAME => layers.push(Conv2D::from_hdf5_group(&group)),
+                        Dense::NAME =>  layers.push(Dense::from_hdf5_group(&group)),
+                        Dropout::NAME => layers.push(Dropout::from_hdf5_group(&group)),
+                        Flatten::NAME => layers.push(Flatten::from_hdf5_group(&group)),
+                        MaxPool2D::NAME => layers.push(MaxPool2D::from_hdf5_group(&group)),
+                        _ => panic!("Unknown layer."),
+                    }
+                }
+
+                // Optimizer
+                let optimizer_group = file.group("optimizer").expect("Could not retrieve the optimizer.");
+                let opt_type = optimizer_group.dataset("type").and_then(|ds| ds.read_raw::<hdf5::types::VarLenUnicode>()).expect("Could not retrieve the optimizer type.");
+                let optimizer: Box<dyn Optimizer> = match opt_type[0].as_str() {
+                    Adam::NAME => Adam::from_hdf5_group(&optimizer_group),
+                    AdaDelta::NAME => AdaDelta::from_hdf5_group(&optimizer_group),
+                    RMSProp::NAME => RMSProp::from_hdf5_group(&optimizer_group),
+                    SGD::NAME => SGD::from_hdf5_group(&optimizer_group),
+                    _ => panic!("Unknown optimizer."),
+                };
+
+                let loss_function_id = file.dataset("loss").and_then(|loss| loss.read_raw::<u64>()).expect("No loss function in the file");
+                let loss_function = loss_from_id(loss_function_id[0]);
+
+                let regularizer = Regularizer::from_hdf5_group(&file);
+
+                Ok(Network {
+                    layers,
+                    loss_function,
+                    optimizer,
+                    regularizer,
+                    input_shape: Dim::new(&input_shape[0]),
+                    output_shape: Dim::new(&output_shape[0]),
+                    classes: None
+                })
+            },
+            Err(err) => Err(Error::from(err)),
+        }
+    }
 }
 
 
-impl<'a, D, O, L> fmt::Display for Network<'a, D, O, L>
-where D: DataSet, O: Optimizer, L: Loss
+impl fmt::Display for Network
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "Layer \t\t Parameters")?;
-        writeln!(f, "------------------------")?;
+        writeln!(f, "=====")?;
+        writeln!(f, "Model")?;
+        writeln!(f, "=====")?;
+        writeln!(f, "Input shape: [{}, {}, {}]", self.input_shape[0], self.input_shape[1], self.input_shape[2])?;
+        writeln!(f, "Output shape: [{}, {}, {}]", self.output_shape[0], self.output_shape[1], self.output_shape[2])?;
+        writeln!(f, "Optimizer: {}", self.optimizer.name())?;
+        if let Some(regularizer) = self.regularizer { writeln!(f, "Regularizer: {}", regularizer)?; }
+        writeln!(f, "\nLayer \t\t Parameters \t Output shape")?;
+        writeln!(f, "---------------------------------------------")?;
         for layer in self.layers.iter() {
-            println!("{}", layer);
+            writeln!(f, "{}", layer)?;
         }
         Ok(())
     }
