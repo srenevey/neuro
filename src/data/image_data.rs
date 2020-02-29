@@ -283,7 +283,7 @@ impl ImageDataSet {
 
         match image::open(path) {
             Ok(mut image) => {
-                image = image.resize_exact(size.1, size.0, image::FilterType::Nearest);
+                image = image.resize_exact(size.1, size.0, image::imageops::FilterType::Nearest);
                 let image_vec = image_ops.process(&mut image);
                 let num_channels = image.color().channel_count();
                 Ok((image_vec, num_channels))
@@ -300,6 +300,30 @@ impl ImageDataSet {
     ///
     /// * `paths` - A slice of paths to the images. Each path must point to an individual image.
     ///
+    pub fn load_image_vec(paths: &[&Path], image_size: (u32, u32), image_ops: &ImageOps) -> Result<Tensor, Error> {
+        let mut images = Vec::new();
+        let mut num_channels = None;
+
+        for path in paths {
+            let image = Self::load_image(path, image_size, image_ops)?;
+
+            match num_channels {
+                Some(n) => {
+                    if image.1 != n {
+                        return Err(std::convert::From::from(DataSetError::DifferentNumbersOfChannels));
+                    }
+                },
+                None => num_channels = Some(image.1),
+            }
+            images.extend(image.0);
+        }
+
+        let mut x = Tensor::new(&images[..], Dim::new(&[num_channels.unwrap() as u64, image_size.1 as u64, image_size.0 as u64, paths.len() as u64]));
+        x = reorder_v2(&x, 2, 1, Some(vec![0, 3]));
+        Ok(x)
+    }
+
+    /*
     pub fn load_image_vec(&self, paths: &[&Path]) -> Result<Tensor, Error> {
         let mut images = Vec::new();
         let mut num_channels = None;
@@ -324,6 +348,11 @@ impl ImageDataSet {
         //x = reorder(&x, Dim::new(&[2, 1, 0, 3]));
         x = reorder_v2(&x, 2, 1, Some(vec![0, 3]));
         Ok(x)
+    }
+    */
+
+    pub fn image_ops(&self) -> &ImageOps {
+        &self.image_ops
     }
 }
 
@@ -467,13 +496,14 @@ impl ImageOps {
     }
 
     fn scale(&self, image: &mut DynamicImage) -> Vec<PrimitiveType> {
-       image.raw_pixels().iter_mut().map(|pixel| {
+       image.to_bytes().iter_mut().map(|pixel| {
             if let Some(factor) = self.scale {
                 *pixel as PrimitiveType * factor
             } else {
                 *pixel as PrimitiveType
             }
         }).collect::<Vec<PrimitiveType>>()
+
     }
 }
 

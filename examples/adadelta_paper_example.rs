@@ -2,7 +2,7 @@
 // An accuracy of about 97.4% is achieved on the test set.
 
 use neuro::activations::Activation;
-use neuro::data::ImageDataSetBuilder;
+use neuro::data::{ImageDataSetBuilder, ImageDataSet};
 use neuro::errors::*;
 use neuro::layers::{Dense, Flatten};
 use neuro::losses;
@@ -42,12 +42,12 @@ fn main() -> Result<(), Error> {
 
 
     // Predict the output of some images from the test set
-    let input = data.load_image_vec(&vec![
+    let input = ImageDataSet::load_image_vec(&vec![
         Path::new("datasets/MNIST/test/1/5.png"),
         Path::new("datasets/MNIST/test/3/2008.png"),
         Path::new("datasets/MNIST/test/5/59.png"),
         Path::new("datasets/MNIST/test/9/104.png")
-    ])?;
+    ], (28, 28), data.image_ops())?;
 
     let predictions = nn.predict_class(&input);
     print_prediction(&predictions);
