@@ -419,6 +419,14 @@ impl Network
         let output_shape = file.new_dataset::<[u64; 4]>().create("output_shape", 1)?;
         output_shape.write(&[*self.output_shape.get()])?;
 
+        if let Some(classes) = &self.classes {
+            let classes_ds = file.new_dataset::<hdf5::types::VarLenUnicode>().create("classes", classes.len())?;
+            let mut str = Vec::<hdf5::types::VarLenUnicode>::new();
+            for class in classes {
+                str.push(hdf5::types::VarLenUnicode::from_str(class).unwrap());
+            }
+            classes_ds.write(&str[..])?;
+        }
 
         let layers_group = create_group(&file, "layers");
         for (i, layer) in self.layers.iter().enumerate() {
@@ -431,10 +439,10 @@ impl Network
 
     /// Loads a model from a HDF5 file.
     pub fn load(filename: &str) -> Result<Network, Error> {
+        let _ = hdf5::silence_errors();
         let file = hdf5::File::open(filename);
         match file {
             Ok(file) => {
-                let _ = hdf5::silence_errors();
 
                 // Shapes
                 let input_shape = file.dataset("input_shape").and_then(|shape| shape.read_raw::<[u64; 4]>()).expect("No input shape in the file");
@@ -475,6 +483,16 @@ impl Network
 
                 let regularizer = Regularizer::from_hdf5_group(&file);
 
+                let classes = if let Ok(classes_group) = file.dataset("classes") {
+                    let classes_vec = classes_group
+                        .read_raw::<hdf5::types::VarLenUnicode>()
+                        .unwrap()
+                        .iter()
+                        .map(|entry| String::from(entry.as_str()))
+                        .collect::<Vec<String>>();
+                    Some(classes_vec)
+                } else { None };
+
                 Ok(Network {
                     layers,
                     loss_function,
@@ -482,7 +500,7 @@ impl Network
                     regularizer,
                     input_shape: Dim::new(&input_shape[0]),
                     output_shape: Dim::new(&output_shape[0]),
-                    classes: None
+                    classes: classes
                 })
             },
             Err(err) => Err(Error::from(err)),
