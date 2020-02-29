@@ -39,7 +39,7 @@ impl ImageDataSet {
     /// The images must be in folders named after the corresponding class in a *train* top-level directory.
     /// Optionally, if a *test* directory exists, its content will be used to create a test set.
     /// For instance:
-    /// ```ignore
+    /// ```
     /// pets/
     ///   train/
     ///     cats/
@@ -322,35 +322,7 @@ impl ImageDataSet {
         x = reorder_v2(&x, 2, 1, Some(vec![0, 3]));
         Ok(x)
     }
-
-    /*
-    pub fn load_image_vec(&self, paths: &[&Path]) -> Result<Tensor, Error> {
-        let mut images = Vec::new();
-        let mut num_channels = None;
-        let mut image_ops = ImageOps::default();
-        image_ops.scale = self.image_ops.scale;
-
-        for path in paths {
-            let image = Self::load_image(path, self.image_size, &image_ops)?;
-
-            match num_channels {
-                Some(n) => {
-                    if image.1 != n {
-                        return Err(std::convert::From::from(DataSetError::DifferentNumbersOfChannels));
-                    }
-                },
-                None => num_channels = Some(image.1),
-            }
-            images.extend(image.0);
-        }
-
-        let mut x = Tensor::new(&images[..], Dim::new(&[num_channels.unwrap() as u64, self.image_size.1 as u64, self.image_size.0 as u64, paths.len() as u64]));
-        //x = reorder(&x, Dim::new(&[2, 1, 0, 3]));
-        x = reorder_v2(&x, 2, 1, Some(vec![0, 3]));
-        Ok(x)
-    }
-    */
-
+    
     pub fn image_ops(&self) -> &ImageOps {
         &self.image_ops
     }
@@ -528,7 +500,7 @@ impl ImageDataSetBuilder {
     /// The images must be in folders named after the corresponding class in a *train* top-level directory.
     /// Optionally, if a *test* directory exists, its content will be used to create a test set.
     /// For instance:
-    /// ```ignore
+    /// ```
     /// pets/
     ///   train/
     ///     cats/
