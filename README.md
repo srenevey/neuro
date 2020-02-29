@@ -1,9 +1,11 @@
 # neuro 
-[Homepage](https://srenevey.github.io/neuro) • [API Documentation](https://srenevey.github.io/neuro/api/neuro) • [Examples](https://srenevey.github.io/neuro/examples)
+[![Crates.io](https://img.shields.io/crates/v/neuro.svg)](https://crates.io/crates/neuro/)[![Crates.io](https://img.shields.io/crates/l/neuro.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
+[Homepage](https://srenevey.github.io/neuro) • [API Documentation](https://srenevey.github.io/neuro/api/neuro) • [Examples](https://srenevey.github.io/neuro/examples)
 
 Neuro is a deep learning library that runs on the GPU. The library is designed to be very modular and allow users to easily add custom activation functions, loss functions, layers, and optimizers.
 The library presently supports:
+
   * Layers: BatchNorm, Conv2D, Dense, Dropout, Flatten, MaxPool2D.
   * Optimizers: Adadelta, Adam, RMSprop, SGD.
   * Activations: LeakyReLU, Linear, ReLU, Sigmoid, Softmax, Tanh.

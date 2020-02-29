@@ -22,7 +22,5 @@ rand = "0.7.3"
 image = "0.23.0"
 walkdir = "2.3.1"
 indicatif = "0.14.0"
-#hdf5 = { git = "https://github.com/aldanor/hdf5-rust" }
 hdf5 = "0.6.0"
-#hdf5-sys = { git = "https://github.com/aldanor/hdf5-rust" }
 hdf5-sys = "0.6.0"
