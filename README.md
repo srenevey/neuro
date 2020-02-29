@@ -1,5 +1,5 @@
 # neuro 
-[![Crates.io](https://img.shields.io/crates/v/neuro.svg)](https://crates.io/crates/neuro/)[![Crates.io](https://img.shields.io/crates/l/neuro.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Crates.io](https://img.shields.io/crates/v/neuro.svg)](https://crates.io/crates/neuro/) [![Crates.io](https://img.shields.io/crates/l/neuro.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 [Homepage](https://srenevey.github.io/neuro) • [API Documentation](https://srenevey.github.io/neuro/api/neuro) • [Examples](https://srenevey.github.io/neuro/examples)
 
