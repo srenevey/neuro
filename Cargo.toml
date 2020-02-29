@@ -5,7 +5,7 @@ authors = ["Sylvain Renevey <syl.renevey@gmail.com>"]
 description = "A deep learning library that runs on the GPU."
 edition = "2018"
 
-documentation = "https://srenevey.github.io/neuro/api"
+documentation = "https://srenevey.github.io/neuro/api/neuro/"
 homepage = "https://srenevey.github.io/neuro/"
 repository = "https://github.com/srenevey/neuro"
 readme = "README.md"
