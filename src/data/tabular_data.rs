@@ -161,7 +161,7 @@ impl TabularDataSet {
     /// is a normal distribution with a mean of 0 and standard deviation 1 (assuming that the features originally come
     /// from a Gaussian distribution).
     pub fn standardize_input(&mut self) {
-        self.x_train_stats = Some(self.standarize(IO::Input));
+        self.x_train_stats = Some(self.standardize(IO::Input));
     }
 
     /// Normalizes the labels of the training, validation, and test (if any) sets.
@@ -203,13 +203,13 @@ impl TabularDataSet {
     /// from a Gaussian distribution).
     pub fn standardize_output(&mut self) {
 
-        self.y_train_stats = Some(self.standarize(IO::Output));
+        self.y_train_stats = Some(self.standardize(IO::Output));
 
         /*
         let y_mean = mean(&self.y_train, 3);
         let y_std = stdev(&self.y_train, 3);
 
-        // Standarize y_train, y_valid, and y_test
+        // Standardize y_train, y_valid, and y_test
         self.y_train = div(&sub(&self.y_train, &y_mean, true), &y_std, true);
         self.y_valid = div(&sub(&self.y_valid, &y_mean, true), &y_std, true);
 
@@ -221,7 +221,7 @@ impl TabularDataSet {
         }
 
         // Save standardization parameters
-        self.y_train_stats = Some((Scaling::Standarized, y_mean, y_std));
+        self.y_train_stats = Some((Scaling::Standardized, y_mean, y_std));
         */
     }
 
@@ -258,13 +258,13 @@ impl TabularDataSet {
     /// # Arguments
     ///
     /// * `io` - The IO variant indicating if the inputs or outputs are standardized.
-    fn standarize(&mut self, io: IO) -> (Scaling, Tensor, Tensor) {
+    fn standardize(&mut self, io: IO) -> (Scaling, Tensor, Tensor) {
         let (train_values, valid_values, test_values) = self.select_io(io);
 
         let mean_value = mean(train_values, 3);
         let standard_deviation = stdev(train_values, 3);
 
-        // Standarize the training, validation, and test sets.
+        // Standardize the training, validation, and test sets.
         *train_values = div(&sub(train_values, &mean_value, true), &standard_deviation, true);
         if let Some(valid_values) = valid_values {
             *valid_values = div(&sub(valid_values, &mean_value, true), &standard_deviation, true);
@@ -275,7 +275,7 @@ impl TabularDataSet {
         }
 
         // Return standardization parameters
-        (Scaling::Standarized, mean_value, standard_deviation)
+        (Scaling::Standardized, mean_value, standard_deviation)
     }
 
     /// Normalizes the inputs or outputs.
@@ -376,8 +376,8 @@ impl fmt::Display for TabularDataSet {
                         af_print!("y_max:", c2);
                         write!(f, "")?;
                     },
-                    Scaling::Standarized => {
-                        writeln!(f, "The output data have been standarized with:")?;
+                    Scaling::Standardized => {
+                        writeln!(f, "The output data have been standardized with:")?;
                         af_print!("mean:", c1);
                         af_print!("std:", c2);
                         write!(f, "")?;

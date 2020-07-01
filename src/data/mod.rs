@@ -63,7 +63,7 @@ impl std::convert::From<io::Error> for DataSetError {
 #[derive(Debug)]
 pub enum Scaling {
     Normalized,
-    Standarized,
+    Standardized,
 }
 
 
@@ -106,7 +106,7 @@ pub trait DataSet {
     ///
     /// If scaling has been applied, the returned tuple contains the following:
     /// * Normalization: (Scaling::Normalized, minimum value, maximum value)
-    /// * Standardization: (Scaling::Standarized, mean, standard deviation)
+    /// * Standardization: (Scaling::Standardized, mean, standard deviation)
     ///
     fn x_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)>;
 
@@ -114,7 +114,7 @@ pub trait DataSet {
     ///
     /// If scaling has been applied, the returned tuple contains the following:
     /// * Normalization: (Scaling::Normalized, minimum value, maximum value)
-    /// * Standardization: (Scaling::Standarized, mean, standard deviation)
+    /// * Standardization: (Scaling::Standardized, mean, standard deviation)
     ///
     fn y_train_stats(&self) -> &Option<(Scaling, Tensor, Tensor)>;
 }
