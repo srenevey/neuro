@@ -3,6 +3,7 @@ use arrayfire::*;
 use indicatif::{ProgressBar, ProgressStyle};
 use std::fmt;
 use std::str::FromStr;
+use rand::prelude::*;
 
 use crate::data::{DataSet, BatchIterator};
 use crate::errors::Error;
@@ -43,6 +44,10 @@ impl Network
                optimizer: O,
                regularizer: Option<Regularizer>
     ) -> Result<Network, Error> {
+
+        // Generate a random seed used by ArrayFire
+        let mut rng = thread_rng();
+        set_seed(rng.gen());
 
         Ok(Network {
             layers: Vec::new(),
