@@ -31,21 +31,21 @@ impl SGD {
     pub(crate) const NAME: &'static str = "SGD";
 
     /// Creates a Stochastic Gradient Descent optimizer.
-    pub fn new(learning_rate: PrimitiveType) -> SGD {
-        SGD {
+    pub fn new(learning_rate: PrimitiveType) -> Box<SGD> {
+        Box::new(SGD {
             learning_rate,
             momentum: 0.0,
             first_moment_est: Default::default(),
-        }
+        })
     }
 
     /// Creates a Stochastic Gradient Descent optimizer with momentum estimation.
-    pub fn with_param(learning_rate: PrimitiveType, momentum: PrimitiveType) -> SGD {
-        SGD {
+    pub fn with_param(learning_rate: PrimitiveType, momentum: PrimitiveType) -> Box<SGD> {
+        Box::new(SGD {
             learning_rate,
             momentum,
             first_moment_est: Default::default(),
-        }
+        })
     }
 
     pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<SGD> {
@@ -130,8 +130,8 @@ impl Adam {
     /// The exponential decay rates for the first and second moment estimates are set to 0.9 and 0.999 respectively.
     /// The epsilon value used for numerical stability is 1e-8.
     ///
-    pub fn new(learning_rate: PrimitiveType) -> Adam {
-        Adam {
+    pub fn new(learning_rate: PrimitiveType) -> Box<Adam> {
+        Box::new(Adam {
             learning_rate,
             beta1: 0.9,
             beta2: 0.999,
@@ -139,7 +139,7 @@ impl Adam {
             time_step: 0,
             first_moment_est: Default::default(),
             second_moment_est: Default::default(),
-        }
+        })
     }
 
     /// Creates an Adam optimizer with the given parameters.
@@ -154,8 +154,8 @@ impl Adam {
                       beta1: PrimitiveType,
                       beta2: PrimitiveType,
                       eps: PrimitiveType
-    ) -> Adam {
-        Adam {
+    ) -> Box<Adam> {
+        Box::new(Adam {
             learning_rate,
             beta1,
             beta2,
@@ -163,7 +163,7 @@ impl Adam {
             time_step: 0,
             first_moment_est: Default::default(),
             second_moment_est: Default::default(),
-        }
+        })
     }
 
     pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<Adam> {
@@ -282,26 +282,26 @@ impl RMSProp {
     /// The exponential decay rate for the first moment estimate is set to 0.9 and the epsilon value used for
     /// numerical stability to 1e-8.
     ///
-    pub fn new(learning_rate: PrimitiveType) -> RMSProp {
-        RMSProp {
+    pub fn new(learning_rate: PrimitiveType) -> Box<RMSProp> {
+        Box::new(RMSProp {
             learning_rate,
             decay_rate: 0.9,
             eps: 1e-8,
             first_moment_est: Default::default(),
-        }
+        })
     }
 
     /// Creates an RMSProp optimizer with the given parameters.
     pub fn with_param(learning_rate: PrimitiveType,
                       decay_rate: PrimitiveType,
                       eps: PrimitiveType
-    ) -> RMSProp {
-        RMSProp {
+    ) -> Box<RMSProp> {
+        Box::new(RMSProp {
             learning_rate,
             decay_rate,
             eps,
             first_moment_est: Default::default(),
-        }
+        })
     }
 
     pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<RMSProp> {
@@ -383,23 +383,23 @@ impl AdaDelta {
     ///
     /// The exponential decay rate is set to 0.95 and the epsilon value used for numerical stability to 1e-6.
     ///
-    pub fn new() -> AdaDelta {
-        AdaDelta {
+    pub fn new() -> Box<AdaDelta> {
+        Box::new(AdaDelta {
             decay_rate: 0.95,
             eps: 1e-6,
             grad_acc: Default::default(),
             updates_acc: Default::default(),
-        }
+        })
     }
 
     /// Creates an AdaDelta optimizer with the parameters.
-    pub fn with_param(decay_rate: PrimitiveType, eps: PrimitiveType) -> AdaDelta {
-        AdaDelta {
+    pub fn with_param(decay_rate: PrimitiveType, eps: PrimitiveType) -> Box<AdaDelta> {
+        Box::new(AdaDelta {
             decay_rate,
             eps,
             grad_acc: Default::default(),
             updates_acc: Default::default(),
-        }
+        })
     }
 
     pub(crate) fn from_hdf5_group(group: &hdf5::Group) -> Box<AdaDelta> {

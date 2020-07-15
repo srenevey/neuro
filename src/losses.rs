@@ -29,6 +29,12 @@ pub(crate) fn loss_from_id(id: u64) -> Box<dyn Loss> {
 #[derive(Debug, Copy, Clone)]
 pub struct BinaryCrossEntropy;
 
+impl BinaryCrossEntropy {
+    pub fn new() -> Box<BinaryCrossEntropy> {
+        Box::new(BinaryCrossEntropy)
+    }
+}
+
 impl Loss for BinaryCrossEntropy {
     fn id(&self) -> u64 {
         1
@@ -57,6 +63,12 @@ impl Loss for BinaryCrossEntropy {
 #[derive(Debug, Copy, Clone)]
 pub struct CrossEntropy;
 
+impl CrossEntropy {
+    pub fn new() -> Box<CrossEntropy> {
+        Box::new(CrossEntropy)
+    }
+}
+
 impl Loss for CrossEntropy {
     fn id(&self) -> u64 {
         2
@@ -84,6 +96,12 @@ impl Loss for CrossEntropy {
 #[derive(Debug, Copy, Clone)]
 pub struct MeanAbsoluteError;
 
+impl MeanAbsoluteError {
+    pub fn new() -> Box<MeanAbsoluteError> {
+        Box::new(MeanAbsoluteError)
+    }
+}
+
 impl Loss for MeanAbsoluteError {
     fn id(&self) -> u64 {
         3
@@ -108,6 +126,12 @@ impl Loss for MeanAbsoluteError {
 
 #[derive(Debug, Copy, Clone)]
 pub struct MeanSquaredError;
+
+impl MeanSquaredError {
+    pub fn new() -> Box<MeanSquaredError> {
+        Box::new(MeanSquaredError)
+    }
+}
 
 impl Loss for MeanSquaredError {
     fn id(&self) -> u64 {
@@ -134,6 +158,12 @@ impl Loss for MeanSquaredError {
 /// Applies the softmax function on the input and then computes the cross entropy loss.
 #[derive(Debug, Copy, Clone)]
 pub struct SoftmaxCrossEntropy;
+
+impl SoftmaxCrossEntropy {
+    pub fn new() -> Box<SoftmaxCrossEntropy> {
+        Box::new(SoftmaxCrossEntropy)
+    }
+}
 
 impl Loss for SoftmaxCrossEntropy {
     fn id(&self) -> u64 {

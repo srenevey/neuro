@@ -18,7 +18,7 @@ fn main() -> Result<(), Error> {
     let data = TabularDataSet::from_tensor(x_train.copy(), y_train.copy(), None, None, None, None)?;
 
     // Create the neural network and add two layers
-    let mut nn = models::Network::new(Dim::new(&[2, 1, 1, 1]), losses::BinaryCrossEntropy, SGD::new(0.1), None)?;
+    let mut nn = models::Network::new(Dim::new(&[2, 1, 1, 1]), losses::BinaryCrossEntropy::new(), SGD::new(0.1), None)?;
     nn.add(Dense::with_param(2, Activation::Sigmoid, Initializer::UniformBounded(-1., 1.), Initializer::Zeros));
     nn.add(Dense::with_param(1, Activation::Sigmoid, Initializer::UniformBounded(-1., 1.), Initializer::Zeros));
 

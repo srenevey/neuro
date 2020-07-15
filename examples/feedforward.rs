@@ -19,7 +19,7 @@ fn main() -> Result<(), Error> {
     println!("{}", data);
 
     // Create the network
-    let mut nn = Network::new(data.input_shape(), losses::MeanSquaredError, Adam::new(0.01), None)?;
+    let mut nn = Network::new(data.input_shape(), losses::MeanSquaredError::new(), Adam::new(0.01), None)?;
     nn.add(Dense::new(32, Activation::ReLU));
     nn.add(Dense::new(16, Activation::ReLU));
     nn.add(Dense::new(1, Activation::Linear));

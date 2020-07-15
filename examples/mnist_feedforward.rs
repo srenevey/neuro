@@ -23,7 +23,7 @@ fn main() -> Result<(), Error> {
     println!("{}", data);
 
     // Create the neural network
-    let mut nn = Network::new(Dim::new(&[28, 28, 1, 1]), losses::SoftmaxCrossEntropy, Adam::new(0.003), Some(Regularizer::L2(1e-3)))?;
+    let mut nn = Network::new(Dim::new(&[28, 28, 1, 1]), losses::SoftmaxCrossEntropy::new(), Adam::new(0.003), Some(Regularizer::L2(1e-3)))?;
     nn.add(Flatten::new());
     nn.add(Dense::new(32, Activation::ReLU));
     nn.add(Dense::new(10, Activation::Softmax));

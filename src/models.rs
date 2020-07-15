@@ -39,9 +39,9 @@ impl Network
     /// Creates an empty neural network.
     ///
     /// The input shape must be in the form [height, width, channel, 1]. Mini-batches are created along the fourth dimension.
-    pub fn new<L: 'static + Loss, O: 'static + Optimizer>(input_shape: Dim,
-               loss_function: L,
-               optimizer: O,
+    pub fn new(input_shape: Dim,
+               loss_function: Box<dyn Loss>,
+               optimizer: Box<dyn Optimizer>,
                regularizer: Option<Regularizer>
     ) -> Result<Network, Error> {
 
@@ -51,8 +51,8 @@ impl Network
 
         Ok(Network {
             layers: Vec::new(),
-            loss_function: Box::new(loss_function),
-            optimizer: Box::new(optimizer),
+            loss_function,
+            optimizer,
             regularizer,
             input_shape,
             output_shape: Dim::new(&[0, 0, 0, 0]),
@@ -505,7 +505,7 @@ impl Network
                     regularizer,
                     input_shape: Dim::new(&input_shape[0]),
                     output_shape: Dim::new(&output_shape[0]),
-                    classes: classes
+                    classes
                 })
             },
             Err(err) => Err(Error::from(err)),

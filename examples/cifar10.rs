@@ -23,7 +23,7 @@ fn main() -> Result<(), Error> {
     println!("{}", data);
 
     // Create the neural network
-    let mut nn = Network::new(Dim::new(&[32, 32, 3, 1]), losses::SoftmaxCrossEntropy, Adam::new(0.001), None)?;
+    let mut nn = Network::new(Dim::new(&[32, 32, 3, 1]), losses::SoftmaxCrossEntropy::new(), Adam::new(0.001), None)?;
     nn.add(Conv2D::new(32, (3, 3), (1, 1), Padding::Same));
     nn.add(Conv2D::new(32, (3, 3), (1, 1), Padding::Same));
     nn.add(MaxPool2D::new((2, 2)));

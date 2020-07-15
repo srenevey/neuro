@@ -26,7 +26,7 @@ fn main() -> Result<(), Error> {
     println!("{}", data);
 
     // Create the neural network
-    let mut nn = Network::new(Dim::new(&[28, 28, 1, 1]), losses::SoftmaxCrossEntropy, AdaDelta::new(), None)?;
+    let mut nn = Network::new(Dim::new(&[28, 28, 1, 1]), losses::SoftmaxCrossEntropy::new(), AdaDelta::new(), None)?;
     nn.add(Flatten::new());
     nn.add(Dense::new(500, Activation::Tanh));
     nn.add(Dense::new(300, Activation::Tanh));
